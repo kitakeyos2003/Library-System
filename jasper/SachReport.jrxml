@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.2.final using JasperReports Library version 6.12.2-75c5e90a222ab406e416cbf590a5397028a52de3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SachReport" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7f02c355-29af-4c84-bb1b-32a798ca3e38">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="qlsach"/>
+	<queryString language="SQL">
+		<![CDATA[Select *from sach]]>
+	</queryString>
+	<field name="MaSach" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="MaSach"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sach"/>
+	</field>
+	<field name="TenSach" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TenSach"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sach"/>
+	</field>
+	<field name="TenTG" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TenTG"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sach"/>
+	</field>
+	<field name="NhaXB" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NhaXB"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sach"/>
+	</field>
+	<field name="TheLoai" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TheLoai"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sach"/>
+	</field>
+	<field name="SoLuong" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SoLuong"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sach"/>
+	</field>
+	<field name="GiaTien" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="GiaTien"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sach"/>
+	</field>
+	<variable name="MaSach1" class="java.lang.Integer" resetType="Column" calculation="Count">
+		<variableExpression><![CDATA[$F{MaSach}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="81" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="801" height="81" uuid="b6c73024-c41c-4a25-965a-73b30d2938d0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="29" isBold="true"/>
+				</textElement>
+				<text><![CDATA[THỐNG KÊ SÁCH]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="-1" width="801" height="31" backcolor="#07FAC5" uuid="ce9f4a39-5160-49fc-bd27-53a506eaf798"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="118" height="30" uuid="2debc8b4-0c9f-42b7-b614-299868790f0a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6072d34d-7164-4286-99b2-0cb5aa084f3a"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Mã ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="118" y="0" width="114" height="30" uuid="1b3ecfa4-238b-4528-85f8-c2c8f22c5a4a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d4c27a2b-c47e-40b9-9158-d8b188b78616"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Tên sách]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="232" y="0" width="114" height="30" uuid="a0877a57-62d4-4a90-a042-713d59a17405">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c956424e-d759-46c4-a41c-7660c51f342f"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Tên TG]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="346" y="0" width="114" height="30" uuid="3155fad1-f890-4ca3-b1e0-ea213ac2227e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9825576d-a77c-45ab-80e6-72e5a050e7f2"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Nhà XB]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="0" width="114" height="30" uuid="77d58bb8-2fcb-489c-9f0d-024eeaa59486">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e7f0fe06-dddf-44ea-96fd-c98181859705"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Thể loại]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="574" y="0" width="114" height="30" uuid="243251a9-25a6-4d5f-9a4d-a29361414995">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e1768042-7cd0-4448-9a98-98d72ba9654e"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Số lượng]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="688" y="0" width="114" height="30" uuid="559ef46e-a7e9-4cb4-883d-26c882bfde24">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="13f07558-4cba-4574-8419-da41dd42108e"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Giá tiền]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="34" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="118" height="30" uuid="7532c794-b1ec-493e-b9e4-8af33879db48">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6072d34d-7164-4286-99b2-0cb5aa084f3a"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{MaSach}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="118" y="0" width="114" height="30" uuid="255d3a1e-a170-4566-940f-7ba0d084a255">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d4c27a2b-c47e-40b9-9158-d8b188b78616"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TenSach}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="232" y="0" width="114" height="30" uuid="1cc51158-5f9f-4dcf-a548-9bcad35fcc5e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c956424e-d759-46c4-a41c-7660c51f342f"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TenTG}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="346" y="0" width="114" height="30" uuid="15a7d03d-cd84-4a65-b1c7-e1f5136e22df">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9825576d-a77c-45ab-80e6-72e5a050e7f2"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NhaXB}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="460" y="0" width="114" height="30" uuid="c75a01f6-3666-4c42-988d-0b33a5106a61">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e7f0fe06-dddf-44ea-96fd-c98181859705"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TheLoai}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="574" y="0" width="114" height="30" uuid="7a52fefe-06fc-46f0-97c3-c49a316efd1f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e1768042-7cd0-4448-9a98-98d72ba9654e"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{SoLuong}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="688" y="0" width="116" height="30" uuid="a6fa006b-e017-45fe-9977-d28a9be90fe3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="13f07558-4cba-4574-8419-da41dd42108e"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{GiaTien}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="49" splitType="Stretch">
+			<textField>
+				<reportElement x="690" y="0" width="114" height="30" uuid="ca0ab9e0-2017-4fe4-b1f9-8c1f9937c7fe"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{MaSach1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="588" y="0" width="100" height="30" uuid="f89ae38c-1d19-481b-ae48-cbcd2dc1e1b8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15"/>
+				</textElement>
+				<text><![CDATA[Tổng số]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

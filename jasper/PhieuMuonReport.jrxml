@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.2.final using JasperReports Library version 6.12.2-75c5e90a222ab406e416cbf590a5397028a52de3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PhieuMuonReport" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8ff34bd2-3094-4f16-8a71-025564a4664f">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="qlsach"/>
+	<queryString language="SQL">
+		<![CDATA[select * from phieumuon]]>
+	</queryString>
+	<field name="MaPM" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="MaPM"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="phieumuon"/>
+	</field>
+	<field name="MaDG" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="MaDG"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="phieumuon"/>
+	</field>
+	<field name="NgayMuon" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="NgayMuon"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="phieumuon"/>
+	</field>
+	<field name="NgayHenTra" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="NgayHenTra"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="phieumuon"/>
+	</field>
+	<field name="SoLuongMuon" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="SoLuongMuon"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="phieumuon"/>
+	</field>
+	<field name="User" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="User"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="phieumuon"/>
+	</field>
+	<variable name="MaPM1" class="java.lang.Integer" resetType="Column" calculation="Count">
+		<variableExpression><![CDATA[$F{MaPM}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="141" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="141" uuid="e8e656a4-18ae-4279-a676-0d19ef0cde3e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="29" isBold="true"/>
+				</textElement>
+				<text><![CDATA[THỐNG KÊ PHIẾU MƯỢN]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="34" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="-1" width="801" height="31" backcolor="#1FE0BA" uuid="bfb4dfb2-8dc3-4b9d-8fb9-167959a17922"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="137" height="30" uuid="dcc21fee-1ac6-4168-82d0-318186afcdc9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5c2f3c57-e81b-4826-8db6-bbf758d2bad1"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MaPM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="137" y="0" width="133" height="30" uuid="6b1fd03b-7952-4ceb-8bef-1c8a9470f695">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b00e28ef-5af7-4d8a-9944-789a02784293"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mã]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="0" width="133" height="30" uuid="c3e85194-bcba-4372-aa04-e630466dbf57">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="697f8c8a-e713-4e37-a489-c07f3649e7d5"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ngày mượn]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="403" y="0" width="107" height="30" uuid="8d8eafd0-b5b4-42a0-aa2f-41ce370741c5">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="168babac-5891-40e8-b5ff-eb1e410c4755"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hạn trả]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="510" y="0" width="140" height="30" uuid="9b1adcf4-8400-476b-a092-ad8562eb8fd9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a3074256-bdc0-4528-b45f-55db377242d9"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Số lượng mượn]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="650" y="0" width="152" height="30" uuid="f4249b2e-bb50-4bf2-aba1-7511d2288a36">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3b9e3d30-dbb8-4f49-91a9-43e93b1f5d64"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tài khoản thủ thư]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="137" height="30" uuid="5fddbd03-39df-4914-b67a-721e76fad71b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5c2f3c57-e81b-4826-8db6-bbf758d2bad1"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{MaPM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="137" y="0" width="133" height="30" uuid="5146a3ec-4c91-4020-a946-c757e5812000">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b00e28ef-5af7-4d8a-9944-789a02784293"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MaDG}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="0" width="133" height="30" uuid="f48c3d54-ad5e-4fc3-be82-a7a14aa43883">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="697f8c8a-e713-4e37-a489-c07f3649e7d5"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NgayMuon}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="403" y="0" width="107" height="30" uuid="077a66cf-a883-4aff-a9eb-b13fa645075d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="168babac-5891-40e8-b5ff-eb1e410c4755"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NgayHenTra}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="510" y="0" width="140" height="30" uuid="a34c7049-083d-4fd7-a5b6-296f94980612">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a3074256-bdc0-4528-b45f-55db377242d9"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SoLuongMuon}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="650" y="0" width="152" height="30" uuid="120ac303-b4d6-4ab6-8ad0-cb3e49b10f37">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3b9e3d30-dbb8-4f49-91a9-43e93b1f5d64"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{User}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch">
+			<textField>
+				<reportElement x="650" y="0" width="151" height="30" uuid="e6beb09b-b477-4e64-ac66-b366f759d51d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{MaPM1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="510" y="0" width="140" height="29" uuid="0d8b1a2a-fd89-47ad-a32a-4f6ed1f6d1e6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tổng số]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

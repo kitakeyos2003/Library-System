@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.2.final using JasperReports Library version 6.12.2-75c5e90a222ab406e416cbf590a5397028a52de3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PhieuTraReport" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="777c70ae-25ce-4b28-b853-efbb5cedafb3">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="qlsach"/>
+	<queryString language="SQL">
+		<![CDATA[select * from ctpm]]>
+	</queryString>
+	<field name="MaPM" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="MaPM"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ctpm"/>
+	</field>
+	<field name="MaSach" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="MaSach"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ctpm"/>
+	</field>
+	<field name="NgayTra" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="NgayTra"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ctpm"/>
+	</field>
+	<field name="TinhTrangSach" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="TinhTrangSach"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ctpm"/>
+	</field>
+	<field name="TinhTrangTra" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="TinhTrangTra"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ctpm"/>
+	</field>
+	<field name="User" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="User"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ctpm"/>
+	</field>
+	<field name="GhiChu" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="GhiChu"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ctpm"/>
+	</field>
+	<variable name="MaPM1" class="java.lang.Integer" resetType="Column" calculation="Count">
+		<variableExpression><![CDATA[$F{MaPM}]]></variableExpression>
+	</variable>
+	<group name="MaPM">
+		<groupExpression><![CDATA[$F{MaPM}]]></groupExpression>
+		<groupHeader>
+			<band height="33">
+				<rectangle>
+					<reportElement x="0" y="0" width="801" height="29" backcolor="#A571F5" uuid="26ac6e30-9f5a-4f67-8f04-7db2040da7f5"/>
+				</rectangle>
+				<textField>
+					<reportElement x="3" y="-1" width="108" height="30" uuid="de4c8e6c-9eb3-43bd-84a8-ffbb9229a0f2"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{MaPM}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="81" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="801" height="81" uuid="539fefa2-dc31-4e60-9eea-9cafd687f6e7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="29" isBold="true"/>
+				</textElement>
+				<text><![CDATA[THỐNG KÊ PHIẾU TRẢ]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="41" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="801" height="40" backcolor="#0CF7B9" uuid="6650d121-c180-45de-8d1b-fbd891965291"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="-1" width="111" height="41" uuid="f901af80-0a5f-47f8-a508-77745a7bebe4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mã]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="111" y="1" width="98" height="39" uuid="253dc926-696e-4eca-89a5-069ee0c67d92">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="75befd25-2ca8-455a-b10a-c21d68d15409"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font fontName="Arial" size="15" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Mã sách]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="0" width="110" height="40" uuid="25d74a38-832d-49f8-a152-94f977535158">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4ffe2cb4-3bae-4a33-a187-0a48a61735ed"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font fontName="Arial" size="15" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Ngày trả]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="0" width="130" height="40" uuid="7e002d3c-38a7-40bd-8130-a762a5b5eb4b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="57ccb6fc-0976-4f01-8320-228c5f49f817"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font fontName="Arial" size="15" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Tình trạng sách]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="0" width="108" height="40" uuid="5243c298-fa3a-4aaa-837b-2ee3e4d9c222">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cfc2d903-4178-47c2-981d-6eb139f7e72e"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font fontName="Arial" size="15" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Tình trạng chiều]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="558" y="0" width="91" height="39" uuid="75fee7e6-3317-49c2-b61d-0d4ba1fbfc21">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9a3d5df0-e1b5-476f-8dcb-0c07110999e0"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font fontName="Arial" size="15" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Tài khoản]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="650" y="0" width="152" height="38" uuid="e1ca5a23-64bc-447d-8bf8-dce84b3bf173">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d00ac3a2-a51e-43d0-b2fe-d46a6df6e506"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font fontName="Arial" size="15" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[GhiChu]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="120" y="0" width="89" height="30" uuid="dabd58f3-3dbc-4758-af54-b7c1a6a9469d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="75befd25-2ca8-455a-b10a-c21d68d15409"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MaSach}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="0" width="110" height="30" uuid="52c96c57-5b93-4a84-b98d-62742219f7d0">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4ffe2cb4-3bae-4a33-a187-0a48a61735ed"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NgayTra}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="0" width="130" height="30" uuid="9acf2016-7aa7-4afd-ba56-01f92b3566ee">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="57ccb6fc-0976-4f01-8320-228c5f49f817"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TinhTrangSach}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="0" width="107" height="30" uuid="1d8e4cb6-e79b-40fa-9873-08103eaa96d9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cfc2d903-4178-47c2-981d-6eb139f7e72e"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TinhTrangTra}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="558" y="0" width="79" height="30" uuid="435adab7-126a-41bb-8829-6cbf828cfaa8">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9a3d5df0-e1b5-476f-8dcb-0c07110999e0"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{User}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="637" y="0" width="165" height="30" uuid="85019fed-9d06-4c73-8d43-9b587f3efe73">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d00ac3a2-a51e-43d0-b2fe-d46a6df6e506"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{GhiChu}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="48" splitType="Stretch">
+			<textField>
+				<reportElement x="670" y="0" width="130" height="30" uuid="a507618f-15c5-4d25-8bd6-810fb33c5fe5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{MaPM1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="561" y="0" width="109" height="29" uuid="1286dabc-1c7f-42fb-b0eb-1403f70c25bd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tổng số]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
