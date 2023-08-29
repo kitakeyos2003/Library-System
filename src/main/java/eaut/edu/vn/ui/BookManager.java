@@ -2,7 +2,6 @@ package eaut.edu.vn.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -22,7 +21,6 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -34,14 +32,17 @@ import javax.swing.table.DefaultTableModel;
 
 
 import eaut.edu.vn.database.ConnectMySQL;
-import eaut.edu.vn.ui.dialog.book.Sua;
-import eaut.edu.vn.ui.dialog.book.Them;
-import eaut.edu.vn.ui.dialog.book.TimKiem;
-import eaut.edu.vn.ui.dialog.book.Xoa;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.Header;
+import eaut.edu.vn.ui.dialog.book.Edit;
+import eaut.edu.vn.ui.dialog.book.Add;
+import eaut.edu.vn.ui.dialog.book.Search;
+import eaut.edu.vn.ui.dialog.book.Delete;
 import eaut.edu.vn.model.LoanDetail;
 import eaut.edu.vn.util.Util;
 
-public class BookManager extends JFrame {
+public class BookManager extends Frame {
     public String tentk = "";
     public int thongke = 0;
     JTextField txtMaSach, txtTenSach, txtTacGia, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
@@ -54,11 +55,12 @@ public class BookManager extends JFrame {
     JList listTheLoai;
 
     public BookManager(String tieude) {
-        this.setTitle(tieude);
-        addControls();
-        hienThiSach();
+        super(tieude);
+        setHeader(new Header("QUẢN LÝ SÁCH"));
+        setFooter(new Footer());
+        initComponents();
         addEvents();
-
+        hienThiSach();
     }
 
     private void hienThiSach() {
@@ -93,6 +95,7 @@ public class BookManager extends JFrame {
 
     }
 
+    @Override
     protected void addEvents() {
         btnQuayLai.addActionListener(new ActionListener() {
 
@@ -218,7 +221,7 @@ public class BookManager extends JFrame {
         });
         btnThem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Them themsach = new Them("Thêm sách");
+                Add themsach = new Add("Thêm sách");
                 themsach.showWindow();
                 dtmSach.setRowCount(0);
                 hienThiSach();
@@ -226,7 +229,7 @@ public class BookManager extends JFrame {
         });
         btnTimKiem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                TimKiem timsach = new TimKiem("Tìm kiếm thông tin sách");
+                Search timsach = new Search("Tìm kiếm thông tin sách");
                 timsach.showWindow();
                 dtmSach.setRowCount(0);
                 hienThiSach();
@@ -234,7 +237,7 @@ public class BookManager extends JFrame {
         });
         btnSua.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Sua suasach = new Sua("Sửa thông tin sách");
+                Edit suasach = new Edit("Sửa thông tin sách");
                 suasach.ma = txtMaSach.getText();
                 suasach.hienThi();
                 suasach.showWindow();
@@ -244,7 +247,7 @@ public class BookManager extends JFrame {
         });
         btnXoa.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Xoa xoasach = new Xoa("Xóa thông tin sách");
+                Delete xoasach = new Delete("Xóa thông tin sách");
                 xoasach.ma = txtMaSach.getText();
                 xoasach.hienThi();
                 xoasach.showWindow();
@@ -254,34 +257,11 @@ public class BookManager extends JFrame {
         });
     }
 
-    protected void addControls() {
-        Container con = getContentPane();
-
-        JPanel pnSach = new JPanel();
-        pnSach.setLayout(new BorderLayout());
-        con.add(pnSach);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ SÁCH");
-        pnTieuDe.add(lblTieuDe);
-        pnSach.add(pnTieuDe, BorderLayout.NORTH);
-        Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
-        lblTieuDe.setFont(font1);
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnSach.add(pnLienHe, BorderLayout.SOUTH);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
-        Font fontx = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblLienHe.setFont(fontx);
-
+    @Override
+    protected void initComponents() {
         JPanel pnThongTin = new JPanel();
         pnThongTin.setLayout(new BorderLayout());
-        pnSach.add(pnThongTin, BorderLayout.CENTER);
+        mainPanel.add(pnThongTin, BorderLayout.CENTER);
 
         JPanel pnChiTietSach = new JPanel();
         pnChiTietSach.setLayout(new BorderLayout());

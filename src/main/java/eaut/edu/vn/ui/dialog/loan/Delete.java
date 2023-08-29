@@ -28,7 +28,7 @@ import eaut.edu.vn.database.ConnectMySQL;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
-public class Xoa extends Dialog {
+public class Delete extends Dialog {
     public String machon = "";
     JTextField txtMaPhieu, txtMaDG, txtTenDG, txtNgayMuon, txtNgayHenTra, txtSachMuon, txtThuThu;
     JButton btnXoa;
@@ -37,7 +37,7 @@ public class Xoa extends Dialog {
     int soluongsau = 0;
     JDateChooser choosedate, choosedate1;
 
-    public Xoa(String title) {
+    public Delete(String title) {
         super(title);
         hienThi();
     }

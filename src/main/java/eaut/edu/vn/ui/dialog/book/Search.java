@@ -29,14 +29,14 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-public class TimKiem extends Dialog {
+public class Search extends Dialog {
     JButton btnTimKiem;
     JTextField txtTimKiem, txtMaSach, txtTenSach, txtTacGia, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
     DefaultTableModel dtmSach;
     JTable tblSach;
     Connection conn = ConnectMySQL.connect;
 
-    public TimKiem(String title) {
+    public Search(String title) {
         super(title);
     }
 

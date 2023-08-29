@@ -2,7 +2,6 @@ package eaut.edu.vn.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,9 +24,12 @@ import javax.swing.border.TitledBorder;
 
 import eaut.edu.vn.service.AccountService;
 import eaut.edu.vn.model.Account;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.util.Util;
 
-public class Login extends JFrame {
+public class Login extends Frame {
     JButton btnLogin, btnExit;
     JTextField txtUsername;
     JPasswordField pwdPassword;
@@ -36,10 +37,13 @@ public class Login extends JFrame {
 
     public Login(String title) {
         super(title);
+        setHeader(new Header("QUẢN LÝ NGƯỜI DÙNG"));
+        setFooter(new Footer());
         initComponents();
         addEvents();
     }
 
+    @Override
     protected void addEvents() {
 
         btnExit.addActionListener(e -> System.exit(0));
@@ -252,18 +256,8 @@ public class Login extends JFrame {
         });
     }
 
+    @Override
     protected void initComponents() {
-        Container container = getContentPane();
-
-        JPanel loginPanel = new JPanel();
-        loginPanel.setLayout(new BorderLayout());
-        container.add(loginPanel);
-
-        JPanel titlePanel = new JPanel();
-        JLabel lblTitle = new JLabel("PHẦN MỀM QUẢN LÝ THƯ VIỆN");
-        titlePanel.add(lblTitle);
-        loginPanel.add(titlePanel, BorderLayout.NORTH);
-
         JPanel pnLogin = new JPanel();
         pnLogin.setLayout(new BoxLayout(pnLogin, BoxLayout.Y_AXIS));
 
@@ -297,25 +291,15 @@ public class Login extends JFrame {
         pnThaoTac.add(btnLogin);
         pnThaoTac.add(btnExit);
 
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        loginPanel.add(pnLienHe, BorderLayout.SOUTH);
-        Font fontx = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblLienHe.setFont(fontx);
-
         pnLogin.add(pnTitle);
         pnLogin.add(pnTaiKhoan);
         pnLogin.add(pnMatKhau);
         pnLogin.add(pnThaoTac);
-        loginPanel.add(pnLogin, BorderLayout.CENTER);
+        mainPanel.add(pnLogin, BorderLayout.CENTER);
 
         Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
-        Font font2 = Util.loadFontFromResource("SVN-Avo.ttf", Font.TRUETYPE_FONT, 30);
-        Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.TRUETYPE_FONT, 15);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 10);
-        lblTitle.setFont(font1);
         lblLogin.setFont(font1);
         //lblTaiKhoan.setFont(font3);
         //lblMatKhau.setFont(font3);
@@ -326,11 +310,6 @@ public class Login extends JFrame {
 
         btnLogin.setIcon(Util.loadImage("lock.png"));
         btnExit.setIcon(Util.loadImage("close.png"));
-
-        titlePanel.setBackground(new Color(48, 51, 107));
-        lblTitle.setForeground(Color.WHITE);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblLogin.setForeground(new Color(48, 51, 107));

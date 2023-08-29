@@ -26,13 +26,13 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-public class Sua extends Dialog {
+public class Edit extends Dialog {
     public String ma = "";
     JTextField txtMaSach, txtTenSach, txtTenTG, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
     JButton btnSua;
     Connection conn = ConnectMySQL.connect;
 
-    public Sua(String title) {
+    public Edit(String title) {
         super(title);
         hienThi();
     }

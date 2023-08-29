@@ -31,13 +31,13 @@ import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
 
-public class TraSach extends Dialog {
+public class ReturnReceipt extends Dialog {
     public String MaPM = "", MaSach = "", NgayHenTra = "", TinhTrangSach = "", tentk = "", MaDG = "";
     JTextField txtMaPhieu, txtMaDG, txtMaSach, txtNgayHenTra, txtNgayTra, txtTTSachMuon, txtTTSachTra, txtThuThuNhanSach, txtGhiChu;
     JButton btnTraSach;
     JDateChooser choosedate;
 
-    public TraSach(String title) {
+    public ReturnReceipt(String title) {
         super(title);
         hienThi();
 

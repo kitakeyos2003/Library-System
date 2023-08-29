@@ -6,14 +6,11 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -30,6 +27,9 @@ import eaut.edu.vn.model.Reader;
 import eaut.edu.vn.model.Loan;
 import eaut.edu.vn.model.Book;
 
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.util.Util;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -37,7 +37,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 
-public class StatisticAnalyzer extends JFrame {
+public class StatisticAnalyzer extends Frame {
     public String tenTk = "";
     public int thongke = 1;
     JButton btnQLDG, btnQLPM, btnQLPT, btnQLS, btnQuayLai, btnChiTietSach, btnChiTietDG, btnChiTietPM, btnChiTietPT;
@@ -46,7 +46,9 @@ public class StatisticAnalyzer extends JFrame {
 
     public StatisticAnalyzer(String title) {
         super(title);
-        addControls();
+        setHeader(new Header("THỐNG KÊ"));
+        setFooter(new Footer());
+        initComponents();
         addEvents();
         hienThi();
     }
@@ -99,28 +101,7 @@ public class StatisticAnalyzer extends JFrame {
         return SoLuongDG;
     }
 
-    public void addControls() {
-        Container con = getContentPane();
-
-        JPanel pnTrangChu = new JPanel();
-        pnTrangChu.setLayout(new BorderLayout());
-        con.add(pnTrangChu);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("THỐNG KÊ");
-        pnTieuDe.add(lblTieuDe);
-        pnTrangChu.add(pnTieuDe, BorderLayout.NORTH);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnTrangChu.add(pnLienHe, BorderLayout.SOUTH);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
-        Font fontx = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblLienHe.setFont(fontx);
-
-
+    public void initComponents() {
         JPanel pnQuanLy = new JPanel();
         pnQuanLy.setLayout(new BoxLayout(pnQuanLy, BoxLayout.Y_AXIS));
 
@@ -223,7 +204,7 @@ public class StatisticAnalyzer extends JFrame {
         pnQuanLy.add(pnHang1);
         pnQuanLy.add(pnHang2);
 
-        pnTrangChu.add(pnQuanLy, BorderLayout.EAST);
+        mainPanel.add(pnQuanLy, BorderLayout.EAST);
 
 
         JPanel pnChucNang = new JPanel();
@@ -278,13 +259,7 @@ public class StatisticAnalyzer extends JFrame {
         pnChucNang.add(pnHinhAnh);
         pnChucNang.add(pnQuayLai);
 
-        pnTrangChu.add(pnChucNang, BorderLayout.WEST);
-
-        Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
-        lblTieuDe.setFont(font1);
-
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
+        mainPanel.add(pnChucNang, BorderLayout.WEST);
 
         btnQLDG.setBorder(null);
         btnQLPM.setBorder(null);

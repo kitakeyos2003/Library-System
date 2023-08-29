@@ -30,9 +30,9 @@ import javax.swing.table.DefaultTableModel;
 import eaut.edu.vn.database.ConnectMySQL;
 import eaut.edu.vn.service.LoanService;
 import eaut.edu.vn.service.BookService;
-import eaut.edu.vn.ui.dialog.loan.Sua;
-import eaut.edu.vn.ui.dialog.loan.Them;
-import eaut.edu.vn.ui.dialog.loan.Xoa;
+import eaut.edu.vn.ui.dialog.loan.Edit;
+import eaut.edu.vn.ui.dialog.loan.Add;
+import eaut.edu.vn.ui.dialog.loan.Delete;
 import eaut.edu.vn.model.Loan;
 import eaut.edu.vn.model.Book;
 import eaut.edu.vn.util.Util;
@@ -101,7 +101,7 @@ public class LoanManager extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                Them tpm = new Them("Thêm phiếu mượn");
+                Add tpm = new Add("Thêm phiếu mượn");
                 tpm.tentk = tentk;
                 tpm.hienThi();
                 tpm.showWindow();
@@ -111,7 +111,7 @@ public class LoanManager extends JFrame {
         btnSua.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                Sua suapm = new Sua("Sửa phiếu mượn");
+                Edit suapm = new Edit("Sửa phiếu mượn");
                 suapm.maPM = txtMaPhieu.getText();
                 suapm.hienThi();
                 suapm.showWindow();
@@ -122,7 +122,7 @@ public class LoanManager extends JFrame {
         btnXoa.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                Xoa xoapm = new Xoa("Xóa phiếu mượn");
+                Delete xoapm = new Delete("Xóa phiếu mượn");
                 xoapm.machon = txtMaPhieu.getText();
                 xoapm.hienThi();
                 xoapm.showWindow();

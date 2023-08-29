@@ -18,13 +18,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class ChiTiet extends Dialog {
+public class Detail extends Dialog {
     public String ma = "";
     DefaultTableModel dtmCTPM;
     JTable tblCTPM;
     Connection conn = ConnectMySQL.connect;
 
-    public ChiTiet(String title) {
+    public Detail(String title) {
         super(title);
         if (ma.length() != 0) {
             hienThi();

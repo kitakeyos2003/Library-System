@@ -35,7 +35,7 @@ import eaut.edu.vn.database.ConnectMySQL;
 import eaut.edu.vn.model.LoanDetail;
 import eaut.edu.vn.util.Util;
 
-public class TimKiem extends Dialog {
+public class Search extends Dialog {
     public String tentk = "";
     JButton btnTimKiem, btnTraSach;
     JTextField txtTimKiem, txtMaPhieu, txtMaDG, txtMaSach, txtNgayHenTra, txtNgayTra, txtTTSachMuon, txtTTSachTra, txtThuThu, txtGhiChu;
@@ -46,7 +46,7 @@ public class TimKiem extends Dialog {
     DefaultTableModel dtmPhieuTra, dtmPhieuChuaTra;
     JTable tblPhieuTra, tblPhieuChuaTra;
 
-    public TimKiem(String title) {
+    public Search(String title) {
         super(title);
     }
 
@@ -276,7 +276,7 @@ public class TimKiem extends Dialog {
                     JOptionPane.showMessageDialog(null, "Phiếu mượn đã trả sách rồi");
                     return;
                 }
-                TraSach ts = new TraSach("Trả sách");
+                ReturnReceipt ts = new ReturnReceipt("Trả sách");
                 ts.tentk = tentk;
                 ts.MaDG = txtMaDG.getText();
                 ts.MaPM = txtMaPhieu.getText();

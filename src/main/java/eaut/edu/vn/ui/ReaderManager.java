@@ -6,8 +6,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.Connection;
@@ -18,7 +16,6 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -28,14 +25,17 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import eaut.edu.vn.database.ConnectMySQL;
-import eaut.edu.vn.ui.dialog.reader.ChiTiet;
-import eaut.edu.vn.ui.dialog.reader.Sua;
-import eaut.edu.vn.ui.dialog.reader.Them;
-import eaut.edu.vn.ui.dialog.reader.Xoa;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.Header;
+import eaut.edu.vn.ui.dialog.reader.Detail;
+import eaut.edu.vn.ui.dialog.reader.Edit;
+import eaut.edu.vn.ui.dialog.reader.Add;
+import eaut.edu.vn.ui.dialog.reader.Delete;
 import eaut.edu.vn.util.Util;
 
 
-public class ReaderManager extends JFrame {
+public class ReaderManager extends Frame {
     public String tentk = "";
     public int thongke = 0;
     JTextField txtMaDocGia, txtTenDocGia, txtSDT, txtDiaChi, txtGioiTinh, txtLanMatSach;
@@ -45,8 +45,10 @@ public class ReaderManager extends JFrame {
     Connection conn = ConnectMySQL.connect;
 
     public ReaderManager(String tieude) {
-        this.setTitle(tieude);
-        addControls();
+        super(tieude);
+        setHeader(new Header("QUẢN LÝ ĐỘC GIẢ"));
+        setFooter(new Footer());
+        initComponents();
         lietKeDocGia();
         addEvents();
     }
@@ -89,35 +91,29 @@ public class ReaderManager extends JFrame {
             }
         });
 
-        btnThem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                Them themdg = new Them("Thêm độc giả");
-                themdg.showWindow();
-                dtmDocGia.setRowCount(0);
-                lietKeDocGia();
-            }
+        btnThem.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            Add themdg = new Add("Thêm độc giả");
+            themdg.showWindow();
+            dtmDocGia.setRowCount(0);
+            lietKeDocGia();
         });
-        btnXoa.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                Xoa xoadg = new Xoa("Xóa độc giả");
-                xoadg.machon = txtMaDocGia.getText();
-                xoadg.hienThi();
-                xoadg.showWindow();
-                dtmDocGia.setRowCount(0);
-                lietKeDocGia();
-            }
+        btnXoa.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            Delete xoadg = new Delete("Xóa độc giả");
+            xoadg.machon = txtMaDocGia.getText();
+            xoadg.hienThi();
+            xoadg.showWindow();
+            dtmDocGia.setRowCount(0);
+            lietKeDocGia();
         });
-        btnSua.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Sua suadg = new Sua("Sửa độc giả");
-                suadg.ma = txtMaDocGia.getText();
-                suadg.hienThi();
-                suadg.showWindow();
-                dtmDocGia.setRowCount(0);
-                lietKeDocGia();
-            }
+        btnSua.addActionListener(e -> {
+            Edit suadg = new Edit("Sửa độc giả");
+            suadg.ma = txtMaDocGia.getText();
+            suadg.hienThi();
+            suadg.showWindow();
+            dtmDocGia.setRowCount(0);
+            lietKeDocGia();
         });
 
         tblDocGia.addMouseListener(new MouseListener() {
@@ -163,20 +159,18 @@ public class ReaderManager extends JFrame {
             }
 
         });
-        btnThongTin.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String ma = "";
-                int row = tblPhieuMuon.getSelectedRow();
-                if (row == -1) {
-                    JOptionPane.showMessageDialog(null, "Mời bạn chọn phiếu mượn");
-                    return;
-                }
-                ma = (String) dtmPhieuMuon.getValueAt(row, 0);
-                ChiTiet a = new ChiTiet("Chi tiết phiếu mượn");
-                a.ma = ma;
-                a.hienThi();
-                a.showWindow();
+        btnThongTin.addActionListener(e -> {
+            String ma = "";
+            int row = tblPhieuMuon.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(null, "Mời bạn chọn phiếu mượn");
+                return;
             }
+            ma = (String) dtmPhieuMuon.getValueAt(row, 0);
+            Detail a = new Detail("Chi tiết phiếu mượn");
+            a.ma = ma;
+            a.hienThi();
+            a.showWindow();
         });
 
     }
@@ -233,34 +227,11 @@ public class ReaderManager extends JFrame {
         }
     }
 
-    protected void addControls() {
-        Container con = getContentPane();
-
-        JPanel pnDocGia = new JPanel();
-        pnDocGia.setLayout(new BorderLayout());
-        con.add(pnDocGia);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ ĐỘC GIẢ");
-        pnTieuDe.add(lblTieuDe);
-        pnDocGia.add(pnTieuDe, BorderLayout.NORTH);
-        Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
-        lblTieuDe.setFont(font1);
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnDocGia.add(pnLienHe, BorderLayout.SOUTH);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
-        Font fontx = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblLienHe.setFont(fontx);
-
+    @Override
+    protected void initComponents() {
         JPanel pnThongTin = new JPanel();
         pnThongTin.setLayout(new BorderLayout());
-        pnDocGia.add(pnThongTin, BorderLayout.CENTER);
+        mainPanel.add(pnThongTin, BorderLayout.CENTER);
 
         JPanel pnHienThiChiTiet = new JPanel();
         pnHienThiChiTiet.setLayout(new BorderLayout());

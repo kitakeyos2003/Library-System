@@ -1,5 +1,8 @@
 package eaut.edu.vn.ui;
 
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.util.Util;
 
 import java.awt.BorderLayout;
@@ -13,99 +16,69 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class LibrarianManager extends JFrame {
+public class LibrarianManager extends Frame {
     public String tentk = "";
     JButton btnQLDG, btnQLPM, btnQLPT, btnQLS, btnDoiMK, btnDangXuat;
 
     public LibrarianManager(String title) {
         super(title);
-        addControls();
+        setHeader(new Header("TRANG CHỦ: QUẢN LÝ THƯ VIỆN"));
+        setFooter(new Footer());
+        initComponents();
         addEvents();
     }
 
+    @Override
     public void addEvents() {
-        btnDangXuat.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Login login = new Login("Đăng nhập");
-                login.showWindow();
-                dispose();
-            }
+        btnDangXuat.addActionListener(e -> {
+            Login login = new Login("Đăng nhập");
+            login.showWindow();
+            dispose();
         });
-        btnQLPM.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                LoanManager qlpm = new LoanManager("Quản lý phiếu mượn");
-                qlpm.tentk = tentk;
-                qlpm.showWindow();
-                dispose();
-            }
+        btnQLPM.addActionListener(e -> {
+            LoanManager qlpm = new LoanManager("Quản lý phiếu mượn");
+            qlpm.tentk = tentk;
+            qlpm.showWindow();
+            dispose();
         });
-        btnQLPT.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ReturnManager qlpt = new ReturnManager("Quản lý phiếu trả");
-                qlpt.tentk = tentk;
-                qlpt.showWindow();
-                dispose();
+        btnQLPT.addActionListener(e -> {
+            ReturnManager qlpt = new ReturnManager("Quản lý phiếu trả");
+            qlpt.tentk = tentk;
+            qlpt.showWindow();
+            dispose();
 
-            }
         });
-        btnQLDG.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ReaderManager qldg = new ReaderManager("Quản lý độc giả");
-                qldg.tentk = tentk;
-                qldg.showWindow();
-                dispose();
+        btnQLDG.addActionListener(e -> {
+            ReaderManager qldg = new ReaderManager("Quản lý độc giả");
+            qldg.tentk = tentk;
+            qldg.showWindow();
+            dispose();
 
-            }
         });
 
-        btnQLS.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                BookManager qls = new BookManager("Quản lý sách");
-                qls.tentk = tentk;
-                qls.showWindow();
-                dispose();
+        btnQLS.addActionListener(e -> {
+            BookManager qls = new BookManager("Quản lý sách");
+            qls.tentk = tentk;
+            qls.showWindow();
+            dispose();
 
-            }
         });
-        btnDoiMK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ChangePassword dmk = new ChangePassword("Đổi mật khẩu");
-                dmk.tentk = tentk;
-                dmk.HienThi();
-                dmk.showWindow();
-                dispose();
+        btnDoiMK.addActionListener(e -> {
+            ChangePassword dmk = new ChangePassword("Đổi mật khẩu");
+            dmk.tentk = tentk;
+            dmk.HienThi();
+            dmk.showWindow();
+            dispose();
 
-            }
         });
 
     }
 
-    public void addControls() {
-        Container con = getContentPane();
-
-        JPanel pnTrangChu = new JPanel();
-        pnTrangChu.setLayout(new BorderLayout());
-        con.add(pnTrangChu);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("TRANG CHỦ: QUẢN LÝ THƯ VIỆN");
-        pnTieuDe.add(lblTieuDe);
-        pnTrangChu.add(pnTieuDe, BorderLayout.NORTH);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnTrangChu.add(pnLienHe, BorderLayout.SOUTH);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
-        Font fontx = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblLienHe.setFont(fontx);
-
-
+    @Override
+    public void initComponents() {
         JPanel pnQuanLy = new JPanel();
         pnQuanLy.setLayout(new BoxLayout(pnQuanLy, BoxLayout.Y_AXIS));
 
@@ -153,7 +126,7 @@ public class LibrarianManager extends JFrame {
         pnQuanLy.add(pnHang2);
         pnQuanLy.add(pnHang3);
 
-        pnTrangChu.add(pnQuanLy, BorderLayout.EAST);
+        mainPanel.add(pnQuanLy, BorderLayout.EAST);
 
 
         JPanel pnChucNang = new JPanel();
@@ -194,14 +167,7 @@ public class LibrarianManager extends JFrame {
         pnChucNang.add(pnDoiMatKhau);
         pnChucNang.add(pnDangXuat);
 
-        pnTrangChu.add(pnChucNang, BorderLayout.WEST);
-
-
-        Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
-        lblTieuDe.setFont(font1);
-
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
+        mainPanel.add(pnChucNang, BorderLayout.WEST);
 
         btnQLDG.setBorder(null);
         btnQLPM.setBorder(null);

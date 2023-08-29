@@ -24,17 +24,16 @@ import javax.swing.border.TitledBorder;
 import eaut.edu.vn.database.ConnectMySQL;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.service.AccountService;
-import eaut.edu.vn.model.Account;
 import eaut.edu.vn.util.Util;
 
-public class Xoa extends Dialog {
+public class Delete extends Dialog {
     public String machon = "";
     JTextField txtTaiKhoan, txtHoTen, txtSDT, txtCMND, txtPhanQuyen;
     JPasswordField pwdMatKhau;
     JButton btnXoa;
     Connection connect = ConnectMySQL.connect;
 
-    public Xoa(String title) {
+    public Delete(String title) {
         super(title);
         if (machon.length() != 0) {
             hienThi();
@@ -43,8 +42,8 @@ public class Xoa extends Dialog {
 
     public void hienThi() {
         AccountService tksv = new AccountService();
-        ArrayList<Account> dstk = tksv.layTaiKhoanTheoUser(machon);
-        for (Account tk : dstk) {
+        ArrayList<eaut.edu.vn.model.Account> dstk = tksv.layTaiKhoanTheoUser(machon);
+        for (eaut.edu.vn.model.Account tk : dstk) {
             txtTaiKhoan.setText(tk.getUser());
             txtCMND.setText(tk.getCMND());
             txtHoTen.setText(tk.getTenND());

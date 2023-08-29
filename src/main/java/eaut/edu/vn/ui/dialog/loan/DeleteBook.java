@@ -27,7 +27,7 @@ import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
 
-public class XoaSach extends Dialog {
+public class DeleteBook extends Dialog {
     public String MaPM = "";
     public String user = "";
     JTextField txtMaPM;
@@ -35,7 +35,7 @@ public class XoaSach extends Dialog {
     JButton btnXoa;
     Connection conn = ConnectMySQL.connect;
 
-    public XoaSach(String title) {
+    public DeleteBook(String title) {
         super(title);
         if (MaPM.length() != 0) {
             hienThi();

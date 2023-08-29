@@ -20,14 +20,14 @@ import eaut.edu.vn.database.ConnectMySQL;
 import eaut.edu.vn.util.Util;
 
 
-public class ThemSach extends Dialog {
+public class AddBook extends Dialog {
     public String MaPM = "";
     public String user = "";
     JTextField txtMaPM, txtTinhTrangSach, txtMaSach;
     JButton btnThem;
     Connection conn = ConnectMySQL.connect;
 
-    public ThemSach(String title) {
+    public AddBook(String title) {
         super(title);
         if (MaPM.length() != 0) {
             hienThi();

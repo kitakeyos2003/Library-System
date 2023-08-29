@@ -2,7 +2,6 @@ package eaut.edu.vn.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -16,7 +15,6 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -28,13 +26,15 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import eaut.edu.vn.service.AccountService;
-import eaut.edu.vn.ui.dialog.account.Sua;
-import eaut.edu.vn.ui.dialog.account.Them;
-import eaut.edu.vn.ui.dialog.account.Xoa;
-import eaut.edu.vn.model.Account;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.Header;
+import eaut.edu.vn.ui.dialog.account.Edit;
+import eaut.edu.vn.ui.dialog.account.Add;
+import eaut.edu.vn.ui.dialog.account.Delete;
 import eaut.edu.vn.util.Util;
 
-public class AccountManager extends JFrame {
+public class AccountManager extends Frame {
     public String tentk = "";
     public int ThongKe = 0;
     JButton btnThem, btnXoa, btnSua, btnQuayLai, btnIcon;
@@ -42,12 +42,14 @@ public class AccountManager extends JFrame {
     DefaultTableModel dtmNguoiDung;
     JTextField txtTaiKhoạn, txtHoVaTen, txtPhanQuyen, txtCMND, txtSoDienThoai;
     JPasswordField pwdPass;
-    ArrayList<Account> dstk;
+    ArrayList<eaut.edu.vn.model.Account> dstk;
     int dem = 2;
 
     public AccountManager(String title) {
-        this.setTitle(title);
-        addControls();
+        super(title);
+        setHeader(new Header("QUẢN LÝ NGƯỜI DÙNG"));
+        setFooter(new Footer());
+        initComponents();
         addEvents();
         hienThiQLND();
     }
@@ -56,7 +58,7 @@ public class AccountManager extends JFrame {
         AccountService tksv = new AccountService();
         dstk = tksv.layTaiKhoan();
         dtmNguoiDung.setRowCount(0);
-        for (Account tk : dstk) {
+        for (eaut.edu.vn.model.Account tk : dstk) {
             Vector<Object> vec = new Vector<Object>();
             vec.add(tk.getUser());
             vec.add(tk.getTenND());
@@ -67,35 +69,11 @@ public class AccountManager extends JFrame {
 
     }
 
-    public void addControls() {
-        Container con = getContentPane();
-
-        JPanel pnNguoiDung = new JPanel();
-        pnNguoiDung.setLayout(new BorderLayout());
-        con.add(pnNguoiDung);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ NGƯỜI DÙNG");
-        pnTieuDe.add(lblTieuDe);
-        pnNguoiDung.add(pnTieuDe, BorderLayout.NORTH);
-        Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
-        lblTieuDe.setFont(font1);
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnNguoiDung.add(pnLienHe, BorderLayout.SOUTH);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
-        Font fontx = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblLienHe.setFont(fontx);
-
+    @Override
+    public void initComponents() {
         JPanel pnThongTin = new JPanel();
         pnThongTin.setLayout(new BorderLayout());
-        pnNguoiDung.add(pnThongTin, BorderLayout.CENTER);
+        mainPanel.add(pnThongTin, BorderLayout.CENTER);
 
         JPanel pnChiTietNguoiDung = new JPanel();
         pnChiTietNguoiDung.setLayout(new BorderLayout());
@@ -290,24 +268,22 @@ public class AccountManager extends JFrame {
 
     }
 
+    @Override
     public void addEvents() {
-        btnQuayLai.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                if (ThongKe == 1) {
-                    StatisticAnalyzer ui = new StatisticAnalyzer("Thống kê");
-                    ui.tenTk = tentk;
-                    ui.showWindow();
-                    dispose();
-                    ThongKe = 0;
-                    return;
-                }
-                AdminManager ql = new AdminManager("Trang Chủ Phần Mềm Quản Lý Thư Viện");
-                ql.tentk = tentk;
-                ql.showWindow();
+        btnQuayLai.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            if (ThongKe == 1) {
+                StatisticAnalyzer ui = new StatisticAnalyzer("Thống kê");
+                ui.tenTk = tentk;
+                ui.showWindow();
                 dispose();
+                ThongKe = 0;
+                return;
             }
+            AdminManager ql = new AdminManager("Trang Chủ Phần Mềm Quản Lý Thư Viện");
+            ql.tentk = tentk;
+            ql.showWindow();
+            dispose();
         });
         tblNguoiDung.addMouseListener(new MouseListener() {
 
@@ -342,7 +318,7 @@ public class AccountManager extends JFrame {
                 String user = String.valueOf(dtmNguoiDung.getValueAt(n, 0));
                 AccountService tksv = new AccountService();
                 dstk = tksv.layTaiKhoanTheoUser(user);
-                for (Account tk : dstk) {
+                for (eaut.edu.vn.model.Account tk : dstk) {
                     txtTaiKhoạn.setText(tk.getUser());
                     txtCMND.setText(tk.getCMND());
                     txtHoVaTen.setText(tk.getTenND());
@@ -374,14 +350,14 @@ public class AccountManager extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                Them themqlnd = new Them("Thêm người dùng");
+                Add themqlnd = new Add("Thêm người dùng");
                 themqlnd.showWindow();
                 hienThiQLND();
             }
         });
         btnXoa.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Xoa xoand = new Xoa("Xóa người dùng");
+                Delete xoand = new Delete("Xóa người dùng");
                 xoand.machon = txtTaiKhoạn.getText();
                 xoand.hienThi();
                 xoand.showWindow();
@@ -396,7 +372,7 @@ public class AccountManager extends JFrame {
         });
         btnSua.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Sua suand = new Sua("Sửa người dùng");
+                Edit suand = new Edit("Sửa người dùng");
                 suand.machon = txtTaiKhoạn.getText();
                 suand.hienThi();
                 suand.showWindow();

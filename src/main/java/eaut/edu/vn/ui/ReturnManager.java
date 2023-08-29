@@ -19,7 +19,6 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -30,12 +29,15 @@ import javax.swing.table.DefaultTableModel;
 
 import eaut.edu.vn.service.LoanDetailService;
 import eaut.edu.vn.database.ConnectMySQL;
-import eaut.edu.vn.ui.dialog.returnreceipt.TimKiem;
-import eaut.edu.vn.ui.dialog.returnreceipt.TraSach;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.Header;
+import eaut.edu.vn.ui.dialog.returnreceipt.Search;
+import eaut.edu.vn.ui.dialog.returnreceipt.ReturnReceipt;
 import eaut.edu.vn.model.LoanDetail;
 import eaut.edu.vn.util.Util;
 
-public class ReturnManager extends JFrame {
+public class ReturnManager extends Frame {
     public String tentk = "";
     public int thongke = 0;
     JTextField txtMaPhieu, txtMaDG, txtMaSach, txtNgayHenTra, txtNgayTra, txtTTSachMuon, txtTTSachTra, txtThuThuNhanSach, txtGhiChu;
@@ -46,8 +48,10 @@ public class ReturnManager extends JFrame {
     Connection conn = ConnectMySQL.connect;
 
     public ReturnManager(String tieude) {
-        this.setTitle(tieude);
-        addControls();
+        super(tieude);
+        setHeader(new Header("QUẢN LÝ PHIẾU TRẢ"));
+        setFooter(new Footer());
+        initComponents();
         addEvents();
         hienThiPhieuMuonChuaTra();
         hienThiPhieuMuonDaTra();
@@ -91,44 +95,40 @@ public class ReturnManager extends JFrame {
 
     protected void addEvents() {
 
-        btnQuayLai.addActionListener(new ActionListener() {
+        btnQuayLai.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            int phanquyen = 0;
+            if (thongke == 1) {
+                StatisticAnalyzer ui = new StatisticAnalyzer("Thống kê");
+                ui.tenTk = tentk;
+                ui.showWindow();
+                dispose();
+                thongke = 0;
+                return;
+            }
+            try {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                int phanquyen = 0;
-                if (thongke == 1) {
-                    StatisticAnalyzer ui = new StatisticAnalyzer("Thống kê");
-                    ui.tenTk = tentk;
-                    ui.showWindow();
-                    dispose();
-                    thongke = 0;
-                    return;
+                String sql = "select PhanQuyen from taikhoan where User=?";
+                PreparedStatement pre = ConnectMySQL.connect.prepareStatement(sql);
+                pre.setString(1, tentk);
+                ResultSet rs = pre.executeQuery();
+                while (rs.next()) {
+                    phanquyen = rs.getInt(1);
                 }
-                try {
-
-                    String sql = "select PhanQuyen from taikhoan where User=?";
-                    PreparedStatement pre = ConnectMySQL.connect.prepareStatement(sql);
-                    pre.setString(1, tentk);
-                    ResultSet rs = pre.executeQuery();
-                    while (rs.next()) {
-                        phanquyen = rs.getInt(1);
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                if (phanquyen == 1) {
-                    AdminManager ql = new AdminManager("Trang Chủ Phần Mềm Quản Lý Thư Viện");
-                    ql.tentk = tentk;
-                    ql.showWindow();
-                    dispose();
-                }
-                if (phanquyen == 2) {
-                    LibrarianManager ql = new LibrarianManager("Thủ thư: " + tentk);
-                    ql.tentk = tentk;
-                    ql.showWindow();
-                    dispose();
-                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            if (phanquyen == 1) {
+                AdminManager ql = new AdminManager("Trang Chủ Phần Mềm Quản Lý Thư Viện");
+                ql.tentk = tentk;
+                ql.showWindow();
+                dispose();
+            }
+            if (phanquyen == 2) {
+                LibrarianManager ql = new LibrarianManager("Thủ thư: " + tentk);
+                ql.tentk = tentk;
+                ql.showWindow();
+                dispose();
             }
         });
 
@@ -246,7 +246,7 @@ public class ReturnManager extends JFrame {
                     JOptionPane.showMessageDialog(null, "Phiếu mượn đã trả sách rồi");
                     return;
                 }
-                TraSach ts = new TraSach("Trả sách");
+                ReturnReceipt ts = new ReturnReceipt("Trả sách");
                 ts.tentk = tentk;
                 ts.MaDG = txtMaDG.getText();
                 ts.MaPM = txtMaPhieu.getText();
@@ -261,7 +261,7 @@ public class ReturnManager extends JFrame {
         });
         btnTimKiem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                TimKiem timphieu = new TimKiem("Tìm kiếm thông tin sách");
+                Search timphieu = new Search("Tìm kiếm thông tin sách");
                 timphieu.showWindow();
                 dtmPhieuChuaTra.setRowCount(0);
                 dtmPhieuTra.setRowCount(0);
@@ -272,34 +272,11 @@ public class ReturnManager extends JFrame {
 
     }
 
-    protected void addControls() {
-        Container con = getContentPane();
-
-        JPanel pnPhieuTra = new JPanel();
-        pnPhieuTra.setLayout(new BorderLayout());
-        con.add(pnPhieuTra);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ PHIẾU TRẢ");
-        pnTieuDe.add(lblTieuDe);
-        pnPhieuTra.add(pnTieuDe, BorderLayout.NORTH);
-        Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
-        lblTieuDe.setFont(font1);
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnPhieuTra.add(pnLienHe, BorderLayout.SOUTH);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
-        Font fontx = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblLienHe.setFont(fontx);
-
+    @Override
+    protected void initComponents() {
         JPanel pnThongTin = new JPanel();
         pnThongTin.setLayout(new BorderLayout());
-        pnPhieuTra.add(pnThongTin, BorderLayout.CENTER);
+        mainPanel.add(pnThongTin, BorderLayout.CENTER);
 
         JPanel pnHienThiChiTiet = new JPanel();
         pnHienThiChiTiet.setLayout(new BorderLayout());

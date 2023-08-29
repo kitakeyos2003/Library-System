@@ -2,7 +2,6 @@ package eaut.edu.vn.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -30,9 +28,12 @@ import javax.swing.border.TitledBorder;
 import eaut.edu.vn.database.ConnectMySQL;
 import eaut.edu.vn.service.AccountService;
 import eaut.edu.vn.model.Account;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.util.Util;
 
-public class ChangePassword extends JFrame {
+public class ChangePassword extends Frame {
     public String tentk = "";
     JButton btnLuu, btnQuayLai, btnLamLai;
     JPasswordField pwdMatKhauCu, pwdMatKhauMoi, pwdNhapLaiMKM;
@@ -43,7 +44,9 @@ public class ChangePassword extends JFrame {
 
     public ChangePassword(String tieude) {
         super(tieude);
-        addControls();
+        setHeader(new Header("PHẦN MỀM QUẢN LÝ THƯ VIỆN"));
+        setFooter(new Footer());
+        initComponents();
         addEvents();
         if (tentk.length() != 0) {
             HienThi();
@@ -54,37 +57,34 @@ public class ChangePassword extends JFrame {
         txtTaiKhoan.setText(tentk);
     }
 
+    @Override
     public void addEvents() {
-        btnQuayLai.addActionListener(new ActionListener() {
+        btnQuayLai.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            int phanquyen = 0;
+            try {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                int phanquyen = 0;
-                try {
-
-                    String sql = "select PhanQuyen from taikhoan where User=?";
-                    PreparedStatement pre = ConnectMySQL.connect.prepareStatement(sql);
-                    pre.setString(1, tentk);
-                    ResultSet rs = pre.executeQuery();
-                    while (rs.next()) {
-                        phanquyen = rs.getInt(1);
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                String sql = "select PhanQuyen from taikhoan where User=?";
+                PreparedStatement pre = ConnectMySQL.connect.prepareStatement(sql);
+                pre.setString(1, tentk);
+                ResultSet rs = pre.executeQuery();
+                while (rs.next()) {
+                    phanquyen = rs.getInt(1);
                 }
-                if (phanquyen == 1) {
-                    AdminManager ql = new AdminManager("Admin");
-                    ql.tentk = tentk;
-                    ql.showWindow();
-                    dispose();
-                }
-                if (phanquyen == 2) {
-                    LibrarianManager ql = new LibrarianManager("Thủ thư: " + tentk);
-                    ql.tentk = tentk;
-                    ql.showWindow();
-                    dispose();
-                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            if (phanquyen == 1) {
+                AdminManager ql = new AdminManager("Admin");
+                ql.tentk = tentk;
+                ql.showWindow();
+                dispose();
+            }
+            if (phanquyen == 2) {
+                LibrarianManager ql = new LibrarianManager("Thủ thư: " + tentk);
+                ql.tentk = tentk;
+                ql.showWindow();
+                dispose();
             }
         });
 
@@ -240,26 +240,11 @@ public class ChangePassword extends JFrame {
         });
     }
 
-    protected void addControls() {
-        Container con = getContentPane();
-
-        JPanel pnDoiMatKhau = new JPanel();
-        pnDoiMatKhau.setLayout(new BorderLayout());
-        con.add(pnDoiMatKhau);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("PHẦN MỀM QUẢN LÝ THƯ VIỆN");
-        pnTieuDe.add(lblTieuDe);
-        pnDoiMatKhau.add(pnTieuDe, BorderLayout.NORTH);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnDoiMatKhau.add(pnLienHe, BorderLayout.SOUTH);
-
+    @Override
+    protected void initComponents() {
         JPanel pnHienThiDoiMatKhau = new JPanel();
         pnHienThiDoiMatKhau.setLayout(new BorderLayout());
-        pnDoiMatKhau.add(pnHienThiDoiMatKhau, BorderLayout.CENTER);
+        mainPanel.add(pnHienThiDoiMatKhau, BorderLayout.CENTER);
 
         JPanel pnHinhAnh = new JPanel();
         pnHinhAnh.setLayout(new FlowLayout());
@@ -323,18 +308,14 @@ public class ChangePassword extends JFrame {
         pnThaoTac.add(btnLuu);
         pnThaoTac.add(btnQuayLai);
 
-        Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
         Font font2 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 30);
-        Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.TRUETYPE_FONT, 15);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblTieuDe.setFont(font1);
         lblDoiMatKhau.setFont(font2);
         txtTaiKhoan.setFont(font4);
         pwdMatKhauCu.setFont(font4);
         pwdNhapLaiMKM.setFont(font4);
         pwdMatKhauMoi.setFont(font4);
-        lblLienHe.setFont(font4);
 
         btnLamLai.setFont(font5);
         btnQuayLai.setFont(font5);
@@ -342,11 +323,6 @@ public class ChangePassword extends JFrame {
 		
 		/*btnDangNhap.setIcon(ImageLoader.loadImage("/Hinh/lock.png"));
 		btnThoat.setIcon(ImageLoader.loadImage("/Hinh/close.png"));  */
-
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblDoiMatKhau.setForeground(new Color(48, 51, 107));

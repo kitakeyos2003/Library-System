@@ -1,27 +1,30 @@
 package eaut.edu.vn.ui;
 
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.util.Util;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class AdminManager extends JFrame {
+public class AdminManager extends Frame {
     public String tentk = "";
     JButton btnQLND, btnQLDG, btnQLPM, btnQLPT, btnThongKe, btnQLS, btnDoiMK, btnDangXuat;
 
     public AdminManager(String title) {
         super(title);
-        addControls();
+        setHeader(new Header("TRANG CHỦ: QUẢN LÝ THƯ VIỆN"));
+        setFooter(new Footer());
+        initComponents();
         addEvents();
     }
 
@@ -82,28 +85,8 @@ public class AdminManager extends JFrame {
         });
     }
 
-    public void addControls() {
-        Container con = getContentPane();
-
-        JPanel pnTrangChu = new JPanel();
-        pnTrangChu.setLayout(new BorderLayout());
-        con.add(pnTrangChu);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("TRANG CHỦ: QUẢN LÝ THƯ VIỆN");
-        pnTieuDe.add(lblTieuDe);
-        pnTrangChu.add(pnTieuDe, BorderLayout.NORTH);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnTrangChu.add(pnLienHe, BorderLayout.SOUTH);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
-        Font fontx = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblLienHe.setFont(fontx);
-
-
+    @Override
+    public void initComponents() {
         JPanel pnQuanLy = new JPanel();
         pnQuanLy.setLayout(new BoxLayout(pnQuanLy, BoxLayout.Y_AXIS));
 
@@ -158,7 +141,7 @@ public class AdminManager extends JFrame {
         pnQuanLy.add(pnHang2);
         pnQuanLy.add(pnHang3);
 
-        pnTrangChu.add(pnQuanLy, BorderLayout.EAST);
+        mainPanel.add(pnQuanLy, BorderLayout.EAST);
 
 
         JPanel pnChucNang = new JPanel();
@@ -199,13 +182,7 @@ public class AdminManager extends JFrame {
         pnChucNang.add(pnDoiMatKhau);
         pnChucNang.add(pnDangXuat);
 
-        pnTrangChu.add(pnChucNang, BorderLayout.WEST);
-
-        Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
-        lblTieuDe.setFont(font1);
-
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
+        mainPanel.add(pnChucNang, BorderLayout.WEST);
 
         btnQLDG.setBorder(null);
         btnQLND.setBorder(null);

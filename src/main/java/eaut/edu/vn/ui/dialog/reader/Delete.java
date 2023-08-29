@@ -26,13 +26,13 @@ import eaut.edu.vn.database.ConnectMySQL;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
-public class Xoa extends Dialog {
+public class Delete extends Dialog {
     public String machon = "";
     JTextField txtMaDocGia, txtHoTen, txtSDT, txtDiaChi, txtGioiTinh;
     JButton btnXoa;
     Connection connect = ConnectMySQL.connect;
 
-    public Xoa(String title) {
+    public Delete(String title) {
         super(title);
         hienThi();
     }
