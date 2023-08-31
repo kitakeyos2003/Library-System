@@ -53,7 +53,7 @@ public class ReturnReceipt extends Dialog {
     }
 
     @Override
-    protected void addEvents() {
+    public void addEvents() {
         btnTraSach.addActionListener(new ActionListener() {
 
             @Override

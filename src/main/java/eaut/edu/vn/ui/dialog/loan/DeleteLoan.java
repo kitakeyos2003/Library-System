@@ -11,9 +11,6 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -29,104 +26,69 @@ import com.toedter.calendar.JDateChooser;
 
 import eaut.edu.vn.database.ConnectMySQL;
 import eaut.edu.vn.ui.dialog.Dialog;
-import eaut.edu.vn.service.LoanService;
-import eaut.edu.vn.model.Loan;
 import eaut.edu.vn.util.Util;
 
-
-public class Add extends Dialog {
-    public String ma = "";
-    public String tentk = "";
+public class DeleteLoan extends Dialog {
+    public String machon = "";
     JTextField txtMaPhieu, txtMaDG, txtTenDG, txtNgayMuon, txtNgayHenTra, txtSachMuon, txtThuThu;
-    JButton btnThem;
+    JButton btnXoa;
     Connection conn = ConnectMySQL.connect;
+    int soluongtruoc = 0;
+    int soluongsau = 0;
     JDateChooser choosedate, choosedate1;
 
-    public Add(String title) {
+    public DeleteLoan(String title) {
         super(title);
-        if (tentk.length() != 0) {
-            hienThi();
-        }
+        hienThi();
     }
 
     public void hienThi() {
-        txtThuThu.setText(tentk);
+        try {
+            String sql = "select * from phieumuon where MaPM=?";
+            PreparedStatement pre = conn.prepareStatement(sql);
+            pre.setString(1, machon);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                txtMaPhieu.setText(rs.getString(1));
+                txtMaDG.setText(rs.getString(2));
+                choosedate.setDate(rs.getDate(3));
+                choosedate1.setDate(rs.getDate(4));
+                txtSachMuon.setText(rs.getString(5));
+                soluongtruoc = rs.getInt(5);
+                txtThuThu.setText(rs.getString(6));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
-    protected void addEvents() {
-        btnThem.addActionListener(new ActionListener() {
+    public void addEvents() {
+        btnXoa.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-
-                    String sql = "select * from phieumuon where mapm=?";
+                    String sql = "Delete from phieumuon where mapm=?";
                     PreparedStatement pre = conn.prepareStatement(sql);
                     pre.setString(1, txtMaPhieu.getText());
-                    ResultSet rs = pre.executeQuery();
-
-                    if (rs.next()) {
-                        JOptionPane.showMessageDialog(null, "Mã phiếu mượn đã tồn tại!");
-                        return;
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-
-                int soluong2 = 0;
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                if (choosedate.getDate() == null || choosedate1.getDate() == null) {
-                    JOptionPane.showMessageDialog(null, "Không được để trống");
-                    return;
-                }
-                String datemuon = df.format(choosedate.getDate());
-                String datehentra = df.format(choosedate1.getDate());
-
-                int flag = 1;
-                try {
-                    String sql = "insert into phieumuon values(?,?,?,?,?,?)";
-                    PreparedStatement pre = conn.prepareStatement(sql);
-                    pre.setString(1, txtMaPhieu.getText());
-                    pre.setString(2, txtMaDG.getText());
-                    pre.setString(3, datemuon);
-                    pre.setString(4, datehentra);
-                    pre.setString(5, txtSachMuon.getText());
-                    pre.setString(6, txtThuThu.getText());
-                    if (txtMaPhieu.getText().length() == 0 || txtMaDG.getText().length() == 0 || txtSachMuon.getText().length() == 0) {
-                        JOptionPane.showMessageDialog(null, "Không được để trống");
-                        return;
-                    }
-
-
                     try {
-                        String sqldocgia1 = "Select MatSach from docgia where MaDG=?";
-                        PreparedStatement prex = ConnectMySQL.connect.prepareStatement(sqldocgia1);
-                        prex.setString(1, txtMaDG.getText());
-                        ResultSet b = prex.executeQuery();
-                        while (b.next()) {
-                            soluong2 = b.getInt(1);
+                        String sql1 = "Delete from ctpm where mapm=?";
+                        PreparedStatement pre1 = conn.prepareStatement(sql1);
+                        pre1.setString(1, txtMaPhieu.getText());
+                        int x1 = pre1.executeUpdate();
+                        if (x1 > 0) {
+                            JOptionPane.showMessageDialog(null, "Xóa phiếu trả thành công");
+                            dispose();
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                    }
-                    if (soluong2 == 3) {
-                        JOptionPane.showMessageDialog(null, "Bạn đã làm mất sách 3 lần. Bạn không được mượn sách nữa.Thanks!");
-                        dispose();
-                        return;
+                        JOptionPane.showMessageDialog(null, ex.getMessage());
                     }
                     int x = pre.executeUpdate();
                     if (x > 0) {
-                        JOptionPane.showMessageDialog(null, "Thêm phiếu mượn thành công");
+                        JOptionPane.showMessageDialog(null, "Xóa phiếu mượn thành công");
                         dispose();
-                        String soluong = txtSachMuon.getText();
-                        int soluong1 = Integer.parseInt(soluong);
-                        for (int i = 0; i < soluong1; i++) {
-                            AddBook qlts = new AddBook("Thêm Sách");
-                            qlts.MaPM = txtMaPhieu.getText();
-                            qlts.user = tentk;
-                            qlts.hienThi();
-                            qlts.showWindow();
-                        }
                     }
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -135,19 +97,8 @@ public class Add extends Dialog {
         });
     }
 
-    public int DemPhieuMuon() {
-        int SoLuongPM = 0;
-        LoanService pmsv = new LoanService();
-        ArrayList<Loan> ds = pmsv.layThongTinPhieuMuon();
-        for (Loan pm : ds) {
-            SoLuongPM++;
-        }
-        return SoLuongPM;
-    }
-
     @Override
-    protected void initComponents() {
-        int kqpm = DemPhieuMuon() + 1;
+    public void initComponents() {
         Container con = getContentPane();
 
         JPanel pnThemPhieuMuon = new JPanel();
@@ -160,7 +111,7 @@ public class Add extends Dialog {
         pnThemPhieuMuon.add(pnTieuDe, BorderLayout.NORTH);
 
         JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
+        JLabel lblLienHe = new JLabel("THÔNG TIN LIÊN HỆ: 0342565857");
         pnLienHe.add(lblLienHe);
         pnThemPhieuMuon.add(pnLienHe, BorderLayout.SOUTH);
 
@@ -172,7 +123,7 @@ public class Add extends Dialog {
         pnHinhAnh.setLayout(new FlowLayout());
         JLabel lblHinhAnh = new JLabel();
         pnHinhAnh.setBackground(Color.WHITE);
-        lblHinhAnh.setIcon(Util.loadImage("kha.png"));
+        lblHinhAnh.setIcon(Util.loadImage("kha2.png"));
         pnHinhAnh.add(lblHinhAnh);
         pnHienThiThemPM.add(pnHinhAnh, BorderLayout.WEST);
 
@@ -182,13 +133,13 @@ public class Add extends Dialog {
 
         JPanel pnTitle = new JPanel();
         pnTitle.setLayout(new FlowLayout());
-        JLabel lblThemPM = new JLabel("THÊM PHIẾU MƯỢN");
+        JLabel lblThemPM = new JLabel("XÓA PHIẾU MƯỢN");
         pnTitle.add(lblThemPM);
 
         JPanel pnMaPM = new JPanel();
         pnMaPM.setLayout(new FlowLayout());
         JLabel lblMaPM = new JLabel("Mã phiếu: ");
-        txtMaPhieu = new JTextField("PM" + kqpm);
+        txtMaPhieu = new JTextField();
         txtMaPhieu.setPreferredSize(new Dimension(340, 30));
         pnMaPM.add(lblMaPM);
         pnMaPM.add(txtMaPhieu);
@@ -196,7 +147,7 @@ public class Add extends Dialog {
         JPanel pnMaDG = new JPanel();
         pnMaDG.setLayout(new FlowLayout());
         JLabel lblMaDG = new JLabel("Mã độc giả: ");
-        txtMaDG = new JTextField("DG");
+        txtMaDG = new JTextField();
         txtMaDG.setPreferredSize(new Dimension(340, 30));
         pnMaDG.add(lblMaDG);
         pnMaDG.add(txtMaDG);
@@ -277,8 +228,14 @@ public class Add extends Dialog {
         choosedate1.setFont(font4);
         txtSachMuon.setFont(font4);
         txtThuThu.setFont(font4);
-        txtThuThu.setEditable(false);
+
+        txtMaDG.setEditable(false);
         txtMaPhieu.setEditable(false);
+        txtTenDG.setEditable(false);
+        choosedate.setEnabled(false);
+        choosedate1.setEnabled(false);
+        txtSachMuon.setEditable(false);
+        txtThuThu.setEditable(false);
 
         pnTieuDe.setBackground(new Color(48, 51, 107));
         lblTieuDe.setForeground(Color.WHITE);
@@ -299,15 +256,16 @@ public class Add extends Dialog {
         JPanel pnThaoTac = new JPanel();
         pnThaoTac.setLayout(new FlowLayout());
         pnHienThiChiTiet.add(pnThaoTac);
-        btnThem = new JButton("THÊM");
-        btnThem.setPreferredSize(new Dimension(110, 35));
-        pnThaoTac.add(btnThem);
+        btnXoa = new JButton("XÓA");
+        btnXoa.setPreferredSize(new Dimension(110, 35));
+        pnThaoTac.add(btnXoa);
         pnThaoTac.setBackground(new Color(241, 242, 246));
 
-        btnThem.setFont(font5);
-        btnThem.setBackground(new Color(255, 177, 66));
-        btnThem.setForeground(Color.white);
-        btnThem.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnXoa.setFont(font5);
+
+        btnXoa.setBackground(new Color(255, 177, 66));
+        btnXoa.setForeground(Color.white);
+        btnXoa.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
 
 
         Border borderLogin = BorderFactory.createLineBorder(new Color(48, 51, 107));

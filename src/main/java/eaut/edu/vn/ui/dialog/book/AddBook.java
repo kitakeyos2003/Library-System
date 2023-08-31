@@ -1,9 +1,5 @@
 package eaut.edu.vn.ui.dialog.book;
 
-import eaut.edu.vn.database.ConnectMySQL;
-import eaut.edu.vn.ui.dialog.Dialog;
-import eaut.edu.vn.util.Util;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -15,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -26,53 +23,64 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-public class Edit extends Dialog {
+import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.ui.dialog.Dialog;
+import eaut.edu.vn.service.BookService;
+import eaut.edu.vn.model.Book;
+import eaut.edu.vn.util.Util;
+
+public class AddBook extends Dialog {
     public String ma = "";
     JTextField txtMaSach, txtTenSach, txtTenTG, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
-    JButton btnSua;
+    JButton btnThem;
     Connection conn = ConnectMySQL.connect;
 
-    public Edit(String title) {
+    public AddBook(String title) {
         super(title);
-        hienThi();
     }
 
-    public void hienThi() {
-        try {
-            String sql = "select * from sach where masach=?";
-            PreparedStatement pre = conn.prepareStatement(sql);
-            pre.setString(1, ma);
-            ResultSet rs = pre.executeQuery();
-            while (rs.next()) {
-                String ma = rs.getString(1);
-                String ten = rs.getString(2);
-                String tg = rs.getString(3);
-                String nxb = rs.getString(4);
-                String tl = rs.getString(5);
-                String sl = String.valueOf(rs.getInt(6));
-                String gia = String.valueOf(rs.getInt(7));
-
-                txtMaSach.setText(ma);
-                txtTenSach.setText(ten);
-                txtTenTG.setText(tg);
-                txtNhaXB.setText(nxb);
-                txtTheLoai.setText(tl);
-                txtSoLuong.setText(sl);
-                txtGia.setText(gia);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    public int DemSach() {
+        int SoLuongSach = 0;
+        BookService sv = new BookService();
+        ArrayList<Book> ds = sv.layToanBoSach();
+        for (Book s : ds) {
+            SoLuongSach++;
         }
+        return SoLuongSach;
     }
 
     @Override
-    protected void addEvents() {
-        btnSua.addActionListener(new ActionListener() {
+    public void addEvents() {
+        btnThem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String ma = txtMaSach.getText();
+                int flag = 1;
                 try {
 
-                    String sql = "update sach set masach=?, tensach=?, tentg=?, nhaxb=?, theloai=?, soluong=?, giatien=? where masach=?";
+                    String sql = "select * from sach where masach=?";
+                    PreparedStatement pre = conn.prepareStatement(sql);
+                    pre.setString(1, txtMaSach.getText());
+                    ResultSet rs = pre.executeQuery();
+
+                    if (rs.next()) {
+                        flag = 0;
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+                if (flag == 0) {
+                    JOptionPane.showMessageDialog(null, "Mã sách đã tồn tại!");
+                    return;
+                }
+
+                if (txtMaSach.getText().length() == 0) {
+                    JOptionPane.showMessageDialog(null, "Mã sách không được để trống");
+                    return;
+                }
+
+                try {
+
+                    String sql = "insert into sach values (?,?,?,?,?,?,?)";
                     PreparedStatement pre = conn.prepareStatement(sql);
                     pre.setString(1, txtMaSach.getText());
                     pre.setString(2, txtTenSach.getText());
@@ -81,12 +89,9 @@ public class Edit extends Dialog {
                     pre.setString(5, txtTheLoai.getText());
                     pre.setInt(6, Integer.parseInt(txtSoLuong.getText()));
                     pre.setInt(7, Integer.parseInt(txtGia.getText()));
-                    pre.setString(8, txtMaSach.getText());
                     int x = pre.executeUpdate();
-
                     if (x > 0) {
-                        JOptionPane.showMessageDialog(null, "Sửa thành công");
-                        dispose();
+                        JOptionPane.showMessageDialog(null, "Thêm thành công");
                     }
 
                 } catch (Exception ex) {
@@ -98,51 +103,53 @@ public class Edit extends Dialog {
     }
 
     @Override
-    protected void initComponents() {
+    public void initComponents() {
+        int kqs = DemSach() + 1;
         Container con = getContentPane();
 
-        JPanel pnSuaSach = new JPanel();
-        pnSuaSach.setLayout(new BorderLayout());
-        con.add(pnSuaSach);
+        JPanel pnThemSach = new JPanel();
+        pnThemSach.setLayout(new BorderLayout());
+        con.add(pnThemSach);
 
         JPanel pnTieuDe = new JPanel();
         JLabel lblTieuDe = new JLabel("QUẢN LÝ SÁCH");
         pnTieuDe.add(lblTieuDe);
-        pnSuaSach.add(pnTieuDe, BorderLayout.NORTH);
+        pnThemSach.add(pnTieuDe, BorderLayout.NORTH);
 
         JPanel pnLienHe = new JPanel();
         JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
         pnLienHe.add(lblLienHe);
-        pnSuaSach.add(pnLienHe, BorderLayout.SOUTH);
+        pnThemSach.add(pnLienHe, BorderLayout.SOUTH);
 
-        JPanel pnHienThiSuaSach = new JPanel();
-        pnHienThiSuaSach.setLayout(new BorderLayout());
-        pnSuaSach.add(pnHienThiSuaSach, BorderLayout.CENTER);
+        JPanel pnHienThiThemSach = new JPanel();
+        pnHienThiThemSach.setLayout(new BorderLayout());
+        pnThemSach.add(pnHienThiThemSach, BorderLayout.CENTER);
 
         JPanel pnHinhAnh = new JPanel();
         pnHinhAnh.setLayout(new FlowLayout());
         JLabel lblHinhAnh = new JLabel();
         pnHinhAnh.setBackground(Color.WHITE);
-        lblHinhAnh.setIcon(Util.loadImage("like.png"));
+        lblHinhAnh.setIcon(Util.loadImage("book.png"));
         pnHinhAnh.add(lblHinhAnh);
-        pnHienThiSuaSach.add(pnHinhAnh, BorderLayout.WEST);
+        pnHienThiThemSach.add(pnHinhAnh, BorderLayout.WEST);
 
         JPanel pnHienThiChiTiet = new JPanel();
         pnHienThiChiTiet.setLayout(new BoxLayout(pnHienThiChiTiet, BoxLayout.Y_AXIS));
-        pnHienThiSuaSach.add(pnHienThiChiTiet, BorderLayout.CENTER);
+        pnHienThiThemSach.add(pnHienThiChiTiet, BorderLayout.CENTER);
 
         JPanel pnTitle = new JPanel();
         pnTitle.setLayout(new FlowLayout());
-        JLabel lblSuaSach = new JLabel("SỬA THÔNG TIN SÁCH");
-        pnTitle.add(lblSuaSach);
+        JLabel lblThemSach = new JLabel("THÊM SÁCH");
+        pnTitle.add(lblThemSach);
 
         JPanel pnMaSach = new JPanel();
         pnMaSach.setLayout(new FlowLayout());
         JLabel lblMaSach = new JLabel("Mã sách: ");
-        txtMaSach = new JTextField();
+        txtMaSach = new JTextField("MS" + kqs);
         txtMaSach.setPreferredSize(new Dimension(340, 30));
         pnMaSach.add(lblMaSach);
         pnMaSach.add(txtMaSach);
+        txtMaSach.setEditable(false);
 
         JPanel pnTenSach = new JPanel();
         pnTenSach.setLayout(new FlowLayout());
@@ -197,9 +204,9 @@ public class Edit extends Dialog {
         pnHienThiChiTiet.add(pnMaSach);
         pnHienThiChiTiet.add(pnTenSach);
         pnHienThiChiTiet.add(pnTenTG);
-        pnHienThiChiTiet.add(pnSoLuong);
-        pnHienThiChiTiet.add(pnTheLoai);
         pnHienThiChiTiet.add(pnNhaXB);
+        pnHienThiChiTiet.add(pnTheLoai);
+        pnHienThiChiTiet.add(pnSoLuong);
         pnHienThiChiTiet.add(pnGia);
 
         Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
@@ -208,7 +215,7 @@ public class Edit extends Dialog {
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
         lblTieuDe.setFont(font1);
-        lblSuaSach.setFont(font2);
+        lblThemSach.setFont(font2);
         lblGia.setFont(font4);
         lblMaSach.setFont(font4);
         lblTenSach.setFont(font4);
@@ -225,7 +232,6 @@ public class Edit extends Dialog {
         txtSoLuong.setFont(font4);
         txtTheLoai.setFont(font4);
         txtGia.setFont(font4);
-        txtMaSach.setEditable(false);
 
         pnTieuDe.setBackground(new Color(48, 51, 107));
         lblTieuDe.setForeground(Color.WHITE);
@@ -233,7 +239,7 @@ public class Edit extends Dialog {
         lblLienHe.setForeground(Color.WHITE);
 
         pnTitle.setBackground(new Color(241, 242, 246));
-        lblSuaSach.setForeground(new Color(48, 51, 107));
+        lblThemSach.setForeground(new Color(48, 51, 107));
         pnMaSach.setBackground(new Color(241, 242, 246));
         pnTenSach.setBackground(new Color(241, 242, 246));
         pnTenTG.setBackground(new Color(241, 242, 246));
@@ -246,23 +252,23 @@ public class Edit extends Dialog {
         JPanel pnThaoTac = new JPanel();
         pnThaoTac.setLayout(new FlowLayout());
         pnHienThiChiTiet.add(pnThaoTac);
-        btnSua = new JButton("LƯU");
-        btnSua.setPreferredSize(new Dimension(110, 35));
-        pnThaoTac.add(btnSua);
+        btnThem = new JButton("THÊM");
+        btnThem.setPreferredSize(new Dimension(110, 35));
+        pnThaoTac.add(btnThem);
         pnThaoTac.setBackground(new Color(241, 242, 246));
 
-        btnSua.setFont(font5);
+        btnThem.setFont(font5);
 
-        btnSua.setBackground(new Color(255, 177, 66));
-        btnSua.setForeground(Color.white);
-        btnSua.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnThem.setBackground(new Color(255, 177, 66));
+        btnThem.setForeground(Color.white);
+        btnThem.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
 
 
         Border borderLogin = BorderFactory.createLineBorder(new Color(48, 51, 107));
         TitledBorder titleLogin = new TitledBorder(borderLogin, "");
         titleLogin.setTitleJustification(TitledBorder.LEFT);
         titleLogin.setTitleColor(Color.BLUE);
-        pnHienThiSuaSach.setBorder(titleLogin);
+        pnHienThiThemSach.setBorder(titleLogin);
 
         lblMaSach.setPreferredSize(lblNhaXB.getPreferredSize());
         lblTenSach.setPreferredSize(lblNhaXB.getPreferredSize());

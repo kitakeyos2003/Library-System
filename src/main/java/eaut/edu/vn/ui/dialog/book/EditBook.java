@@ -26,13 +26,13 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-public class Delete extends Dialog {
+public class EditBook extends Dialog {
     public String ma = "";
     JTextField txtMaSach, txtTenSach, txtTenTG, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
-    JButton btnXoa;
+    JButton btnSua;
     Connection conn = ConnectMySQL.connect;
 
-    public Delete(String title) {
+    public EditBook(String title) {
         super(title);
         hienThi();
     }
@@ -66,42 +66,27 @@ public class Delete extends Dialog {
     }
 
     @Override
-    protected void addEvents() {
-        // TODO Auto-generated method stub
-        btnXoa.addActionListener(new ActionListener() {
-
-            @Override
+    public void addEvents() {
+        btnSua.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 String ma = txtMaSach.getText();
-                int flag = 1;
                 try {
 
-                    String sql = "select * from ctpm where masach=?";
+                    String sql = "update sach set masach=?, tensach=?, tentg=?, nhaxb=?, theloai=?, soluong=?, giatien=? where masach=?";
                     PreparedStatement pre = conn.prepareStatement(sql);
-                    pre.setString(1, ma);
-                    ResultSet rs = pre.executeQuery();
-
-                    if (rs.next()) {
-                        flag = 0;
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                if (flag == 0) {
-                    JOptionPane.showMessageDialog(null, "Sách còn tồn tại trong phiếu mượn");
-                    return;
-                }
-                try {
-
-                    String sql = "delete from sach where masach=?";
-                    PreparedStatement pre = conn.prepareStatement(sql);
-                    pre.setString(1, ma);
-
+                    pre.setString(1, txtMaSach.getText());
+                    pre.setString(2, txtTenSach.getText());
+                    pre.setString(3, txtTenTG.getText());
+                    pre.setString(4, txtNhaXB.getText());
+                    pre.setString(5, txtTheLoai.getText());
+                    pre.setInt(6, Integer.parseInt(txtSoLuong.getText()));
+                    pre.setInt(7, Integer.parseInt(txtGia.getText()));
+                    pre.setString(8, txtMaSach.getText());
                     int x = pre.executeUpdate();
 
                     if (x > 0) {
-                        JOptionPane.showMessageDialog(null, "Xóa thành công");
+                        JOptionPane.showMessageDialog(null, "Sửa thành công");
+                        dispose();
                     }
 
                 } catch (Exception ex) {
@@ -109,46 +94,47 @@ public class Delete extends Dialog {
                 }
             }
         });
+
     }
 
     @Override
-    protected void initComponents() {
+    public void initComponents() {
         Container con = getContentPane();
 
-        JPanel pnXoaSach = new JPanel();
-        pnXoaSach.setLayout(new BorderLayout());
-        con.add(pnXoaSach);
+        JPanel pnSuaSach = new JPanel();
+        pnSuaSach.setLayout(new BorderLayout());
+        con.add(pnSuaSach);
 
         JPanel pnTieuDe = new JPanel();
         JLabel lblTieuDe = new JLabel("QUẢN LÝ SÁCH");
         pnTieuDe.add(lblTieuDe);
-        pnXoaSach.add(pnTieuDe, BorderLayout.NORTH);
+        pnSuaSach.add(pnTieuDe, BorderLayout.NORTH);
 
         JPanel pnLienHe = new JPanel();
         JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
         pnLienHe.add(lblLienHe);
-        pnXoaSach.add(pnLienHe, BorderLayout.SOUTH);
+        pnSuaSach.add(pnLienHe, BorderLayout.SOUTH);
 
-        JPanel pnHienThiXoaSach = new JPanel();
-        pnHienThiXoaSach.setLayout(new BorderLayout());
-        pnXoaSach.add(pnHienThiXoaSach, BorderLayout.CENTER);
+        JPanel pnHienThiSuaSach = new JPanel();
+        pnHienThiSuaSach.setLayout(new BorderLayout());
+        pnSuaSach.add(pnHienThiSuaSach, BorderLayout.CENTER);
 
         JPanel pnHinhAnh = new JPanel();
         pnHinhAnh.setLayout(new FlowLayout());
         JLabel lblHinhAnh = new JLabel();
         pnHinhAnh.setBackground(Color.WHITE);
-        lblHinhAnh.setIcon(Util.loadImage("kn.png"));
+        lblHinhAnh.setIcon(Util.loadImage("like.png"));
         pnHinhAnh.add(lblHinhAnh);
-        pnHienThiXoaSach.add(pnHinhAnh, BorderLayout.WEST);
+        pnHienThiSuaSach.add(pnHinhAnh, BorderLayout.WEST);
 
         JPanel pnHienThiChiTiet = new JPanel();
         pnHienThiChiTiet.setLayout(new BoxLayout(pnHienThiChiTiet, BoxLayout.Y_AXIS));
-        pnHienThiXoaSach.add(pnHienThiChiTiet, BorderLayout.CENTER);
+        pnHienThiSuaSach.add(pnHienThiChiTiet, BorderLayout.CENTER);
 
         JPanel pnTitle = new JPanel();
         pnTitle.setLayout(new FlowLayout());
-        JLabel lblXoaSach = new JLabel("XÓA THÔNG TIN SÁCH");
-        pnTitle.add(lblXoaSach);
+        JLabel lblSuaSach = new JLabel("SỬA THÔNG TIN SÁCH");
+        pnTitle.add(lblSuaSach);
 
         JPanel pnMaSach = new JPanel();
         pnMaSach.setLayout(new FlowLayout());
@@ -222,7 +208,7 @@ public class Delete extends Dialog {
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
         lblTieuDe.setFont(font1);
-        lblXoaSach.setFont(font2);
+        lblSuaSach.setFont(font2);
         lblGia.setFont(font4);
         lblMaSach.setFont(font4);
         lblTenSach.setFont(font4);
@@ -240,12 +226,6 @@ public class Delete extends Dialog {
         txtTheLoai.setFont(font4);
         txtGia.setFont(font4);
         txtMaSach.setEditable(false);
-        txtTenSach.setEditable(false);
-        txtTenTG.setEditable(false);
-        txtNhaXB.setEditable(false);
-        txtSoLuong.setEditable(false);
-        txtTheLoai.setEditable(false);
-        txtGia.setEditable(false);
 
         pnTieuDe.setBackground(new Color(48, 51, 107));
         lblTieuDe.setForeground(Color.WHITE);
@@ -253,7 +233,7 @@ public class Delete extends Dialog {
         lblLienHe.setForeground(Color.WHITE);
 
         pnTitle.setBackground(new Color(241, 242, 246));
-        lblXoaSach.setForeground(new Color(48, 51, 107));
+        lblSuaSach.setForeground(new Color(48, 51, 107));
         pnMaSach.setBackground(new Color(241, 242, 246));
         pnTenSach.setBackground(new Color(241, 242, 246));
         pnTenTG.setBackground(new Color(241, 242, 246));
@@ -266,23 +246,23 @@ public class Delete extends Dialog {
         JPanel pnThaoTac = new JPanel();
         pnThaoTac.setLayout(new FlowLayout());
         pnHienThiChiTiet.add(pnThaoTac);
-        btnXoa = new JButton("XÓA");
-        btnXoa.setPreferredSize(new Dimension(110, 35));
-        pnThaoTac.add(btnXoa);
+        btnSua = new JButton("LƯU");
+        btnSua.setPreferredSize(new Dimension(110, 35));
+        pnThaoTac.add(btnSua);
         pnThaoTac.setBackground(new Color(241, 242, 246));
 
-        btnXoa.setFont(font5);
+        btnSua.setFont(font5);
 
-        btnXoa.setBackground(new Color(255, 177, 66));
-        btnXoa.setForeground(Color.white);
-        btnXoa.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnSua.setBackground(new Color(255, 177, 66));
+        btnSua.setForeground(Color.white);
+        btnSua.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
 
 
         Border borderLogin = BorderFactory.createLineBorder(new Color(48, 51, 107));
         TitledBorder titleLogin = new TitledBorder(borderLogin, "");
         titleLogin.setTitleJustification(TitledBorder.LEFT);
         titleLogin.setTitleColor(Color.BLUE);
-        pnHienThiXoaSach.setBorder(titleLogin);
+        pnHienThiSuaSach.setBorder(titleLogin);
 
         lblMaSach.setPreferredSize(lblNhaXB.getPreferredSize());
         lblTenSach.setPreferredSize(lblNhaXB.getPreferredSize());

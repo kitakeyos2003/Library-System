@@ -27,14 +27,14 @@ import javax.swing.table.DefaultTableModel;
 
 import eaut.edu.vn.service.AccountService;
 import eaut.edu.vn.ui.controls.Footer;
-import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Header;
-import eaut.edu.vn.ui.dialog.account.Edit;
-import eaut.edu.vn.ui.dialog.account.Add;
-import eaut.edu.vn.ui.dialog.account.Delete;
+import eaut.edu.vn.ui.dialog.account.EditAccount;
+import eaut.edu.vn.ui.dialog.account.AddAccount;
+import eaut.edu.vn.ui.dialog.account.DeleteAccount;
 import eaut.edu.vn.util.Util;
 
-public class AccountManager extends Frame {
+public class AccountManager extends CustomFrame {
     public String tentk = "";
     public int ThongKe = 0;
     JButton btnThem, btnXoa, btnSua, btnQuayLai, btnIcon;
@@ -47,10 +47,9 @@ public class AccountManager extends Frame {
 
     public AccountManager(String title) {
         super(title);
+        this.setSize(865, 780);
         setHeader(new Header("QUẢN LÝ NGƯỜI DÙNG"));
         setFooter(new Footer());
-        initComponents();
-        addEvents();
         hienThiQLND();
     }
 
@@ -350,14 +349,14 @@ public class AccountManager extends Frame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                Add themqlnd = new Add("Thêm người dùng");
+                AddAccount themqlnd = new AddAccount("Thêm người dùng");
                 themqlnd.showWindow();
                 hienThiQLND();
             }
         });
         btnXoa.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Delete xoand = new Delete("Xóa người dùng");
+                DeleteAccount xoand = new DeleteAccount("Xóa người dùng");
                 xoand.machon = txtTaiKhoạn.getText();
                 xoand.hienThi();
                 xoand.showWindow();
@@ -372,7 +371,7 @@ public class AccountManager extends Frame {
         });
         btnSua.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Edit suand = new Edit("Sửa người dùng");
+                EditAccount suand = new EditAccount("Sửa người dùng");
                 suand.machon = txtTaiKhoạn.getText();
                 suand.hienThi();
                 suand.showWindow();
@@ -385,14 +384,6 @@ public class AccountManager extends Frame {
                 pwdPass.setText(null);
             }
         });
-    }
-
-    public void showWindow() {
-        this.setSize(865, 780);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        this.setResizable(false);
     }
 
 }

@@ -2,7 +2,6 @@ package eaut.edu.vn.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -19,7 +18,6 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -30,15 +28,18 @@ import javax.swing.table.DefaultTableModel;
 import eaut.edu.vn.database.ConnectMySQL;
 import eaut.edu.vn.service.LoanService;
 import eaut.edu.vn.service.BookService;
-import eaut.edu.vn.ui.dialog.loan.Edit;
-import eaut.edu.vn.ui.dialog.loan.Add;
-import eaut.edu.vn.ui.dialog.loan.Delete;
+import eaut.edu.vn.ui.controls.CustomFrame;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
+import eaut.edu.vn.ui.dialog.loan.EditLoan;
+import eaut.edu.vn.ui.dialog.loan.AddLoan;
+import eaut.edu.vn.ui.dialog.loan.DeleteLoan;
 import eaut.edu.vn.model.Loan;
 import eaut.edu.vn.model.Book;
 import eaut.edu.vn.util.Util;
 
 
-public class LoanManager extends JFrame {
+public class LoanManager extends CustomFrame {
     public String tentk = "";
     public int thongke = 0;
     JTextField txtMaPhieu, txtTenDG, txtNgayMuon, txtNgayHenTra, txtSoSachMuon, txtThuThu, txtMaDG;
@@ -50,13 +51,14 @@ public class LoanManager extends JFrame {
     Connection conn = ConnectMySQL.connect;
 
     public LoanManager(String tieude) {
-        this.setTitle(tieude);
-        addControls();
-        addEvents();
+        super(tieude);
+        this.setSize(1130, 775);
+        setHeader(new Header("QUẢN LÝ PHIẾU MƯỢN"));
+        setFooter(new Footer());
         hienThiPhieuMuon();
     }
 
-    protected void addEvents() {
+    public void addEvents() {
         btnQuayLai.addActionListener(new ActionListener() {
 
             @Override
@@ -101,7 +103,7 @@ public class LoanManager extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                Add tpm = new Add("Thêm phiếu mượn");
+                AddLoan tpm = new AddLoan("Thêm phiếu mượn");
                 tpm.tentk = tentk;
                 tpm.hienThi();
                 tpm.showWindow();
@@ -111,7 +113,7 @@ public class LoanManager extends JFrame {
         btnSua.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                Edit suapm = new Edit("Sửa phiếu mượn");
+                EditLoan suapm = new EditLoan("Sửa phiếu mượn");
                 suapm.maPM = txtMaPhieu.getText();
                 suapm.hienThi();
                 suapm.showWindow();
@@ -122,7 +124,7 @@ public class LoanManager extends JFrame {
         btnXoa.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                Delete xoapm = new Delete("Xóa phiếu mượn");
+                DeleteLoan xoapm = new DeleteLoan("Xóa phiếu mượn");
                 xoapm.machon = txtMaPhieu.getText();
                 xoapm.hienThi();
                 xoapm.showWindow();
@@ -195,34 +197,11 @@ public class LoanManager extends JFrame {
 
     }
 
-    protected void addControls() {
-        Container con = getContentPane();
-
-        JPanel pnPhieuMuon = new JPanel();
-        pnPhieuMuon.setLayout(new BorderLayout());
-        con.add(pnPhieuMuon);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ PHIẾU MƯỢN");
-        pnTieuDe.add(lblTieuDe);
-        pnPhieuMuon.add(pnTieuDe, BorderLayout.NORTH);
-        Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
-        lblTieuDe.setFont(font1);
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnPhieuMuon.add(pnLienHe, BorderLayout.SOUTH);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
-        Font fontx = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblLienHe.setFont(fontx);
-
+    @Override
+    public void initComponents() {
         JPanel pnThongTin = new JPanel();
         pnThongTin.setLayout(new BorderLayout());
-        pnPhieuMuon.add(pnThongTin, BorderLayout.CENTER);
+        mainPanel.add(pnThongTin, BorderLayout.CENTER);
 
         JPanel pnHienThiChiTiet = new JPanel();
         pnHienThiChiTiet.setLayout(new BorderLayout());
@@ -459,14 +438,6 @@ public class LoanManager extends JFrame {
             vec.add(pm.getUser());
             dtmPhieuMuon.addRow(vec);
         }
-    }
-
-    public void showWindow() {
-        this.setSize(1130, 775);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        this.setResizable(false);
     }
 
 }

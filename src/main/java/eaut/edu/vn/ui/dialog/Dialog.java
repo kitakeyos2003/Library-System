@@ -1,14 +1,46 @@
 package eaut.edu.vn.ui.dialog;
 
-import javax.swing.*;
+import eaut.edu.vn.interfaces.UIComposer;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
 
-public abstract class Dialog extends JDialog {
+import javax.swing.*;
+import java.awt.*;
+
+public abstract class Dialog extends JDialog implements UIComposer {
+    protected JPanel mainPanel;
+    private Header header;
+    private Footer footer;
     public Dialog(String title) {
         setTitle(title);
+        Container container = getContentPane();
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        container.add(mainPanel);
         initComponents();
         addEvents();
     }
-    protected abstract void initComponents();
-    protected abstract void addEvents();
-    protected abstract void showWindow();
+
+    public Header getHeader() {
+        return header;
+    }
+
+    public void setHeader(Header header) {
+        this.header = header;
+        mainPanel.add(header, BorderLayout.NORTH);
+    }
+
+    public Footer getFooter() {
+        return footer;
+    }
+
+    public void setFooter(Footer footer) {
+        this.footer = footer;
+        mainPanel.add(footer, BorderLayout.SOUTH);
+    }
+
+    @Override
+    public void showWindow() {
+        setVisible(true);
+    }
 }

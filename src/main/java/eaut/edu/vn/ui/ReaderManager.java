@@ -2,7 +2,6 @@ package eaut.edu.vn.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -26,16 +25,16 @@ import javax.swing.table.DefaultTableModel;
 
 import eaut.edu.vn.database.ConnectMySQL;
 import eaut.edu.vn.ui.controls.Footer;
-import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Header;
-import eaut.edu.vn.ui.dialog.reader.Detail;
-import eaut.edu.vn.ui.dialog.reader.Edit;
-import eaut.edu.vn.ui.dialog.reader.Add;
-import eaut.edu.vn.ui.dialog.reader.Delete;
+import eaut.edu.vn.ui.dialog.reader.ReaderDetail;
+import eaut.edu.vn.ui.dialog.reader.EditReader;
+import eaut.edu.vn.ui.dialog.reader.AddReader;
+import eaut.edu.vn.ui.dialog.reader.DeleteReader;
 import eaut.edu.vn.util.Util;
 
 
-public class ReaderManager extends Frame {
+public class ReaderManager extends CustomFrame {
     public String tentk = "";
     public int thongke = 0;
     JTextField txtMaDocGia, txtTenDocGia, txtSDT, txtDiaChi, txtGioiTinh, txtLanMatSach;
@@ -46,14 +45,13 @@ public class ReaderManager extends Frame {
 
     public ReaderManager(String tieude) {
         super(tieude);
+        this.setSize(1130, 780);
         setHeader(new Header("QUẢN LÝ ĐỘC GIẢ"));
         setFooter(new Footer());
-        initComponents();
         lietKeDocGia();
-        addEvents();
     }
 
-    protected void addEvents() {
+    public void addEvents() {
         btnQuayLai.addActionListener(e -> {
             // TODO Auto-generated method stub
             int phanquyen = 0;
@@ -93,14 +91,14 @@ public class ReaderManager extends Frame {
 
         btnThem.addActionListener(e -> {
             // TODO Auto-generated method stub
-            Add themdg = new Add("Thêm độc giả");
+            AddReader themdg = new AddReader("Thêm độc giả");
             themdg.showWindow();
             dtmDocGia.setRowCount(0);
             lietKeDocGia();
         });
         btnXoa.addActionListener(e -> {
             // TODO Auto-generated method stub
-            Delete xoadg = new Delete("Xóa độc giả");
+            DeleteReader xoadg = new DeleteReader("Xóa độc giả");
             xoadg.machon = txtMaDocGia.getText();
             xoadg.hienThi();
             xoadg.showWindow();
@@ -108,7 +106,7 @@ public class ReaderManager extends Frame {
             lietKeDocGia();
         });
         btnSua.addActionListener(e -> {
-            Edit suadg = new Edit("Sửa độc giả");
+            EditReader suadg = new EditReader("Sửa độc giả");
             suadg.ma = txtMaDocGia.getText();
             suadg.hienThi();
             suadg.showWindow();
@@ -167,7 +165,7 @@ public class ReaderManager extends Frame {
                 return;
             }
             ma = (String) dtmPhieuMuon.getValueAt(row, 0);
-            Detail a = new Detail("Chi tiết phiếu mượn");
+            ReaderDetail a = new ReaderDetail("Chi tiết phiếu mượn");
             a.ma = ma;
             a.hienThi();
             a.showWindow();
@@ -228,7 +226,7 @@ public class ReaderManager extends Frame {
     }
 
     @Override
-    protected void initComponents() {
+    public void initComponents() {
         JPanel pnThongTin = new JPanel();
         pnThongTin.setLayout(new BorderLayout());
         mainPanel.add(pnThongTin, BorderLayout.CENTER);
@@ -463,13 +461,4 @@ public class ReaderManager extends Frame {
         txtDiaChi.setEditable(false);
 
     }
-
-    public void showWindow() {
-        this.setSize(1130, 780);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        this.setResizable(false);
-    }
-
 }

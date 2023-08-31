@@ -1,7 +1,7 @@
 package eaut.edu.vn.ui;
 
 import eaut.edu.vn.ui.controls.Footer;
-import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.util.Util;
 
@@ -16,16 +16,15 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class AdminManager extends Frame {
+public class AdminManager extends CustomFrame {
     public String tentk = "";
     JButton btnQLND, btnQLDG, btnQLPM, btnQLPT, btnThongKe, btnQLS, btnDoiMK, btnDangXuat;
 
     public AdminManager(String title) {
         super(title);
+        this.setSize(888, 600);
         setHeader(new Header("TRANG CHỦ: QUẢN LÝ THƯ VIỆN"));
         setFooter(new Footer());
-        initComponents();
-        addEvents();
     }
 
     public void addEvents() {
@@ -191,14 +190,6 @@ public class AdminManager extends Frame {
         btnQLS.setBorder(null);
         btnThongKe.setBorder(null);
 
-    }
-
-    public void showWindow() {
-        this.setSize(888, 600);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        this.setResizable(false);
     }
 
 }

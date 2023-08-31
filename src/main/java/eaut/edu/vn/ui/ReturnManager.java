@@ -2,7 +2,6 @@ package eaut.edu.vn.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -30,14 +29,14 @@ import javax.swing.table.DefaultTableModel;
 import eaut.edu.vn.service.LoanDetailService;
 import eaut.edu.vn.database.ConnectMySQL;
 import eaut.edu.vn.ui.controls.Footer;
-import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.returnreceipt.Search;
 import eaut.edu.vn.ui.dialog.returnreceipt.ReturnReceipt;
 import eaut.edu.vn.model.LoanDetail;
 import eaut.edu.vn.util.Util;
 
-public class ReturnManager extends Frame {
+public class ReturnManager extends CustomFrame {
     public String tentk = "";
     public int thongke = 0;
     JTextField txtMaPhieu, txtMaDG, txtMaSach, txtNgayHenTra, txtNgayTra, txtTTSachMuon, txtTTSachTra, txtThuThuNhanSach, txtGhiChu;
@@ -49,10 +48,9 @@ public class ReturnManager extends Frame {
 
     public ReturnManager(String tieude) {
         super(tieude);
+        this.setSize(1130, 775);
         setHeader(new Header("QUẢN LÝ PHIẾU TRẢ"));
         setFooter(new Footer());
-        initComponents();
-        addEvents();
         hienThiPhieuMuonChuaTra();
         hienThiPhieuMuonDaTra();
     }
@@ -93,7 +91,7 @@ public class ReturnManager extends Frame {
 
     }
 
-    protected void addEvents() {
+    public void addEvents() {
 
         btnQuayLai.addActionListener(e -> {
             // TODO Auto-generated method stub
@@ -273,7 +271,7 @@ public class ReturnManager extends Frame {
     }
 
     @Override
-    protected void initComponents() {
+    public void initComponents() {
         JPanel pnThongTin = new JPanel();
         pnThongTin.setLayout(new BorderLayout());
         mainPanel.add(pnThongTin, BorderLayout.CENTER);
@@ -522,14 +520,6 @@ public class ReturnManager extends Frame {
         txtTTSachTra.setEditable(false);
         txtThuThuNhanSach.setEditable(false);
         txtGhiChu.setEditable(false);
-    }
-
-    public void showWindow() {
-        this.setSize(1130, 775);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        this.setResizable(false);
     }
 
 }

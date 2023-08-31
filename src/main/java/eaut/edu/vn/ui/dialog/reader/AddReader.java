@@ -1,18 +1,17 @@
 package eaut.edu.vn.ui.dialog.reader;
 
-import eaut.edu.vn.database.ConnectMySQL;
-import eaut.edu.vn.ui.dialog.Dialog;
-import eaut.edu.vn.util.Util;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -21,68 +20,144 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-public class Edit extends Dialog {
-    public String ma = "";
-    JTextField txtMaDocGia, txtHoTen, txtSDT, txtDiaChi, txtGioiTinh;
-    JButton btnSua;
-    JComboBox cb;
-    Connection conn = ConnectMySQL.connect;
+import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.ui.dialog.Dialog;
+import eaut.edu.vn.service.ReaderService;
+import eaut.edu.vn.model.Reader;
+import eaut.edu.vn.util.Util;
 
-    public Edit(String title) {
+public class AddReader extends Dialog {
+    public String tentk = "";
+    JTextField txtMaDocGia, txtHoTen, txtSDT, txtDiaChi, txtGioiTinh;
+    JRadioButton radNam, radNu;
+    JButton btnThem;
+    JComboBox cb;
+    Connection connect = ConnectMySQL.connect;
+
+    public AddReader(String title) {
         super(title);
-        hienThi();
+    }
+
+    public int DemDocGia() {
+        int SoLuongDG = 0;
+        ReaderService dgsv = new ReaderService();
+        ArrayList<Reader> ds = dgsv.layToanBoDocGia();
+        for (Reader dg : ds) {
+            SoLuongDG++;
+        }
+        return SoLuongDG;
     }
 
     @Override
-    protected void initComponents() {
+    public void addEvents() {
+        btnThem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int flag = 1;
+                try {
+
+                    String sql = "select * from docgia where madg=?";
+                    PreparedStatement pre = connect.prepareStatement(sql);
+                    pre.setString(1, txtMaDocGia.getText());
+                    ResultSet rs = pre.executeQuery();
+
+                    if (rs.next()) {
+                        flag = 0;
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+                if (flag == 0) {
+                    JOptionPane.showMessageDialog(null, "Mã đọc giả trùng");
+                    //dispose();
+                    return;
+                }
+
+                if (txtMaDocGia.getText().length() == 0) {
+                    JOptionPane.showMessageDialog(null, "Mã đọc giả không được để trống");
+                    //dispose();
+                    return;
+                }
+
+                try {
+
+                    String sql = "insert into docgia values (?,?,?,?,?,0)";
+                    PreparedStatement pre = connect.prepareStatement(sql);
+                    pre.setString(1, txtMaDocGia.getText());
+                    pre.setString(2, txtHoTen.getText());
+                    pre.setString(3, txtSDT.getText());
+                    pre.setString(4, txtDiaChi.getText());
+                    pre.setString(5, (String) cb.getSelectedItem());
+                    int x = pre.executeUpdate();
+
+                    if (x > 0) {
+                        JOptionPane.showMessageDialog(null, "Thêm thành công");
+                        //dispose();
+                    }
+
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void initComponents() {
+        int kqdg = DemDocGia() + 1;
         Container con = getContentPane();
 
-        JPanel pnSuaDocGia = new JPanel();
-        pnSuaDocGia.setLayout(new BorderLayout());
-        con.add(pnSuaDocGia);
+        JPanel pnThemDocGia = new JPanel();
+        pnThemDocGia.setLayout(new BorderLayout());
+        con.add(pnThemDocGia);
 
         JPanel pnTieuDe = new JPanel();
         JLabel lblTieuDe = new JLabel("QUẢN LÝ ĐỘC GIẢ");
         pnTieuDe.add(lblTieuDe);
-        pnSuaDocGia.add(pnTieuDe, BorderLayout.NORTH);
+        pnThemDocGia.add(pnTieuDe, BorderLayout.NORTH);
 
         JPanel pnLienHe = new JPanel();
         JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
         pnLienHe.add(lblLienHe);
-        pnSuaDocGia.add(pnLienHe, BorderLayout.SOUTH);
+        pnThemDocGia.add(pnLienHe, BorderLayout.SOUTH);
 
-        JPanel pnHienThiSuaDocGia = new JPanel();
-        pnHienThiSuaDocGia.setLayout(new BorderLayout());
-        pnSuaDocGia.add(pnHienThiSuaDocGia, BorderLayout.CENTER);
+        JPanel pnHienThiThemDocGia = new JPanel();
+        pnHienThiThemDocGia.setLayout(new BorderLayout());
+        pnThemDocGia.add(pnHienThiThemDocGia, BorderLayout.CENTER);
+
 
         JPanel pnHinhAnh = new JPanel();
         pnHinhAnh.setLayout(new FlowLayout());
         JLabel lblHinhAnh = new JLabel();
         pnHinhAnh.setBackground(Color.WHITE);
-        lblHinhAnh.setIcon(Util.loadImage("suand.png"));
+        lblHinhAnh.setIcon(Util.loadImage("themnd.png"));
         pnHinhAnh.add(lblHinhAnh);
-        pnHienThiSuaDocGia.add(pnHinhAnh, BorderLayout.WEST);
+        pnHienThiThemDocGia.add(pnHinhAnh, BorderLayout.WEST);
 
         JPanel pnHienThiChiTiet = new JPanel();
         pnHienThiChiTiet.setLayout(new BoxLayout(pnHienThiChiTiet, BoxLayout.Y_AXIS));
-        pnHienThiSuaDocGia.add(pnHienThiChiTiet, BorderLayout.CENTER);
+        pnHienThiThemDocGia.add(pnHienThiChiTiet, BorderLayout.CENTER);
 
         JPanel pnTitle = new JPanel();
         pnTitle.setLayout(new FlowLayout());
-        JLabel lblSuaDocGia = new JLabel("SỬA ĐỘC GIẢ");
-        pnTitle.add(lblSuaDocGia);
+        JLabel lblThemDocGia = new JLabel("THÊM ĐỘC GIẢ");
+        pnTitle.add(lblThemDocGia);
 
         JPanel pnMaDG = new JPanel();
         pnMaDG.setLayout(new FlowLayout());
         JLabel lblMaDG = new JLabel("Mã độc giả: ");
-        txtMaDocGia = new JTextField();
+        txtMaDocGia = new JTextField("DG" + kqdg);
         txtMaDocGia.setPreferredSize(new Dimension(340, 30));
         pnMaDG.add(lblMaDG);
         pnMaDG.add(txtMaDocGia);
+        txtMaDocGia.setEditable(false);
 
         JPanel pnHoTen = new JPanel();
         pnHoTen.setLayout(new FlowLayout());
@@ -119,6 +194,7 @@ public class Edit extends Dialog {
         pnGioiTinh.add(lblGioiTinh);
         pnGioiTinh.add(cb);
 
+
         pnHienThiChiTiet.add(pnTitle);
         pnHienThiChiTiet.add(pnMaDG);
         pnHienThiChiTiet.add(pnHoTen);
@@ -126,13 +202,14 @@ public class Edit extends Dialog {
         pnHienThiChiTiet.add(pnDiaChi);
         pnHienThiChiTiet.add(pnGioiTinh);
 
+
         Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
         Font font2 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 30);
         Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.TRUETYPE_FONT, 15);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
         lblTieuDe.setFont(font1);
-        lblSuaDocGia.setFont(font2);
+        lblThemDocGia.setFont(font2);
         lblMaDG.setFont(font4);
         lblSoDienThoai.setFont(font4);
         lblDiaChi.setFont(font4);
@@ -145,7 +222,6 @@ public class Edit extends Dialog {
         txtSDT.setFont(font4);
         txtGioiTinh.setFont(font4);
         cb.setFont(font4);
-        txtMaDocGia.setEditable(false);
 
         pnTieuDe.setBackground(new Color(48, 51, 107));
         lblTieuDe.setForeground(Color.WHITE);
@@ -153,7 +229,7 @@ public class Edit extends Dialog {
         lblLienHe.setForeground(Color.WHITE);
 
         pnTitle.setBackground(new Color(241, 242, 246));
-        lblSuaDocGia.setForeground(new Color(48, 51, 107));
+        lblThemDocGia.setForeground(new Color(48, 51, 107));
         pnMaDG.setBackground(new Color(241, 242, 246));
         pnDiaChi.setBackground(new Color(241, 242, 246));
         pnGioiTinh.setBackground(new Color(241, 242, 246));
@@ -167,16 +243,16 @@ public class Edit extends Dialog {
         JPanel pnThaoTac = new JPanel();
         pnThaoTac.setLayout(new FlowLayout());
         pnHienThiChiTiet.add(pnThaoTac);
-        btnSua = new JButton("LƯU");
-        btnSua.setPreferredSize(new Dimension(110, 35));
-        pnThaoTac.add(btnSua);
+        btnThem = new JButton("THÊM");
+        btnThem.setPreferredSize(new Dimension(110, 35));
+        pnThaoTac.add(btnThem);
         pnThaoTac.setBackground(new Color(241, 242, 246));
 
-        btnSua.setFont(font5);
+        btnThem.setFont(font5);
 
-        btnSua.setBackground(new Color(255, 177, 66));
-        btnSua.setForeground(Color.white);
-        btnSua.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnThem.setBackground(new Color(255, 177, 66));
+        btnThem.setForeground(Color.white);
+        btnThem.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
         //btnLuu.setBackground(new java.awt.Color(5, 196, 107));
 
 
@@ -184,7 +260,7 @@ public class Edit extends Dialog {
         TitledBorder titleLogin = new TitledBorder(borderLogin, "");
         titleLogin.setTitleJustification(TitledBorder.LEFT);
         titleLogin.setTitleColor(Color.BLUE);
-        pnHienThiSuaDocGia.setBorder(titleLogin);
+        pnHienThiThemDocGia.setBorder(titleLogin);
 
         lblMaDG.setPreferredSize(lblSoDienThoai.getPreferredSize());
         lblGioiTinh.setPreferredSize(lblSoDienThoai.getPreferredSize());
@@ -192,54 +268,6 @@ public class Edit extends Dialog {
         lblDiaChi.setPreferredSize(lblSoDienThoai.getPreferredSize());
         cb.setPreferredSize(txtDiaChi.getPreferredSize());
 
-    }
-
-    @Override
-    protected void addEvents() {
-        btnSua.addActionListener(e -> {
-            String ma = txtMaDocGia.getText();
-            try {
-
-                String sql = "update docgia set  tendg=?, sdt=?, diachi=?, gioitinh=? where madg=?";
-                PreparedStatement pre = conn.prepareStatement(sql);
-                pre.setString(1, txtHoTen.getText());
-                pre.setString(2, txtSDT.getText());
-                pre.setString(3, txtDiaChi.getText());
-                pre.setString(4, (String) cb.getSelectedItem());
-                pre.setString(5, txtMaDocGia.getText());
-
-                int x = pre.executeUpdate();
-
-                if (x > 0) {
-                    JOptionPane.showMessageDialog(null, "Sửa thành công");
-                    dispose();
-                }
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-
-    }
-
-    public void hienThi() {
-        try {
-            String sql = "select * from docgia where madg=?";
-            PreparedStatement pre = conn.prepareStatement(sql);
-            pre.setString(1, ma);
-            ResultSet rs = pre.executeQuery();
-            while (rs.next()) {
-                txtMaDocGia.setText(rs.getString(1));
-                txtHoTen.setText(rs.getString(2));
-                txtSDT.setText(rs.getString(3));
-                txtDiaChi.setText(rs.getString(4));
-                if (rs.getString(5).length() == 2) {
-                    cb.setSelectedIndex(1);
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
 
     }
 

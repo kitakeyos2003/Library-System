@@ -2,7 +2,6 @@ package eaut.edu.vn.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -28,7 +27,7 @@ import eaut.edu.vn.model.Loan;
 import eaut.edu.vn.model.Book;
 
 import eaut.edu.vn.ui.controls.Footer;
-import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.util.Util;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -37,7 +36,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 
-public class StatisticAnalyzer extends Frame {
+public class StatisticAnalyzer extends CustomFrame {
     public String tenTk = "";
     public int thongke = 1;
     JButton btnQLDG, btnQLPM, btnQLPT, btnQLS, btnQuayLai, btnChiTietSach, btnChiTietDG, btnChiTietPM, btnChiTietPT;
@@ -46,10 +45,9 @@ public class StatisticAnalyzer extends Frame {
 
     public StatisticAnalyzer(String title) {
         super(title);
+        this.setSize(1025, 580);
         setHeader(new Header("THỐNG KÊ"));
         setFooter(new Footer());
-        initComponents();
-        addEvents();
         hienThi();
     }
 
@@ -369,13 +367,4 @@ public class StatisticAnalyzer extends Frame {
             }
         });
     }
-
-    public void showWindow() {
-        this.setSize(1025, 580);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        this.setResizable(false);
-    }
-
 }

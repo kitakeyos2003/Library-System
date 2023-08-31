@@ -1,34 +1,30 @@
 package eaut.edu.vn.ui;
 
 import eaut.edu.vn.ui.controls.Footer;
-import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.util.Util;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class LibrarianManager extends Frame {
+public class LibrarianManager extends CustomFrame {
     public String tentk = "";
     JButton btnQLDG, btnQLPM, btnQLPT, btnQLS, btnDoiMK, btnDangXuat;
 
     public LibrarianManager(String title) {
         super(title);
+        this.setSize(888, 600);
         setHeader(new Header("TRANG CHỦ: QUẢN LÝ THƯ VIỆN"));
         setFooter(new Footer());
-        initComponents();
-        addEvents();
     }
 
     @Override
@@ -174,13 +170,5 @@ public class LibrarianManager extends Frame {
         btnQLPT.setBorder(null);
         btnQLS.setBorder(null);
 
-    }
-
-    public void showWindow() {
-        this.setSize(888, 600);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        this.setResizable(false);
     }
 }

@@ -94,7 +94,7 @@ public class Search extends Dialog {
     }
 
     @Override
-    protected void addEvents() {
+    public void addEvents() {
         btnTimKiem.addActionListener(e -> {
             // TODO Auto-generated method stub
             dtmPhieuMuon.setRowCount(0);
@@ -290,7 +290,7 @@ public class Search extends Dialog {
     }
 
     @Override
-    protected void initComponents() {
+    public void initComponents() {
         Container con = getContentPane();
 
         JPanel pnTimKiemPhieuMuon = new JPanel();

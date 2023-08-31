@@ -29,11 +29,11 @@ import eaut.edu.vn.database.ConnectMySQL;
 import eaut.edu.vn.service.AccountService;
 import eaut.edu.vn.model.Account;
 import eaut.edu.vn.ui.controls.Footer;
-import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.util.Util;
 
-public class ChangePassword extends Frame {
+public class ChangePassword extends CustomFrame {
     public String tentk = "";
     JButton btnLuu, btnQuayLai, btnLamLai;
     JPasswordField pwdMatKhauCu, pwdMatKhauMoi, pwdNhapLaiMKM;
@@ -44,10 +44,9 @@ public class ChangePassword extends Frame {
 
     public ChangePassword(String tieude) {
         super(tieude);
+        this.setSize(780, 430);
         setHeader(new Header("PHẦN MỀM QUẢN LÝ THƯ VIỆN"));
         setFooter(new Footer());
-        initComponents();
-        addEvents();
         if (tentk.length() != 0) {
             HienThi();
         }
@@ -241,7 +240,7 @@ public class ChangePassword extends Frame {
     }
 
     @Override
-    protected void initComponents() {
+    public void initComponents() {
         JPanel pnHienThiDoiMatKhau = new JPanel();
         pnHienThiDoiMatKhau.setLayout(new BorderLayout());
         mainPanel.add(pnHienThiDoiMatKhau, BorderLayout.CENTER);
@@ -355,14 +354,5 @@ public class ChangePassword extends Frame {
         pnHienThiDoiMatKhau.setBorder(titleLogin);
 
     }
-
-    public void showWindow() {
-        this.setSize(780, 430);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        this.setResizable(false);
-    }
-
 
 }

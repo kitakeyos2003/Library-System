@@ -2,7 +2,6 @@ package eaut.edu.vn.ui.dialog.account;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -22,83 +21,79 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.service.AccountService;
-import eaut.edu.vn.model.Account;
 import eaut.edu.vn.util.Util;
 
-public class Edit extends Dialog {
+public class DeleteAccount extends Dialog {
     public String machon = "";
     JTextField txtTaiKhoan, txtHoTen, txtSDT, txtCMND, txtPhanQuyen;
     JPasswordField pwdMatKhau;
-    JButton btnSua;
+    JButton btnXoa;
     Connection connect = ConnectMySQL.connect;
 
-    public Edit(String title) {
+    public DeleteAccount(String title) {
         super(title);
+        setHeader(new Header("QUẢN LÝ NGƯỜI DÙNG"));
+        setFooter(new Footer());
         if (machon.length() != 0) {
             hienThi();
         }
     }
 
+    public void hienThi() {
+        AccountService tksv = new AccountService();
+        ArrayList<eaut.edu.vn.model.Account> dstk = tksv.layTaiKhoanTheoUser(machon);
+        for (eaut.edu.vn.model.Account tk : dstk) {
+            txtTaiKhoan.setText(tk.getUser());
+            txtCMND.setText(tk.getCMND());
+            txtHoTen.setText(tk.getTenND());
+            int phanquyen = tk.getPhanQuyen();
+            if (phanquyen == 1) {
+                txtPhanQuyen.setText("Admin");
+            } else
+                txtPhanQuyen.setText("Thủ thư");
+            txtSDT.setText(tk.getSoDienThoai());
+            pwdMatKhau.setText(tk.getPass());
+        }
+
+    }
+
     @Override
-    protected void addEvents() {
-        btnSua.addActionListener(e -> {
+    public void addEvents() {
+        btnXoa.addActionListener(e -> {
             try {
-                String sql = "Update taikhoan set Password=?,PhanQuyen=?,TenND=?,SDT=?,CMND=? where User=?";
+                String sql = "Delete from taikhoan where user=?";
                 PreparedStatement pre = connect.prepareStatement(sql);
-                pre.setString(1, pwdMatKhau.getText());
-                if (txtPhanQuyen.getText().equals("Admin")) {
-                    pre.setInt(2, 1);
-                } else
-                    pre.setInt(2, 2);
-                pre.setString(3, txtHoTen.getText());
-                pre.setString(4, txtSDT.getText());
-                pre.setString(5, txtCMND.getText());
-                pre.setString(6, txtTaiKhoan.getText());
+                pre.setString(1, txtTaiKhoan.getText());
                 int x = pre.executeUpdate();
                 if (x > 0) {
-                    JOptionPane.showMessageDialog(null, "Sửa thành công");
+                    JOptionPane.showMessageDialog(null, "Xóa thành công");
                     dispose();
                 }
+
             } catch (Exception ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, ex.getMessage());
-
             }
         });
 
     }
 
     @Override
-    protected void initComponents() {
-
-        Container con = getContentPane();
-
-        JPanel pnSuaNguoiDung = new JPanel();
-        pnSuaNguoiDung.setLayout(new BorderLayout());
-        con.add(pnSuaNguoiDung);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ NGƯỜI DÙNG");
-        pnTieuDe.add(lblTieuDe);
-        pnSuaNguoiDung.add(pnTieuDe, BorderLayout.NORTH);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnSuaNguoiDung.add(pnLienHe, BorderLayout.SOUTH);
-
+    public void initComponents() {
         JPanel pnHienThiNguoiDung = new JPanel();
         pnHienThiNguoiDung.setLayout(new BorderLayout());
-        pnSuaNguoiDung.add(pnHienThiNguoiDung, BorderLayout.CENTER);
+        mainPanel.add(pnHienThiNguoiDung, BorderLayout.CENTER);
 
 
         JPanel pnHinhAnh = new JPanel();
         pnHinhAnh.setLayout(new FlowLayout());
         JLabel lblHinhAnh = new JLabel();
         pnHinhAnh.setBackground(Color.WHITE);
-        lblHinhAnh.setIcon(Util.loadImage("suand.png"));
+        lblHinhAnh.setIcon(Util.loadImage("xoand.png"));
         pnHinhAnh.add(lblHinhAnh);
         pnHienThiNguoiDung.add(pnHinhAnh, BorderLayout.WEST);
 
@@ -108,7 +103,7 @@ public class Edit extends Dialog {
 
         JPanel pnTitle = new JPanel();
         pnTitle.setLayout(new FlowLayout());
-        JLabel lblXoaNguoiDung = new JLabel("CHỈNH SỬA NGƯỜI DÙNG");
+        JLabel lblXoaNguoiDung = new JLabel("XÓA NGƯỜI DÙNG");
         pnTitle.add(lblXoaNguoiDung);
 
         JPanel pnTaiKhoan = new JPanel();
@@ -175,14 +170,12 @@ public class Edit extends Dialog {
         Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.TRUETYPE_FONT, 15);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblTieuDe.setFont(font1);
         lblXoaNguoiDung.setFont(font2);
         lblTaiKhoan.setFont(font4);
         lblSoDienThoai.setFont(font4);
         lblCMND.setFont(font4);
         lblHoTen.setFont(font4);
         lblMatKhau.setFont(font4);
-        lblLienHe.setFont(font4);
         lblPhanQuyen.setFont(font4);
 
         txtTaiKhoan.setFont(font4);
@@ -191,11 +184,6 @@ public class Edit extends Dialog {
         txtSDT.setFont(font4);
         pwdMatKhau.setFont(font4);
         txtPhanQuyen.setFont(font4);
-
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblXoaNguoiDung.setForeground(new Color(48, 51, 107));
@@ -210,16 +198,16 @@ public class Edit extends Dialog {
         JPanel pnThaoTac = new JPanel();
         pnThaoTac.setLayout(new FlowLayout());
         pnHienThiChiTiet.add(pnThaoTac);
-        btnSua = new JButton("LƯU");
-        btnSua.setPreferredSize(new Dimension(110, 35));
-        pnThaoTac.add(btnSua);
+        btnXoa = new JButton("XÓA");
+        btnXoa.setPreferredSize(new Dimension(110, 35));
+        pnThaoTac.add(btnXoa);
         pnThaoTac.setBackground(new Color(241, 242, 246));
 
-        btnSua.setFont(font5);
+        btnXoa.setFont(font5);
 
-        btnSua.setBackground(new Color(255, 177, 66));
-        btnSua.setForeground(Color.white);
-        btnSua.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnXoa.setBackground(new Color(255, 177, 66));
+        btnXoa.setForeground(Color.white);
+        btnXoa.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
 
 
         Border borderLogin = BorderFactory.createLineBorder(new Color(48, 51, 107));
@@ -234,27 +222,14 @@ public class Edit extends Dialog {
         lblCMND.setPreferredSize(lblSoDienThoai.getPreferredSize());
         lblPhanQuyen.setPreferredSize(lblSoDienThoai.getPreferredSize());
 
+        txtCMND.setEditable(false);
+        txtSDT.setEditable(false);
+        txtHoTen.setEditable(false);
         txtTaiKhoan.setEditable(false);
+        pwdMatKhau.setEditable(false);
+        txtPhanQuyen.setEditable(false);
 
 
-    }
-
-    public void hienThi() {
-        AccountService tksv = new AccountService();
-        ArrayList<Account> dstk = new ArrayList<Account>();
-        dstk = tksv.layTaiKhoanTheoUser(machon);
-        for (Account tk : dstk) {
-            txtTaiKhoan.setText(tk.getUser());
-            txtCMND.setText(tk.getCMND());
-            txtHoTen.setText(tk.getTenND());
-            int phanquyen = tk.getPhanQuyen();
-            if (phanquyen == 1) {
-                txtPhanQuyen.setText("Admin");
-            } else
-                txtPhanQuyen.setText("Thủ thư");
-            txtSDT.setText(tk.getSoDienThoai());
-            pwdMatKhau.setText(tk.getPass());
-        }
     }
 
     public void showWindow() {

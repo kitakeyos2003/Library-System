@@ -25,11 +25,11 @@ import javax.swing.border.TitledBorder;
 import eaut.edu.vn.service.AccountService;
 import eaut.edu.vn.model.Account;
 import eaut.edu.vn.ui.controls.Footer;
-import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.util.Util;
 
-public class Login extends Frame {
+public class Login extends CustomFrame {
     JButton btnLogin, btnExit;
     JTextField txtUsername;
     JPasswordField pwdPassword;
@@ -37,14 +37,13 @@ public class Login extends Frame {
 
     public Login(String title) {
         super(title);
+        this.setSize(540, 350);
         setHeader(new Header("QUẢN LÝ NGƯỜI DÙNG"));
         setFooter(new Footer());
-        initComponents();
-        addEvents();
     }
 
     @Override
-    protected void addEvents() {
+    public void addEvents() {
 
         btnExit.addActionListener(e -> System.exit(0));
         txtUsername.addMouseListener(new MouseListener() {
@@ -257,7 +256,7 @@ public class Login extends Frame {
     }
 
     @Override
-    protected void initComponents() {
+    public void initComponents() {
         JPanel pnLogin = new JPanel();
         pnLogin.setLayout(new BoxLayout(pnLogin, BoxLayout.Y_AXIS));
 
@@ -331,15 +330,6 @@ public class Login extends Frame {
         titleLogin.setTitleJustification(TitledBorder.LEFT);
         titleLogin.setTitleColor(Color.BLUE);
         pnLogin.setBorder(titleLogin);
-
-    }
-
-    public void showWindow() {
-        this.setSize(540, 350);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        this.setResizable(false);
 
     }
 

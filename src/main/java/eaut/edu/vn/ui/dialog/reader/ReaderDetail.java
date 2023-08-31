@@ -18,13 +18,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class Detail extends Dialog {
+public class ReaderDetail extends Dialog {
     public String ma = "";
     DefaultTableModel dtmCTPM;
     JTable tblCTPM;
     Connection conn = ConnectMySQL.connect;
 
-    public Detail(String title) {
+    public ReaderDetail(String title) {
         super(title);
         if (ma.length() != 0) {
             hienThi();
@@ -61,13 +61,13 @@ public class Detail extends Dialog {
     }
 
     @Override
-    protected void addEvents() {
+    public void addEvents() {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    protected void initComponents() {
+    public void initComponents() {
         Container con = getContentPane();
         JPanel pnCTPM = new JPanel();
         pnCTPM.setLayout(new BorderLayout());

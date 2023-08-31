@@ -29,19 +29,19 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-public class Search extends Dialog {
+public class SearchBook extends Dialog {
     JButton btnTimKiem;
     JTextField txtTimKiem, txtMaSach, txtTenSach, txtTacGia, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
     DefaultTableModel dtmSach;
     JTable tblSach;
     Connection conn = ConnectMySQL.connect;
 
-    public Search(String title) {
+    public SearchBook(String title) {
         super(title);
     }
 
     @Override
-    protected void addEvents() {
+    public void addEvents() {
         btnTimKiem.addActionListener(e -> {
             // TODO Auto-generated method stub
             dtmSach.setRowCount(0);
@@ -204,7 +204,7 @@ public class Search extends Dialog {
     }
 
     @Override
-    protected void initComponents() {
+    public void initComponents() {
         Container con = getContentPane();
 
         JPanel pnTimKiemSach = new JPanel();

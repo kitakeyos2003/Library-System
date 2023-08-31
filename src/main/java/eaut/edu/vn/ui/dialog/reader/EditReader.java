@@ -1,13 +1,15 @@
 package eaut.edu.vn.ui.dialog.reader;
 
+import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.ui.dialog.Dialog;
+import eaut.edu.vn.util.Util;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,6 +17,7 @@ import java.sql.ResultSet;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -22,119 +25,56 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import eaut.edu.vn.database.ConnectMySQL;
-import eaut.edu.vn.ui.dialog.Dialog;
-import eaut.edu.vn.util.Util;
-
-public class Delete extends Dialog {
-    public String machon = "";
+public class EditReader extends Dialog {
+    public String ma = "";
     JTextField txtMaDocGia, txtHoTen, txtSDT, txtDiaChi, txtGioiTinh;
-    JButton btnXoa;
-    Connection connect = ConnectMySQL.connect;
+    JButton btnSua;
+    JComboBox cb;
+    Connection conn = ConnectMySQL.connect;
 
-    public Delete(String title) {
+    public EditReader(String title) {
         super(title);
         hienThi();
     }
 
-    public void hienThi() {
-        try {
-            String sql = "select * from docgia where madg=?";
-            PreparedStatement pre = connect.prepareStatement(sql);
-            pre.setString(1, machon);
-            ResultSet rs = pre.executeQuery();
-            while (rs.next()) {
-                txtMaDocGia.setText(rs.getString(1));
-                txtHoTen.setText(rs.getString(2));
-                txtSDT.setText(rs.getString(3));
-                txtDiaChi.setText(rs.getString(4));
-                txtGioiTinh.setText(rs.getString(5));
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
     @Override
-    protected void addEvents() {
-        btnXoa.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String ma = txtMaDocGia.getText();
-                int flag = 1;
-                try {
-
-                    String sql = "select * from phieumuon where madg=?";
-                    PreparedStatement pre = connect.prepareStatement(sql);
-                    pre.setString(1, ma);
-                    ResultSet rs = pre.executeQuery();
-
-                    if (rs.next()) {
-                        flag = 0;
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                if (flag == 0) {
-                    JOptionPane.showMessageDialog(null, "Đọc giả còn tồn tại phiếu mượn");
-                    return;
-                }
-                try {
-
-                    String sql = "delete from docgia where madg=?";
-                    PreparedStatement pre = connect.prepareStatement(sql);
-                    pre.setString(1, ma);
-                    int x = pre.executeUpdate();
-                    if (x > 0) {
-                        JOptionPane.showMessageDialog(null, "Xóa thành công");
-                        dispose();
-                    }
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-    }
-
-    @Override
-    protected void initComponents() {
+    public void initComponents() {
         Container con = getContentPane();
 
-        JPanel pnThemDocGia = new JPanel();
-        pnThemDocGia.setLayout(new BorderLayout());
-        con.add(pnThemDocGia);
+        JPanel pnSuaDocGia = new JPanel();
+        pnSuaDocGia.setLayout(new BorderLayout());
+        con.add(pnSuaDocGia);
 
         JPanel pnTieuDe = new JPanel();
         JLabel lblTieuDe = new JLabel("QUẢN LÝ ĐỘC GIẢ");
         pnTieuDe.add(lblTieuDe);
-        pnThemDocGia.add(pnTieuDe, BorderLayout.NORTH);
+        pnSuaDocGia.add(pnTieuDe, BorderLayout.NORTH);
 
         JPanel pnLienHe = new JPanel();
         JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
         pnLienHe.add(lblLienHe);
-        pnThemDocGia.add(pnLienHe, BorderLayout.SOUTH);
+        pnSuaDocGia.add(pnLienHe, BorderLayout.SOUTH);
 
-        JPanel pnHienThiXoaDocGia = new JPanel();
-        pnHienThiXoaDocGia.setLayout(new BorderLayout());
-        pnThemDocGia.add(pnHienThiXoaDocGia, BorderLayout.CENTER);
-
+        JPanel pnHienThiSuaDocGia = new JPanel();
+        pnHienThiSuaDocGia.setLayout(new BorderLayout());
+        pnSuaDocGia.add(pnHienThiSuaDocGia, BorderLayout.CENTER);
 
         JPanel pnHinhAnh = new JPanel();
         pnHinhAnh.setLayout(new FlowLayout());
         JLabel lblHinhAnh = new JLabel();
         pnHinhAnh.setBackground(Color.WHITE);
-        lblHinhAnh.setIcon(Util.loadImage("xoand.png"));
+        lblHinhAnh.setIcon(Util.loadImage("suand.png"));
         pnHinhAnh.add(lblHinhAnh);
-        pnHienThiXoaDocGia.add(pnHinhAnh, BorderLayout.WEST);
+        pnHienThiSuaDocGia.add(pnHinhAnh, BorderLayout.WEST);
 
         JPanel pnHienThiChiTiet = new JPanel();
         pnHienThiChiTiet.setLayout(new BoxLayout(pnHienThiChiTiet, BoxLayout.Y_AXIS));
-        pnHienThiXoaDocGia.add(pnHienThiChiTiet, BorderLayout.CENTER);
+        pnHienThiSuaDocGia.add(pnHienThiChiTiet, BorderLayout.CENTER);
 
         JPanel pnTitle = new JPanel();
         pnTitle.setLayout(new FlowLayout());
-        JLabel lblXoaDocGia = new JLabel("XÓA ĐỘC GIẢ");
-        pnTitle.add(lblXoaDocGia);
+        JLabel lblSuaDocGia = new JLabel("SỬA ĐỘC GIẢ");
+        pnTitle.add(lblSuaDocGia);
 
         JPanel pnMaDG = new JPanel();
         pnMaDG.setLayout(new FlowLayout());
@@ -173,9 +113,11 @@ public class Delete extends Dialog {
         JLabel lblGioiTinh = new JLabel("Giới tính: ");
         txtGioiTinh = new JTextField();
         txtGioiTinh.setPreferredSize(new Dimension(340, 30));
+        cb = new JComboBox();
+        cb.addItem("Nam");
+        cb.addItem("Nữ");
         pnGioiTinh.add(lblGioiTinh);
-        pnGioiTinh.add(txtGioiTinh);
-
+        pnGioiTinh.add(cb);
 
         pnHienThiChiTiet.add(pnTitle);
         pnHienThiChiTiet.add(pnMaDG);
@@ -184,14 +126,13 @@ public class Delete extends Dialog {
         pnHienThiChiTiet.add(pnDiaChi);
         pnHienThiChiTiet.add(pnGioiTinh);
 
-
         Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
         Font font2 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 30);
         Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.TRUETYPE_FONT, 15);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
         lblTieuDe.setFont(font1);
-        lblXoaDocGia.setFont(font2);
+        lblSuaDocGia.setFont(font2);
         lblMaDG.setFont(font4);
         lblSoDienThoai.setFont(font4);
         lblDiaChi.setFont(font4);
@@ -203,6 +144,8 @@ public class Delete extends Dialog {
         txtHoTen.setFont(font4);
         txtSDT.setFont(font4);
         txtGioiTinh.setFont(font4);
+        cb.setFont(font4);
+        txtMaDocGia.setEditable(false);
 
         pnTieuDe.setBackground(new Color(48, 51, 107));
         lblTieuDe.setForeground(Color.WHITE);
@@ -210,28 +153,30 @@ public class Delete extends Dialog {
         lblLienHe.setForeground(Color.WHITE);
 
         pnTitle.setBackground(new Color(241, 242, 246));
-        lblXoaDocGia.setForeground(new Color(48, 51, 107));
+        lblSuaDocGia.setForeground(new Color(48, 51, 107));
         pnMaDG.setBackground(new Color(241, 242, 246));
         pnDiaChi.setBackground(new Color(241, 242, 246));
         pnGioiTinh.setBackground(new Color(241, 242, 246));
         pnSoDienThoai.setBackground(new Color(241, 242, 246));
         pnHoTen.setBackground(new Color(241, 242, 246));
         pnHinhAnh.setBackground(new Color(241, 242, 246));
+        cb.setBackground(new Color(241, 242, 246));
+        cb.setForeground(Color.BLACK);
 
 
         JPanel pnThaoTac = new JPanel();
         pnThaoTac.setLayout(new FlowLayout());
         pnHienThiChiTiet.add(pnThaoTac);
-        btnXoa = new JButton("XÓA");
-        btnXoa.setPreferredSize(new Dimension(110, 35));
-        pnThaoTac.add(btnXoa);
+        btnSua = new JButton("LƯU");
+        btnSua.setPreferredSize(new Dimension(110, 35));
+        pnThaoTac.add(btnSua);
         pnThaoTac.setBackground(new Color(241, 242, 246));
 
-        btnXoa.setFont(font5);
+        btnSua.setFont(font5);
 
-        btnXoa.setBackground(new Color(255, 177, 66));
-        btnXoa.setForeground(Color.white);
-        btnXoa.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnSua.setBackground(new Color(255, 177, 66));
+        btnSua.setForeground(Color.white);
+        btnSua.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
         //btnLuu.setBackground(new java.awt.Color(5, 196, 107));
 
 
@@ -239,20 +184,62 @@ public class Delete extends Dialog {
         TitledBorder titleLogin = new TitledBorder(borderLogin, "");
         titleLogin.setTitleJustification(TitledBorder.LEFT);
         titleLogin.setTitleColor(Color.BLUE);
-        pnHienThiXoaDocGia.setBorder(titleLogin);
+        pnHienThiSuaDocGia.setBorder(titleLogin);
 
         lblMaDG.setPreferredSize(lblSoDienThoai.getPreferredSize());
         lblGioiTinh.setPreferredSize(lblSoDienThoai.getPreferredSize());
         lblHoTen.setPreferredSize(lblSoDienThoai.getPreferredSize());
         lblDiaChi.setPreferredSize(lblSoDienThoai.getPreferredSize());
+        cb.setPreferredSize(txtDiaChi.getPreferredSize());
 
+    }
 
-        txtMaDocGia.setEditable(false);
-        txtHoTen.setEditable(false);
-        txtSDT.setEditable(false);
-        txtDiaChi.setEditable(false);
-        txtGioiTinh.setEditable(false);
+    @Override
+    public void addEvents() {
+        btnSua.addActionListener(e -> {
+            String ma = txtMaDocGia.getText();
+            try {
 
+                String sql = "update docgia set  tendg=?, sdt=?, diachi=?, gioitinh=? where madg=?";
+                PreparedStatement pre = conn.prepareStatement(sql);
+                pre.setString(1, txtHoTen.getText());
+                pre.setString(2, txtSDT.getText());
+                pre.setString(3, txtDiaChi.getText());
+                pre.setString(4, (String) cb.getSelectedItem());
+                pre.setString(5, txtMaDocGia.getText());
+
+                int x = pre.executeUpdate();
+
+                if (x > 0) {
+                    JOptionPane.showMessageDialog(null, "Sửa thành công");
+                    dispose();
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+    }
+
+    public void hienThi() {
+        try {
+            String sql = "select * from docgia where madg=?";
+            PreparedStatement pre = conn.prepareStatement(sql);
+            pre.setString(1, ma);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                txtMaDocGia.setText(rs.getString(1));
+                txtHoTen.setText(rs.getString(2));
+                txtSDT.setText(rs.getString(3));
+                txtDiaChi.setText(rs.getString(4));
+                if (rs.getString(5).length() == 2) {
+                    cb.setSelectedIndex(1);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
     }
 

@@ -20,14 +20,14 @@ import eaut.edu.vn.database.ConnectMySQL;
 import eaut.edu.vn.util.Util;
 
 
-public class AddBook extends Dialog {
+public class BookBorrowStatus extends Dialog {
     public String MaPM = "";
     public String user = "";
     JTextField txtMaPM, txtTinhTrangSach, txtMaSach;
     JButton btnThem;
     Connection conn = ConnectMySQL.connect;
 
-    public AddBook(String title) {
+    public BookBorrowStatus(String title) {
         super(title);
         if (MaPM.length() != 0) {
             hienThi();
@@ -40,7 +40,7 @@ public class AddBook extends Dialog {
     }
 
     @Override
-    protected void initComponents() {
+    public void initComponents() {
         Container con = getContentPane();
 
         JPanel pnThemPhieuMuon = new JPanel();

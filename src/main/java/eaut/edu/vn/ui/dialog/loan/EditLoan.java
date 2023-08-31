@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -28,25 +30,27 @@ import eaut.edu.vn.database.ConnectMySQL;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
-public class Delete extends Dialog {
-    public String machon = "";
+public class EditLoan extends Dialog {
+    public String maPM = "";
     JTextField txtMaPhieu, txtMaDG, txtTenDG, txtNgayMuon, txtNgayHenTra, txtSachMuon, txtThuThu;
-    JButton btnXoa;
+    JButton btnSua;
     Connection conn = ConnectMySQL.connect;
     int soluongtruoc = 0;
     int soluongsau = 0;
     JDateChooser choosedate, choosedate1;
 
-    public Delete(String title) {
+    public EditLoan(String title) {
         super(title);
-        hienThi();
+        if (maPM.length() != 0) {
+            hienThi();
+        }
     }
 
     public void hienThi() {
         try {
             String sql = "select * from phieumuon where MaPM=?";
             PreparedStatement pre = conn.prepareStatement(sql);
-            pre.setString(1, machon);
+            pre.setString(1, maPM);
             ResultSet rs = pre.executeQuery();
             if (rs.next()) {
                 txtMaPhieu.setText(rs.getString(1));
@@ -63,32 +67,48 @@ public class Delete extends Dialog {
     }
 
     @Override
-    protected void addEvents() {
-        btnXoa.addActionListener(new ActionListener() {
+    public void addEvents() {
+        btnSua.addActionListener(new ActionListener() {
+
+            @Override
             public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String datemuon = df.format(choosedate.getDate());
+                String datehantra = df.format(choosedate1.getDate());
                 try {
-                    String sql = "Delete from phieumuon where mapm=?";
+                    String sql = "update phieumuon set MaDg=?,NgayMuon=?,NgayHenTra=?,SoLuongMuon=?,User=? where MaPM=?";
                     PreparedStatement pre = conn.prepareStatement(sql);
-                    pre.setString(1, txtMaPhieu.getText());
-                    try {
-                        String sql1 = "Delete from ctpm where mapm=?";
-                        PreparedStatement pre1 = conn.prepareStatement(sql1);
-                        pre1.setString(1, txtMaPhieu.getText());
-                        int x1 = pre1.executeUpdate();
-                        if (x1 > 0) {
-                            JOptionPane.showMessageDialog(null, "Xóa phiếu trả thành công");
-                            dispose();
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, ex.getMessage());
-                    }
+                    pre.setString(1, txtMaDG.getText());
+                    pre.setString(2, datemuon);
+                    pre.setString(3, datehantra);
+                    pre.setString(4, txtSachMuon.getText());
+                    soluongsau = Integer.parseInt(txtSachMuon.getText());
+                    pre.setString(5, txtThuThu.getText());
+                    pre.setString(6, txtMaPhieu.getText());
                     int x = pre.executeUpdate();
                     if (x > 0) {
-                        JOptionPane.showMessageDialog(null, "Xóa phiếu mượn thành công");
+                        JOptionPane.showMessageDialog(null, "Sửa thành công");
                         dispose();
                     }
+                    if (soluongtruoc < soluongsau) {
+                        for (int i = 0; i < (soluongsau - soluongtruoc); i++) {
+                            BookBorrowStatus themsach = new BookBorrowStatus("Mượn tiếp sách");
+                            themsach.MaPM = maPM;
+                            themsach.hienThi();
+                            themsach.showWindow();
+                        }
 
+                    }
+                    if (soluongtruoc > soluongsau) {
+                        for (int i = 0; i < (soluongtruoc - soluongsau); i++) {
+                            UpdateBorrowedBookStatus xoa = new UpdateBorrowedBookStatus("Xóa bớt sách");
+                            xoa.MaPM = maPM;
+                            xoa.hienThi();
+                            xoa.showWindow();
+                        }
+
+                    }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -98,7 +118,7 @@ public class Delete extends Dialog {
     }
 
     @Override
-    protected void initComponents() {
+    public void initComponents() {
         Container con = getContentPane();
 
         JPanel pnThemPhieuMuon = new JPanel();
@@ -111,7 +131,7 @@ public class Delete extends Dialog {
         pnThemPhieuMuon.add(pnTieuDe, BorderLayout.NORTH);
 
         JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN LIÊN HỆ: 0342565857");
+        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
         pnLienHe.add(lblLienHe);
         pnThemPhieuMuon.add(pnLienHe, BorderLayout.SOUTH);
 
@@ -123,7 +143,7 @@ public class Delete extends Dialog {
         pnHinhAnh.setLayout(new FlowLayout());
         JLabel lblHinhAnh = new JLabel();
         pnHinhAnh.setBackground(Color.WHITE);
-        lblHinhAnh.setIcon(Util.loadImage("kha2.png"));
+        lblHinhAnh.setIcon(Util.loadImage("kha1.png"));
         pnHinhAnh.add(lblHinhAnh);
         pnHienThiThemPM.add(pnHinhAnh, BorderLayout.WEST);
 
@@ -133,7 +153,7 @@ public class Delete extends Dialog {
 
         JPanel pnTitle = new JPanel();
         pnTitle.setLayout(new FlowLayout());
-        JLabel lblThemPM = new JLabel("XÓA PHIẾU MƯỢN");
+        JLabel lblThemPM = new JLabel("SỬA THÔNG TIN");
         pnTitle.add(lblThemPM);
 
         JPanel pnMaPM = new JPanel();
@@ -228,13 +248,7 @@ public class Delete extends Dialog {
         choosedate1.setFont(font4);
         txtSachMuon.setFont(font4);
         txtThuThu.setFont(font4);
-
-        txtMaDG.setEditable(false);
         txtMaPhieu.setEditable(false);
-        txtTenDG.setEditable(false);
-        choosedate.setEnabled(false);
-        choosedate1.setEnabled(false);
-        txtSachMuon.setEditable(false);
         txtThuThu.setEditable(false);
 
         pnTieuDe.setBackground(new Color(48, 51, 107));
@@ -256,16 +270,16 @@ public class Delete extends Dialog {
         JPanel pnThaoTac = new JPanel();
         pnThaoTac.setLayout(new FlowLayout());
         pnHienThiChiTiet.add(pnThaoTac);
-        btnXoa = new JButton("XÓA");
-        btnXoa.setPreferredSize(new Dimension(110, 35));
-        pnThaoTac.add(btnXoa);
+        btnSua = new JButton("LƯU");
+        btnSua.setPreferredSize(new Dimension(110, 35));
+        pnThaoTac.add(btnSua);
         pnThaoTac.setBackground(new Color(241, 242, 246));
 
-        btnXoa.setFont(font5);
+        btnSua.setFont(font5);
 
-        btnXoa.setBackground(new Color(255, 177, 66));
-        btnXoa.setForeground(Color.white);
-        btnXoa.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnSua.setBackground(new Color(255, 177, 66));
+        btnSua.setForeground(Color.white);
+        btnSua.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
 
 
         Border borderLogin = BorderFactory.createLineBorder(new Color(48, 51, 107));

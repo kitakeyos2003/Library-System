@@ -1,22 +1,25 @@
 package eaut.edu.vn.ui.controls;
 
+import eaut.edu.vn.interfaces.UIComposer;
+
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class Frame extends JFrame {
+public abstract class CustomFrame extends JFrame implements UIComposer {
 
     protected JPanel mainPanel;
     private Header header;
     private Footer footer;
-    public Frame(String title) {
+    public CustomFrame(String title) {
         super(title);
         this.setResizable(false);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setLocationRelativeTo(null);
         Container container = getContentPane();
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         container.add(mainPanel);
+        initComponents();
+        addEvents();
     }
 
     public Header getHeader() {
@@ -37,10 +40,10 @@ public abstract class Frame extends JFrame {
         mainPanel.add(footer, BorderLayout.SOUTH);
     }
 
-    protected void showWindow() {
+    @Override
+    public void showWindow() {
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
-    protected abstract void initComponents();
-    protected abstract void addEvents();
 
 }

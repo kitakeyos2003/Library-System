@@ -1,12 +1,13 @@
 package eaut.edu.vn.ui.dialog.account;
 
 import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -26,7 +27,7 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-public class Add extends Dialog {
+public class AddAccount extends Dialog {
     JTextField txtTaiKhoan, txtHoTen, txtSDT, txtCMND;
     JRadioButton radAdmin, radThuThu;
     JPasswordField pwdMatKhau;
@@ -34,12 +35,14 @@ public class Add extends Dialog {
     ButtonGroup gr;
     Connection connect = ConnectMySQL.connect;
 
-    public Add(String title) {
+    public AddAccount(String title) {
         super(title);
+        setHeader(new Header("QUẢN LÝ NGƯỜI DÙNG"));
+        setFooter(new Footer());
     }
 
     @Override
-    protected void addEvents() {
+    public void addEvents() {
         btnThem.addActionListener(e -> {
             int n = 0;
             if (radAdmin.isSelected()) {
@@ -80,26 +83,10 @@ public class Add extends Dialog {
     }
 
     @Override
-    protected void initComponents() {
-        Container con = getContentPane();
-
-        JPanel pnThemNguoiDung = new JPanel();
-        pnThemNguoiDung.setLayout(new BorderLayout());
-        con.add(pnThemNguoiDung);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ NGƯỜI DÙNG");
-        pnTieuDe.add(lblTieuDe);
-        pnThemNguoiDung.add(pnTieuDe, BorderLayout.NORTH);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnThemNguoiDung.add(pnLienHe, BorderLayout.SOUTH);
-
+    public void initComponents() {
         JPanel pnHienThiThemNguoiDung = new JPanel();
         pnHienThiThemNguoiDung.setLayout(new BorderLayout());
-        pnThemNguoiDung.add(pnHienThiThemNguoiDung, BorderLayout.CENTER);
+        mainPanel.add(pnHienThiThemNguoiDung, BorderLayout.CENTER);
 
 
         JPanel pnHinhAnh = new JPanel();
@@ -185,14 +172,12 @@ public class Add extends Dialog {
         Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.TRUETYPE_FONT, 15);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblTieuDe.setFont(font1);
         lblThemNguoiDung.setFont(font2);
         lblTaiKhoan.setFont(font4);
         lblSoDienThoai.setFont(font4);
         lblCMND.setFont(font4);
         lblHoTen.setFont(font4);
         lblMatKhau.setFont(font4);
-        lblLienHe.setFont(font4);
         radAdmin.setFont(font4);
         radThuThu.setFont(font4);
         txtTaiKhoan.setFont(font4);
@@ -200,11 +185,6 @@ public class Add extends Dialog {
         txtHoTen.setFont(font4);
         txtSDT.setFont(font4);
         pwdMatKhau.setFont(font4);
-
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblThemNguoiDung.setForeground(new Color(48, 51, 107));

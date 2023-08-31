@@ -33,16 +33,16 @@ import javax.swing.table.DefaultTableModel;
 
 import eaut.edu.vn.database.ConnectMySQL;
 import eaut.edu.vn.ui.controls.Footer;
-import eaut.edu.vn.ui.controls.Frame;
+import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Header;
-import eaut.edu.vn.ui.dialog.book.Edit;
-import eaut.edu.vn.ui.dialog.book.Add;
-import eaut.edu.vn.ui.dialog.book.Search;
-import eaut.edu.vn.ui.dialog.book.Delete;
+import eaut.edu.vn.ui.dialog.book.EditBook;
+import eaut.edu.vn.ui.dialog.book.AddBook;
+import eaut.edu.vn.ui.dialog.book.SearchBook;
+import eaut.edu.vn.ui.dialog.book.DeleteBook;
 import eaut.edu.vn.model.LoanDetail;
 import eaut.edu.vn.util.Util;
 
-public class BookManager extends Frame {
+public class BookManager extends CustomFrame {
     public String tentk = "";
     public int thongke = 0;
     JTextField txtMaSach, txtTenSach, txtTacGia, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
@@ -56,10 +56,9 @@ public class BookManager extends Frame {
 
     public BookManager(String tieude) {
         super(tieude);
+        this.setSize(1130, 775);
         setHeader(new Header("QUẢN LÝ SÁCH"));
         setFooter(new Footer());
-        initComponents();
-        addEvents();
         hienThiSach();
     }
 
@@ -96,45 +95,41 @@ public class BookManager extends Frame {
     }
 
     @Override
-    protected void addEvents() {
-        btnQuayLai.addActionListener(new ActionListener() {
+    public void addEvents() {
+        btnQuayLai.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            int phanquyen = 0;
+            if (thongke == 1) {
+                StatisticAnalyzer ui = new StatisticAnalyzer("Thống kê");
+                ui.tenTk = tentk;
+                ui.showWindow();
+                dispose();
+                thongke = 0;
+                return;
+            }
+            try {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                int phanquyen = 0;
-                if (thongke == 1) {
-                    StatisticAnalyzer ui = new StatisticAnalyzer("Thống kê");
-                    ui.tenTk = tentk;
-                    ui.showWindow();
-                    dispose();
-                    thongke = 0;
-                    return;
+                String sql = "select PhanQuyen from taikhoan where User=?";
+                PreparedStatement pre = ConnectMySQL.connect.prepareStatement(sql);
+                pre.setString(1, tentk);
+                ResultSet rs = pre.executeQuery();
+                while (rs.next()) {
+                    phanquyen = rs.getInt(1);
                 }
-                try {
-
-                    String sql = "select PhanQuyen from taikhoan where User=?";
-                    PreparedStatement pre = ConnectMySQL.connect.prepareStatement(sql);
-                    pre.setString(1, tentk);
-                    ResultSet rs = pre.executeQuery();
-                    while (rs.next()) {
-                        phanquyen = rs.getInt(1);
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                if (phanquyen == 1) {
-                    AdminManager ql = new AdminManager("Trang Chủ Phần Mềm Quản Lý Thư Viện");
-                    ql.tentk = tentk;
-                    ql.showWindow();
-                    dispose();
-                }
-                if (phanquyen == 2) {
-                    LibrarianManager ql = new LibrarianManager("Thủ thư: " + tentk);
-                    ql.tentk = tentk;
-                    ql.showWindow();
-                    dispose();
-                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            if (phanquyen == 1) {
+                AdminManager ql = new AdminManager("Trang Chủ Phần Mềm Quản Lý Thư Viện");
+                ql.tentk = tentk;
+                ql.showWindow();
+                dispose();
+            }
+            if (phanquyen == 2) {
+                LibrarianManager ql = new LibrarianManager("Thủ thư: " + tentk);
+                ql.tentk = tentk;
+                ql.showWindow();
+                dispose();
             }
         });
         tblSach.addMouseListener(new MouseListener() {
@@ -221,7 +216,7 @@ public class BookManager extends Frame {
         });
         btnThem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Add themsach = new Add("Thêm sách");
+                AddBook themsach = new AddBook("Thêm sách");
                 themsach.showWindow();
                 dtmSach.setRowCount(0);
                 hienThiSach();
@@ -229,7 +224,7 @@ public class BookManager extends Frame {
         });
         btnTimKiem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Search timsach = new Search("Tìm kiếm thông tin sách");
+                SearchBook timsach = new SearchBook("Tìm kiếm thông tin sách");
                 timsach.showWindow();
                 dtmSach.setRowCount(0);
                 hienThiSach();
@@ -237,7 +232,7 @@ public class BookManager extends Frame {
         });
         btnSua.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Edit suasach = new Edit("Sửa thông tin sách");
+                EditBook suasach = new EditBook("Sửa thông tin sách");
                 suasach.ma = txtMaSach.getText();
                 suasach.hienThi();
                 suasach.showWindow();
@@ -247,7 +242,7 @@ public class BookManager extends Frame {
         });
         btnXoa.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Delete xoasach = new Delete("Xóa thông tin sách");
+                DeleteBook xoasach = new DeleteBook("Xóa thông tin sách");
                 xoasach.ma = txtMaSach.getText();
                 xoasach.hienThi();
                 xoasach.showWindow();
@@ -258,7 +253,7 @@ public class BookManager extends Frame {
     }
 
     @Override
-    protected void initComponents() {
+    public void initComponents() {
         JPanel pnThongTin = new JPanel();
         pnThongTin.setLayout(new BorderLayout());
         mainPanel.add(pnThongTin, BorderLayout.CENTER);
@@ -516,14 +511,6 @@ public class BookManager extends Frame {
         btnTimKiem.setBorder(null);
 
 
-    }
-
-    public void showWindow() {
-        this.setSize(1130, 775);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        this.setResizable(false);
     }
 
 }
