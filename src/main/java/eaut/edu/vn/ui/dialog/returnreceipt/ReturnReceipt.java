@@ -27,6 +27,8 @@ import javax.swing.border.TitledBorder;
 import com.toedter.calendar.JDateChooser;
 
 import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
@@ -39,6 +41,8 @@ public class ReturnReceipt extends Dialog {
 
     public ReturnReceipt(String title) {
         super(title);
+        setHeader(new Header("QUẢN LÝ PHIẾU TRẢ"));
+        setFooter(new Footer());
         hienThi();
 
     }
@@ -193,25 +197,9 @@ public class ReturnReceipt extends Dialog {
 
     @Override
     public void initComponents() {
-        Container con = getContentPane();
-
-        JPanel pnTraSach = new JPanel();
-        pnTraSach.setLayout(new BorderLayout());
-        con.add(pnTraSach);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ PHIẾU TRẢ");
-        pnTieuDe.add(lblTieuDe);
-        pnTraSach.add(pnTieuDe, BorderLayout.NORTH);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnTraSach.add(pnLienHe, BorderLayout.SOUTH);
-
         JPanel pnHienThiTraSach = new JPanel();
         pnHienThiTraSach.setLayout(new BorderLayout());
-        pnTraSach.add(pnHienThiTraSach, BorderLayout.CENTER);
+        mainPanel.add(pnHienThiTraSach, BorderLayout.CENTER);
 
         JPanel pnHinhAnh = new JPanel();
         pnHinhAnh.setLayout(new FlowLayout());
@@ -341,13 +329,6 @@ public class ReturnReceipt extends Dialog {
         txtThuThuNhanSach.setFont(font4);
         txtGhiChu.setFont(font4);
         txtMaPhieu.setEditable(false);
-        lblTieuDe.setFont(font1);
-        lblLienHe.setFont(font4);
-
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblTraSach.setForeground(new Color(48, 51, 107));

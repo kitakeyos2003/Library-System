@@ -1,6 +1,8 @@
 package eaut.edu.vn.ui.dialog.reader;
 
 import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
@@ -26,6 +28,8 @@ public class ReaderDetail extends Dialog {
 
     public ReaderDetail(String title) {
         super(title);
+        setHeader(new Header("BẢN THỐNG KÊ CHI TIẾT PHIẾU MƯỢN"));
+        setFooter(new Footer());
         if (ma.length() != 0) {
             hienThi();
         }
@@ -68,20 +72,6 @@ public class ReaderDetail extends Dialog {
 
     @Override
     public void initComponents() {
-        Container con = getContentPane();
-        JPanel pnCTPM = new JPanel();
-        pnCTPM.setLayout(new BorderLayout());
-        con.add(pnCTPM);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("BẢNG THỐNG KÊ CHI TIẾT PHIẾU MƯỢN");
-        pnTieuDe.add(lblTieuDe);
-        pnCTPM.add(pnTieuDe, BorderLayout.NORTH);
-        Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
-        lblTieuDe.setFont(font1);
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-
         dtmCTPM = new DefaultTableModel();
         dtmCTPM.addColumn("Mã phiếu");
         dtmCTPM.addColumn("Mã sách");
@@ -93,7 +83,7 @@ public class ReaderDetail extends Dialog {
         tblCTPM = new JTable(dtmCTPM);
         JScrollPane scCTPM = new JScrollPane(tblCTPM, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        pnCTPM.add(scCTPM, BorderLayout.CENTER);
+        mainPanel.add(scCTPM, BorderLayout.CENTER);
 
     }
 

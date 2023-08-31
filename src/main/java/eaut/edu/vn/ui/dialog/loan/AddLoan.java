@@ -28,6 +28,8 @@ import javax.swing.border.TitledBorder;
 import com.toedter.calendar.JDateChooser;
 
 import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.service.LoanService;
 import eaut.edu.vn.model.Loan;
@@ -44,6 +46,8 @@ public class AddLoan extends Dialog {
 
     public AddLoan(String title) {
         super(title);
+        setHeader(new Header("QUẢN LÝ PHIẾU MƯỢN"));
+        setFooter(new Footer());
         if (tentk.length() != 0) {
             hienThi();
         }
@@ -148,25 +152,9 @@ public class AddLoan extends Dialog {
     @Override
     public void initComponents() {
         int kqpm = DemPhieuMuon() + 1;
-        Container con = getContentPane();
-
-        JPanel pnThemPhieuMuon = new JPanel();
-        pnThemPhieuMuon.setLayout(new BorderLayout());
-        con.add(pnThemPhieuMuon);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ PHIẾU MƯỢN");
-        pnTieuDe.add(lblTieuDe);
-        pnThemPhieuMuon.add(pnTieuDe, BorderLayout.NORTH);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnThemPhieuMuon.add(pnLienHe, BorderLayout.SOUTH);
-
         JPanel pnHienThiThemPM = new JPanel();
         pnHienThiThemPM.setLayout(new BorderLayout());
-        pnThemPhieuMuon.add(pnHienThiThemPM, BorderLayout.CENTER);
+        mainPanel.add(pnHienThiThemPM, BorderLayout.CENTER);
 
         JPanel pnHinhAnh = new JPanel();
         pnHinhAnh.setLayout(new FlowLayout());
@@ -259,7 +247,6 @@ public class AddLoan extends Dialog {
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
 
-        lblTieuDe.setFont(font1);
         lblThemPM.setFont(font2);
         lblMaPM.setFont(font4);
         lblMaDG.setFont(font4);
@@ -268,7 +255,6 @@ public class AddLoan extends Dialog {
         lblNgayHenTra.setFont(font4);
         lblSoSachCM.setFont(font4);
         lblThuThu.setFont(font4);
-        lblLienHe.setFont(font4);
 
         txtMaDG.setFont(font4);
         txtMaPhieu.setFont(font4);
@@ -279,11 +265,6 @@ public class AddLoan extends Dialog {
         txtThuThu.setFont(font4);
         txtThuThu.setEditable(false);
         txtMaPhieu.setEditable(false);
-
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblThemPM.setForeground(new Color(48, 51, 107));

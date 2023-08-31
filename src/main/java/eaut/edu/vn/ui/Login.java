@@ -5,10 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -20,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import eaut.edu.vn.service.AccountService;
@@ -80,6 +78,7 @@ public class Login extends CustomFrame {
             }
         });
         pwdPassword.addMouseListener(new MouseListener() {
+
 
             @Override
             public void mouseReleased(MouseEvent e) {

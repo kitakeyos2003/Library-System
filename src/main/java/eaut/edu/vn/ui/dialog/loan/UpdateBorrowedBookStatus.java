@@ -23,6 +23,8 @@ import javax.swing.JTextField;
 
 
 import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
@@ -37,6 +39,8 @@ public class UpdateBorrowedBookStatus extends Dialog {
 
     public UpdateBorrowedBookStatus(String title) {
         super(title);
+        setHeader(new Header("QUẢN LÝ PHIẾU MƯỢN"));
+        setFooter(new Footer());
         if (MaPM.length() != 0) {
             hienThi();
 
@@ -63,25 +67,9 @@ public class UpdateBorrowedBookStatus extends Dialog {
 
     @Override
     public void initComponents() {
-        Container con = getContentPane();
-
-        JPanel pnThemPhieuMuon = new JPanel();
-        pnThemPhieuMuon.setLayout(new BorderLayout());
-        con.add(pnThemPhieuMuon);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("THÊM THÔNG TIN SÁCH");
-        pnTieuDe.add(lblTieuDe);
-        pnThemPhieuMuon.add(pnTieuDe, BorderLayout.NORTH);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnThemPhieuMuon.add(pnLienHe, BorderLayout.SOUTH);
-
         JPanel pnHienThiThemPM = new JPanel();
         pnHienThiThemPM.setLayout(new BoxLayout(pnHienThiThemPM, BoxLayout.Y_AXIS));
-        pnThemPhieuMuon.add(pnHienThiThemPM, BorderLayout.CENTER);
+        mainPanel.add(pnHienThiThemPM, BorderLayout.CENTER);
 
         JPanel pnMaPM = new JPanel();
         pnMaPM.setLayout(new FlowLayout());
@@ -118,16 +106,8 @@ public class UpdateBorrowedBookStatus extends Dialog {
         btnXoa.setForeground(Color.white);
         btnXoa.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
 
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
-
         Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
-
-        lblTieuDe.setFont(font1);
-        lblLienHe.setFont(font4);
 
         lblMaPM.setFont(font4);
         lblMaSach.setFont(font4);

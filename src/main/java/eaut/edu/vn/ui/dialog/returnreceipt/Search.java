@@ -29,6 +29,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.service.LoanDetailService;
 import eaut.edu.vn.database.ConnectMySQL;
@@ -48,6 +50,8 @@ public class Search extends Dialog {
 
     public Search(String title) {
         super(title);
+        setHeader(new Header("QUẢN LÝ PHIẾU TRẢ"));
+        setFooter(new Footer());
     }
 
     private void hienThiPhieuMuonDaTra() {
@@ -291,33 +295,9 @@ public class Search extends Dialog {
 
     @Override
     public void initComponents() {
-        Container con = getContentPane();
-
-        JPanel pnTimKiemPhieuMuon = new JPanel();
-        pnTimKiemPhieuMuon.setLayout(new BorderLayout());
-        con.add(pnTimKiemPhieuMuon);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ PHIẾU TRẢ");
-        pnTieuDe.add(lblTieuDe);
-        pnTimKiemPhieuMuon.add(pnTieuDe, BorderLayout.NORTH);
-        Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
-        lblTieuDe.setFont(font1);
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnTimKiemPhieuMuon.add(pnLienHe, BorderLayout.SOUTH);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
-        Font font2 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblLienHe.setFont(font2);
-
         JPanel pnHienThiTimKiemPhieu = new JPanel();
         pnHienThiTimKiemPhieu.setLayout(new BorderLayout());
-        pnTimKiemPhieuMuon.add(pnHienThiTimKiemPhieu, BorderLayout.CENTER);
+        mainPanel.add(pnHienThiTimKiemPhieu, BorderLayout.CENTER);
 
         JPanel pnThanhTimKiem = new JPanel();
         pnThanhTimKiem.setLayout(new BorderLayout());

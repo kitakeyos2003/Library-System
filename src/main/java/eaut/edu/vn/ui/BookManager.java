@@ -276,6 +276,7 @@ public class BookManager extends CustomFrame {
         pnTieuDeTheLoai.setBackground(new Color(255, 177, 66));
         lblTieuDeTheLoai.setForeground(Color.WHITE);
 
+        Connection conn = ConnectMySQL.connect;
         defaultListTheLoai = new DefaultListModel();
         try {
             String sql = "select theloai from sach group by theloai";

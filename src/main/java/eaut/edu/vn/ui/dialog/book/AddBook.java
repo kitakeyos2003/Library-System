@@ -24,6 +24,8 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.service.BookService;
 import eaut.edu.vn.model.Book;
@@ -37,6 +39,8 @@ public class AddBook extends Dialog {
 
     public AddBook(String title) {
         super(title);
+        setHeader(new Header("QUẢN LÝ SÁCH"));
+        setFooter(new Footer());
     }
 
     public int DemSach() {
@@ -105,25 +109,9 @@ public class AddBook extends Dialog {
     @Override
     public void initComponents() {
         int kqs = DemSach() + 1;
-        Container con = getContentPane();
-
-        JPanel pnThemSach = new JPanel();
-        pnThemSach.setLayout(new BorderLayout());
-        con.add(pnThemSach);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ SÁCH");
-        pnTieuDe.add(lblTieuDe);
-        pnThemSach.add(pnTieuDe, BorderLayout.NORTH);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnThemSach.add(pnLienHe, BorderLayout.SOUTH);
-
         JPanel pnHienThiThemSach = new JPanel();
         pnHienThiThemSach.setLayout(new BorderLayout());
-        pnThemSach.add(pnHienThiThemSach, BorderLayout.CENTER);
+        mainPanel.add(pnHienThiThemSach, BorderLayout.CENTER);
 
         JPanel pnHinhAnh = new JPanel();
         pnHinhAnh.setLayout(new FlowLayout());
@@ -214,7 +202,6 @@ public class AddBook extends Dialog {
         Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.TRUETYPE_FONT, 15);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblTieuDe.setFont(font1);
         lblThemSach.setFont(font2);
         lblGia.setFont(font4);
         lblMaSach.setFont(font4);
@@ -223,7 +210,6 @@ public class AddBook extends Dialog {
         lblNhaXB.setFont(font4);
         lblSoLuong.setFont(font4);
         lblTheLoai.setFont(font4);
-        lblLienHe.setFont(font4);
 
         txtMaSach.setFont(font4);
         txtTenSach.setFont(font4);
@@ -232,11 +218,6 @@ public class AddBook extends Dialog {
         txtSoLuong.setFont(font4);
         txtTheLoai.setFont(font4);
         txtGia.setFont(font4);
-
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblThemSach.setForeground(new Color(48, 51, 107));

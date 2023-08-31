@@ -26,6 +26,8 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.service.ReaderService;
 import eaut.edu.vn.model.Reader;
@@ -41,6 +43,8 @@ public class AddReader extends Dialog {
 
     public AddReader(String title) {
         super(title);
+        setHeader(new Header("QUẢN LÝ ĐỘC GIẢ"));
+        setFooter(new Footer());
     }
 
     public int DemDocGia() {
@@ -112,25 +116,9 @@ public class AddReader extends Dialog {
     @Override
     public void initComponents() {
         int kqdg = DemDocGia() + 1;
-        Container con = getContentPane();
-
-        JPanel pnThemDocGia = new JPanel();
-        pnThemDocGia.setLayout(new BorderLayout());
-        con.add(pnThemDocGia);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ ĐỘC GIẢ");
-        pnTieuDe.add(lblTieuDe);
-        pnThemDocGia.add(pnTieuDe, BorderLayout.NORTH);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnThemDocGia.add(pnLienHe, BorderLayout.SOUTH);
-
         JPanel pnHienThiThemDocGia = new JPanel();
         pnHienThiThemDocGia.setLayout(new BorderLayout());
-        pnThemDocGia.add(pnHienThiThemDocGia, BorderLayout.CENTER);
+        mainPanel.add(pnHienThiThemDocGia, BorderLayout.CENTER);
 
 
         JPanel pnHinhAnh = new JPanel();
@@ -208,25 +196,18 @@ public class AddReader extends Dialog {
         Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.TRUETYPE_FONT, 15);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblTieuDe.setFont(font1);
         lblThemDocGia.setFont(font2);
         lblMaDG.setFont(font4);
         lblSoDienThoai.setFont(font4);
         lblDiaChi.setFont(font4);
         lblHoTen.setFont(font4);
         lblGioiTinh.setFont(font4);
-        lblLienHe.setFont(font4);
         txtMaDocGia.setFont(font4);
         txtDiaChi.setFont(font4);
         txtHoTen.setFont(font4);
         txtSDT.setFont(font4);
         txtGioiTinh.setFont(font4);
         cb.setFont(font4);
-
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblThemDocGia.setForeground(new Color(48, 51, 107));

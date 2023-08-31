@@ -1,6 +1,8 @@
 package eaut.edu.vn.ui.dialog.reader;
 
 import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
@@ -34,30 +36,15 @@ public class EditReader extends Dialog {
 
     public EditReader(String title) {
         super(title);
+        setHeader(new Header("QUẢN LÝ ĐỘC GIẢ"));
+        setFooter(new Footer());
         hienThi();
     }
 
     @Override
-    public void initComponents() {
-        Container con = getContentPane();
-
-        JPanel pnSuaDocGia = new JPanel();
-        pnSuaDocGia.setLayout(new BorderLayout());
-        con.add(pnSuaDocGia);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ ĐỘC GIẢ");
-        pnTieuDe.add(lblTieuDe);
-        pnSuaDocGia.add(pnTieuDe, BorderLayout.NORTH);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnSuaDocGia.add(pnLienHe, BorderLayout.SOUTH);
-
-        JPanel pnHienThiSuaDocGia = new JPanel();
+    public void initComponents() {JPanel pnHienThiSuaDocGia = new JPanel();
         pnHienThiSuaDocGia.setLayout(new BorderLayout());
-        pnSuaDocGia.add(pnHienThiSuaDocGia, BorderLayout.CENTER);
+        mainPanel.add(pnHienThiSuaDocGia, BorderLayout.CENTER);
 
         JPanel pnHinhAnh = new JPanel();
         pnHinhAnh.setLayout(new FlowLayout());
@@ -131,14 +118,12 @@ public class EditReader extends Dialog {
         Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.TRUETYPE_FONT, 15);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblTieuDe.setFont(font1);
         lblSuaDocGia.setFont(font2);
         lblMaDG.setFont(font4);
         lblSoDienThoai.setFont(font4);
         lblDiaChi.setFont(font4);
         lblHoTen.setFont(font4);
         lblGioiTinh.setFont(font4);
-        lblLienHe.setFont(font4);
         txtMaDocGia.setFont(font4);
         txtDiaChi.setFont(font4);
         txtHoTen.setFont(font4);
@@ -146,11 +131,6 @@ public class EditReader extends Dialog {
         txtGioiTinh.setFont(font4);
         cb.setFont(font4);
         txtMaDocGia.setEditable(false);
-
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblSuaDocGia.setForeground(new Color(48, 51, 107));

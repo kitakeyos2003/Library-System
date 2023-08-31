@@ -1,6 +1,8 @@
 package eaut.edu.vn.ui.dialog.book;
 
 import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
@@ -38,6 +40,8 @@ public class SearchBook extends Dialog {
 
     public SearchBook(String title) {
         super(title);
+        setHeader(new Header("QUẢN LÝ SÁCH"));
+        setFooter(new Footer());
     }
 
     @Override
@@ -205,33 +209,9 @@ public class SearchBook extends Dialog {
 
     @Override
     public void initComponents() {
-        Container con = getContentPane();
-
-        JPanel pnTimKiemSach = new JPanel();
-        pnTimKiemSach.setLayout(new BorderLayout());
-        con.add(pnTimKiemSach);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ SÁCH");
-        pnTieuDe.add(lblTieuDe);
-        pnTimKiemSach.add(pnTieuDe, BorderLayout.NORTH);
-        Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
-        lblTieuDe.setFont(font1);
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnTimKiemSach.add(pnLienHe, BorderLayout.SOUTH);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
-        Font font2 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblLienHe.setFont(font2);
-
         JPanel pnHienThiTimKiemSach = new JPanel();
         pnHienThiTimKiemSach.setLayout(new BorderLayout());
-        pnTimKiemSach.add(pnHienThiTimKiemSach, BorderLayout.CENTER);
+        mainPanel.add(pnHienThiTimKiemSach, BorderLayout.CENTER);
 
         JPanel pnThanhTimKiem = new JPanel();
         pnThanhTimKiem.setLayout(new BorderLayout());

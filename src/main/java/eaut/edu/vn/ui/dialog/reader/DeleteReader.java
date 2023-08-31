@@ -23,6 +23,8 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
@@ -34,6 +36,8 @@ public class DeleteReader extends Dialog {
 
     public DeleteReader(String title) {
         super(title);
+        setHeader(new Header("QUẢN LÝ ĐỘC GIẢ"));
+        setFooter(new Footer());
         hienThi();
     }
 
@@ -98,25 +102,9 @@ public class DeleteReader extends Dialog {
 
     @Override
     public void initComponents() {
-        Container con = getContentPane();
-
-        JPanel pnThemDocGia = new JPanel();
-        pnThemDocGia.setLayout(new BorderLayout());
-        con.add(pnThemDocGia);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ ĐỘC GIẢ");
-        pnTieuDe.add(lblTieuDe);
-        pnThemDocGia.add(pnTieuDe, BorderLayout.NORTH);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnThemDocGia.add(pnLienHe, BorderLayout.SOUTH);
-
         JPanel pnHienThiXoaDocGia = new JPanel();
         pnHienThiXoaDocGia.setLayout(new BorderLayout());
-        pnThemDocGia.add(pnHienThiXoaDocGia, BorderLayout.CENTER);
+        mainPanel.add(pnHienThiXoaDocGia, BorderLayout.CENTER);
 
 
         JPanel pnHinhAnh = new JPanel();
@@ -184,30 +172,20 @@ public class DeleteReader extends Dialog {
         pnHienThiChiTiet.add(pnDiaChi);
         pnHienThiChiTiet.add(pnGioiTinh);
 
-
-        Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
         Font font2 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 30);
-        Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.TRUETYPE_FONT, 15);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblTieuDe.setFont(font1);
         lblXoaDocGia.setFont(font2);
         lblMaDG.setFont(font4);
         lblSoDienThoai.setFont(font4);
         lblDiaChi.setFont(font4);
         lblHoTen.setFont(font4);
         lblGioiTinh.setFont(font4);
-        lblLienHe.setFont(font4);
         txtMaDocGia.setFont(font4);
         txtDiaChi.setFont(font4);
         txtHoTen.setFont(font4);
         txtSDT.setFont(font4);
         txtGioiTinh.setFont(font4);
-
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblXoaDocGia.setForeground(new Color(48, 51, 107));

@@ -1,6 +1,8 @@
 package eaut.edu.vn.ui.dialog.book;
 
 import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
@@ -34,6 +36,8 @@ public class DeleteBook extends Dialog {
 
     public DeleteBook(String title) {
         super(title);
+        setHeader(new Header("QUẢN LÝ SÁCH"));
+        setFooter(new Footer());
         hienThi();
     }
 
@@ -113,25 +117,9 @@ public class DeleteBook extends Dialog {
 
     @Override
     public void initComponents() {
-        Container con = getContentPane();
-
-        JPanel pnXoaSach = new JPanel();
-        pnXoaSach.setLayout(new BorderLayout());
-        con.add(pnXoaSach);
-
-        JPanel pnTieuDe = new JPanel();
-        JLabel lblTieuDe = new JLabel("QUẢN LÝ SÁCH");
-        pnTieuDe.add(lblTieuDe);
-        pnXoaSach.add(pnTieuDe, BorderLayout.NORTH);
-
-        JPanel pnLienHe = new JPanel();
-        JLabel lblLienHe = new JLabel("THÔNG TIN TRỢ GIÚP - LIÊN HỆ: 0342565857");
-        pnLienHe.add(lblLienHe);
-        pnXoaSach.add(pnLienHe, BorderLayout.SOUTH);
-
         JPanel pnHienThiXoaSach = new JPanel();
         pnHienThiXoaSach.setLayout(new BorderLayout());
-        pnXoaSach.add(pnHienThiXoaSach, BorderLayout.CENTER);
+        mainPanel.add(pnHienThiXoaSach, BorderLayout.CENTER);
 
         JPanel pnHinhAnh = new JPanel();
         pnHinhAnh.setLayout(new FlowLayout());
@@ -221,7 +209,6 @@ public class DeleteBook extends Dialog {
         Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.TRUETYPE_FONT, 15);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
-        lblTieuDe.setFont(font1);
         lblXoaSach.setFont(font2);
         lblGia.setFont(font4);
         lblMaSach.setFont(font4);
@@ -230,7 +217,6 @@ public class DeleteBook extends Dialog {
         lblNhaXB.setFont(font4);
         lblSoLuong.setFont(font4);
         lblTheLoai.setFont(font4);
-        lblLienHe.setFont(font4);
 
         txtMaSach.setFont(font4);
         txtTenSach.setFont(font4);
@@ -246,11 +232,6 @@ public class DeleteBook extends Dialog {
         txtSoLuong.setEditable(false);
         txtTheLoai.setEditable(false);
         txtGia.setEditable(false);
-
-        pnTieuDe.setBackground(new Color(48, 51, 107));
-        lblTieuDe.setForeground(Color.WHITE);
-        pnLienHe.setBackground(new Color(48, 51, 107));
-        lblLienHe.setForeground(Color.WHITE);
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblXoaSach.setForeground(new Color(48, 51, 107));
