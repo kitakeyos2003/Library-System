@@ -1,9 +1,13 @@
 package eaut.edu.vn.util;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 public class Util {
     public static ImageIcon loadImage(String imagePath) {
@@ -36,5 +40,16 @@ public class Util {
         }
 
         return font;
+    }
+
+    public static ImageIcon resizedImage(String imagePath, int newWidth, int newHeight) {
+        try {
+            URL imageURL = Util.class.getResource("/images/" + imagePath);
+            BufferedImage originalImage = ImageIO.read(imageURL);
+            Image resizedImage = originalImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+            return new ImageIcon(resizedImage);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
