@@ -273,7 +273,7 @@ public class BookManager extends CustomFrame {
         pnTongHopTheLoai.add(pnTieuDeTheLoai, BorderLayout.NORTH);
         Font font2 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 18);
         lblTieuDeTheLoai.setFont(font2);
-        pnTieuDeTheLoai.setBackground(new Color(255, 177, 66));
+        pnTieuDeTheLoai.setBackground(new Color(2, 115, 83));
         lblTieuDeTheLoai.setForeground(Color.WHITE);
 
         Connection conn = ConnectMySQL.connect;
@@ -303,7 +303,7 @@ public class BookManager extends CustomFrame {
         pnTieuDe1.add(lblTieuDe1);
         pnChiTietSach.add(pnTieuDe1, BorderLayout.NORTH);
         lblTieuDe1.setFont(font2);
-        pnTieuDe1.setBackground(new Color(255, 177, 66));
+        pnTieuDe1.setBackground(new Color(2, 115, 83));
         lblTieuDe1.setForeground(Color.WHITE);
 
         JPanel pnHienThiChiTiet = new JPanel();
@@ -380,15 +380,16 @@ public class BookManager extends CustomFrame {
         JPanel pnQuayLai = new JPanel();
         pnQuayLai.setLayout(new FlowLayout());
         btnQuayLai = new JButton("QUAY LẠI");
-        btnQuayLai.setBackground(new Color(255, 177, 66));
+        btnQuayLai.setBackground(new Color(2, 115, 83));
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         btnQuayLai.setFont(font4);
         pnQuayLai.add(btnQuayLai);
         btnQuayLai.setForeground(Color.WHITE);
-        pnQuayLai.setBackground(new Color(255, 177, 66));
+        pnQuayLai.setBackground(new Color(2, 115, 83));
         pnThaoTac.add(pnQuayLai, BorderLayout.NORTH);
 
         JPanel pnChucNang = new JPanel();
+        pnChucNang.setBackground(new Color(241, 242, 246));
         pnChucNang.setLayout(new BoxLayout(pnChucNang, BoxLayout.Y_AXIS));
 
 
@@ -396,29 +397,29 @@ public class BookManager extends CustomFrame {
         pnThem.setLayout(new FlowLayout());
         btnThem = new JButton();
         pnThem.add(btnThem);
-        btnThem.setBackground(new Color(255, 177, 66));
-        pnThem.setBackground(new Color(255, 177, 66));
+        btnThem.setBackground(new Color(241, 242, 246));
+        pnThem.setBackground(new Color(241, 242, 246));
 
         JPanel pnXoa = new JPanel();
         pnXoa.setLayout(new FlowLayout());
         btnXoa = new JButton();
-        btnXoa.setBackground(new Color(255, 177, 66));
+        btnXoa.setBackground(new Color(241, 242, 246));
         pnXoa.add(btnXoa);
-        pnXoa.setBackground(new Color(255, 177, 66));
+        pnXoa.setBackground(new Color(241, 242, 246));
 
         JPanel pnSua = new JPanel();
         pnSua.setLayout(new FlowLayout());
         btnSua = new JButton();
-        btnSua.setBackground(new Color(255, 177, 66));
+        btnSua.setBackground(new Color(241, 242, 246));
         pnSua.add(btnSua);
-        pnSua.setBackground(new Color(255, 177, 66));
+        pnSua.setBackground(new Color(241, 242, 246));
 
         JPanel pnTimKiem = new JPanel();
         pnTimKiem.setLayout(new FlowLayout());
         btnTimKiem = new JButton();
-        btnTimKiem.setBackground(new Color(255, 177, 66));
+        btnTimKiem.setBackground(new Color(241, 242, 246));
         pnTimKiem.add(btnTimKiem);
-        pnTimKiem.setBackground(new Color(255, 177, 66));
+        pnTimKiem.setBackground(new Color(241, 242, 246));
 
         pnChucNang.add(pnThem);
         pnChucNang.add(pnXoa);
@@ -427,7 +428,7 @@ public class BookManager extends CustomFrame {
 
         pnThaoTac.add(pnChucNang, BorderLayout.CENTER);
 		
-		/* Border borderHienThi= BorderFactory.createLineBorder(new java.awt.Color(255, 177, 66));
+		/* Border borderHienThi= BorderFactory.createLineBorder(new java.awt.Color(4, 191, 138));
 		TitledBorder titleBorderHienThi= new TitledBorder(borderHienThi);
 		titleBorderHienThi.setTitleJustification(TitledBorder.LEFT);
 		pnHienThiChiTiet.setBorder(titleBorderHienThi); */
@@ -453,7 +454,7 @@ public class BookManager extends CustomFrame {
         pnTieuDe2.add(lblTieuDe2);
         pnBangThongKe.add(pnTieuDe2, BorderLayout.NORTH);
         lblTieuDe2.setFont(font2);
-        pnTieuDe2.setBackground(new Color(48, 51, 107));
+        pnTieuDe2.setBackground(new Color(2, 115, 83));
         lblTieuDe2.setForeground(Color.WHITE);
 
         btnQuayLai.setPreferredSize(new Dimension(220, 30));

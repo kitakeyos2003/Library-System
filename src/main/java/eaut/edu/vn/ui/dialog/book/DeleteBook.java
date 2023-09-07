@@ -254,9 +254,9 @@ public class DeleteBook extends Dialog {
 
         btnXoa.setFont(font5);
 
-        btnXoa.setBackground(new Color(255, 177, 66));
+        btnXoa.setBackground(new Color(4, 191, 138));
         btnXoa.setForeground(Color.white);
-        btnXoa.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnXoa.setBorder(BorderFactory.createLineBorder(new Color(4, 191, 138)));
 
 
         Border borderLogin = BorderFactory.createLineBorder(new Color(48, 51, 107));

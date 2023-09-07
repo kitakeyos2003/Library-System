@@ -102,10 +102,10 @@ public class LibrarianManager extends CustomFrame {
         btnQLDG.setPreferredSize(btnQLS.getPreferredSize());
         btnQLPT.setPreferredSize(btnQLS.getPreferredSize());
 
-        btnQLS.setBackground(new Color(51, 217, 178));
-        btnQLPM.setBackground(new Color(37, 204, 247));
-        btnQLPT.setBackground(new Color(237, 76, 103));
-        btnQLDG.setBackground(new Color(204, 142, 53));
+//        btnQLS.setBackground(new Color(51, 217, 178));
+//        btnQLPM.setBackground(new Color(37, 204, 247));
+//        btnQLPT.setBackground(new Color(237, 76, 103));
+//        btnQLDG.setBackground(new Color(204, 142, 53));
 
 
         btnQLS.setIcon(Util.loadImage("sach.png"));
@@ -138,19 +138,21 @@ public class LibrarianManager extends CustomFrame {
         JPanel pnDoiMatKhau = new JPanel();
         pnDoiMatKhau.setLayout(new FlowLayout());
         btnDoiMK = new JButton("Đổi mật khẩu");
+        btnDoiMK.setFocusPainted(false);
         pnDoiMatKhau.add(btnDoiMK);
         btnDoiMK.setPreferredSize(new Dimension(300, 60));
         pnDoiMatKhau.setBackground(Color.WHITE);
-        btnDoiMK.setBackground(new Color(48, 51, 107));
+        btnDoiMK.setBackground(new Color(4, 191, 138));
         btnDoiMK.setForeground(Color.WHITE);
 
         JPanel pnDangXuat = new JPanel();
         pnDangXuat.setLayout(new FlowLayout());
         btnDangXuat = new JButton("Đăng xuất");
+        btnDangXuat.setFocusPainted(false);
         pnDangXuat.add(btnDangXuat);
         btnDangXuat.setPreferredSize(new Dimension(300, 60));
         pnDangXuat.setBackground(Color.WHITE);
-        btnDangXuat.setBackground(new Color(48, 51, 107));
+        btnDangXuat.setBackground(new Color(4, 191, 138));
         btnDangXuat.setForeground(Color.WHITE);
 
 

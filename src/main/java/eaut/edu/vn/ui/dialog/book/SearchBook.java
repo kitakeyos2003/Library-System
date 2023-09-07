@@ -276,7 +276,7 @@ public class SearchBook extends Dialog {
         pnHienThiChiTiet.add(pnTieuDe1, BorderLayout.NORTH);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 16);
         lblTieuDe1.setFont(font4);
-        pnTieuDe1.setBackground(new Color(255, 177, 66));
+        pnTieuDe1.setBackground(new Color(4, 191, 138));
         lblTieuDe1.setForeground(Color.WHITE);
 
 
@@ -375,7 +375,7 @@ public class SearchBook extends Dialog {
         pnTieuDe2.add(lblTieuDe2);
         pnBangThongKe.add(pnTieuDe2, BorderLayout.NORTH);
         lblTieuDe2.setFont(font4);
-        pnTieuDe2.setBackground(new Color(255, 177, 66));
+        pnTieuDe2.setBackground(new Color(4, 191, 138));
         lblTieuDe2.setForeground(Color.WHITE);
 
 

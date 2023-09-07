@@ -353,9 +353,9 @@ public class ReturnReceipt extends Dialog {
 
         btnTraSach.setFont(font5);
 
-        btnTraSach.setBackground(new Color(255, 177, 66));
+        btnTraSach.setBackground(new Color(4, 191, 138));
         btnTraSach.setForeground(Color.white);
-        btnTraSach.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnTraSach.setBorder(BorderFactory.createLineBorder(new Color(4, 191, 138)));
 
 
         Border borderLogin = BorderFactory.createLineBorder(new Color(48, 51, 107));

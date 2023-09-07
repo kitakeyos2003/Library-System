@@ -332,11 +332,11 @@ public class ChangePassword extends CustomFrame {
         pnThaoTac.setBackground(new Color(241, 242, 246));
         pnHinhAnh.setBackground(new Color(241, 242, 246));
 
-        btnLamLai.setBackground(new Color(255, 177, 66));
+        btnLamLai.setBackground(new Color(4, 191, 138));
         btnLamLai.setForeground(Color.white);
-        btnLamLai.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
-        btnQuayLai.setBackground(new Color(255, 177, 66));
-        btnQuayLai.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnLamLai.setBorder(BorderFactory.createLineBorder(new Color(4, 191, 138)));
+        btnQuayLai.setBackground(new Color(4, 191, 138));
+        btnQuayLai.setBorder(BorderFactory.createLineBorder(new Color(4, 191, 138)));
         btnQuayLai.setForeground(Color.white);
         btnLuu.setBackground(new Color(5, 196, 107));
         btnLuu.setForeground(Color.white);

@@ -240,9 +240,9 @@ public class AddBook extends Dialog {
 
         btnThem.setFont(font5);
 
-        btnThem.setBackground(new Color(255, 177, 66));
+        btnThem.setBackground(new Color(4, 191, 138));
         btnThem.setForeground(Color.white);
-        btnThem.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnThem.setBorder(BorderFactory.createLineBorder(new Color(4, 191, 138)));
 
 
         Border borderLogin = BorderFactory.createLineBorder(new Color(48, 51, 107));

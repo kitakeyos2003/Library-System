@@ -8,36 +8,26 @@ import java.awt.Font;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 
 import eaut.edu.vn.service.AccountService;
 import eaut.edu.vn.model.Account;
-import eaut.edu.vn.ui.controls.Footer;
-import eaut.edu.vn.ui.controls.CustomFrame;
-import eaut.edu.vn.ui.controls.Header;
+import eaut.edu.vn.ui.controls.*;
 import eaut.edu.vn.util.Util;
 
 public class Login extends CustomFrame {
     JButton btnLogin, btnExit;
-    JTextField txtUsername;
-    JPasswordField pwdPassword;
+    PlaceholderTextField txtUsername;
+    PlaceholderPasswordField pwdPassword;
 
 
     public Login(String title) {
         super(title);
-        this.setSize(540, 350);
-        setHeader(new Header("QUẢN LÝ NGƯỜI DÙNG"));
-        setFooter(new Footer());
+        this.setSize(650, 350);
     }
 
     @Override
@@ -116,11 +106,11 @@ public class Login extends CustomFrame {
         btnLogin.addActionListener(e -> {
             AccountService tksv = new AccountService();
             ArrayList<Account> dstk = tksv.layTaiKhoan();
-            if (txtUsername.getText().length() == 0) {
+            if (txtUsername.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Tài khoản không được để trống");
                 return;
             }
-            if (pwdPassword.getText().length() == 0) {
+            if (pwdPassword.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Mật khẩu không được để trống");
                 return;
             }
@@ -256,32 +246,50 @@ public class Login extends CustomFrame {
 
     @Override
     public void initComponents() {
-        JPanel pnLogin = new JPanel();
-        pnLogin.setLayout(new BoxLayout(pnLogin, BoxLayout.Y_AXIS));
+        JPanel panelLogin = new JPanel();
 
-        JPanel pnTitle = new JPanel();
-        pnTitle.setLayout(new FlowLayout());
+        JPanel panelLogo = new JPanel();
+        panelLogo.setSize(250, 250);
+        JLabel logo = new JLabel();
+        panelLogo.setBackground(Color.WHITE);
+        logo.setIcon(Util.resizedImage("login.png", 250, 250));
+        panelLogo.add(logo);
+
+        panelLogin.setSize(400, 350);
+        panelLogin.setBackground(Color.WHITE);
+        JPanel panelForm = new JPanel();
+        panelForm.setBackground(Color.WHITE);
+        panelForm.setLayout(new BoxLayout(panelForm, BoxLayout.Y_AXIS));
+        panelForm.setBackground(Color.WHITE);
+
+
+
+        JPanel panelTitle = new JPanel();
+
+        panelTitle.setBackground(Color.WHITE);
+        panelTitle.setLayout(new FlowLayout());
         JLabel lblLogin = new JLabel("ĐĂNG NHẬP");
-        pnTitle.add(lblLogin);
+        panelTitle.add(lblLogin);
 
         JPanel pnTaiKhoan = new JPanel();
+        pnTaiKhoan.setBackground(Color.WHITE);
         pnTaiKhoan.setLayout(new FlowLayout());
-        //JLabel lblTaiKhoan = new JLabel("TÀI KHOẢN  ");
-        txtUsername = new JTextField("User name");
-        txtUsername.setPreferredSize(new Dimension(350, 30));
-        //pnTaiKhoan.add(lblTaiKhoan);
+        txtUsername = new PlaceholderTextField();
+        txtUsername.setPlaceholder("User name");
+        txtUsername.setPreferredSize(new Dimension(300, 35));
         pnTaiKhoan.add(txtUsername);
 
         JPanel pnMatKhau = new JPanel();
+        pnMatKhau.setBackground(Color.WHITE);
         pnMatKhau.setLayout(new FlowLayout());
-        //JLabel lblMatKhau = new JLabel("MẬT KHẨU  ");
-        pwdPassword = new JPasswordField("Password");
+        pwdPassword = new PlaceholderPasswordField();
+        pwdPassword.setPlaceholder("Password");
         pwdPassword.setEchoChar((char) 0);
-        pwdPassword.setPreferredSize(new Dimension(350, 30));
-        //pnMatKhau.add(lblMatKhau);
+        pwdPassword.setPreferredSize(new Dimension(300, 35));
         pnMatKhau.add(pwdPassword);
 
         JPanel pnThaoTac = new JPanel();
+        pnThaoTac.setBackground(Color.WHITE);
         pnThaoTac.setLayout(new FlowLayout());
         btnLogin = new JButton("Đăng nhập");
         btnExit = new JButton("Thoát");
@@ -289,46 +297,59 @@ public class Login extends CustomFrame {
         pnThaoTac.add(btnLogin);
         pnThaoTac.add(btnExit);
 
-        pnLogin.add(pnTitle);
-        pnLogin.add(pnTaiKhoan);
-        pnLogin.add(pnMatKhau);
-        pnLogin.add(pnThaoTac);
-        mainPanel.add(pnLogin, BorderLayout.CENTER);
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(10, 20));
+        panel.setBackground(Color.WHITE);
+
+        JPanel panel2 = new JPanel();
+        panel2.setPreferredSize(new Dimension(10, 20));
+        panel2.setBackground(Color.WHITE);
+        panelForm.add(panel);
+        panelForm.add(panelTitle);
+        panelForm.add(pnTaiKhoan);
+        panelForm.add(pnMatKhau);
+        panelForm.add(panel2);
+        panelForm.add(pnThaoTac);
+
+        JPanel panelLeft = new JPanel();
+        panelLeft.setBackground(Color.WHITE);
+        panelLeft.setPreferredSize(new Dimension(20, 50));
+
+        JPanel panelRight = new JPanel();
+        panelRight.setBackground(Color.WHITE);
+        panelRight.setPreferredSize(new Dimension(20, 50));
+
+        panelLogin.add(panelLeft);
+        panelLogin.add(panelForm);
+        panelLogin.add(panelRight);
+
+        mainPanel.add(panelLogo, BorderLayout.WEST);
+        mainPanel.add(panelLogin, BorderLayout.EAST);
 
         Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
-        Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 10);
+        Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 14);
         lblLogin.setFont(font1);
-        //lblTaiKhoan.setFont(font3);
-        //lblMatKhau.setFont(font3);
+
         txtUsername.setFont(font4);
         pwdPassword.setFont(font4);
         btnExit.setFont(font5);
         btnLogin.setFont(font5);
 
-        btnLogin.setIcon(Util.loadImage("lock.png"));
-        btnExit.setIcon(Util.loadImage("close.png"));
-
-        pnTitle.setBackground(new Color(241, 242, 246));
         lblLogin.setForeground(new Color(48, 51, 107));
-        pnTaiKhoan.setBackground(new Color(241, 242, 246));
-        pnMatKhau.setBackground(new Color(241, 242, 246));
-        pnThaoTac.setBackground(new Color(241, 242, 246));
 
-        btnLogin.setBackground(new Color(48, 51, 107));
+        btnLogin.setBackground(new Color(82, 196, 82));
         btnLogin.setForeground(Color.white);
-        btnExit.setBackground(new Color(48, 51, 107));
+        btnLogin.setBorderPainted(false);
+        btnLogin.setFocusPainted(false);
+
+        btnExit.setBackground(new Color(51, 51, 51));
         btnExit.setForeground(Color.white);
+        btnExit.setBorderPainted(false);
+        btnExit.setFocusPainted(false);
 
 
         btnExit.setPreferredSize(btnLogin.getPreferredSize());
-        //lblMatKhau.setPreferredSize(lblTaiKhoan.getPreferredSize() );
-
-        Border borderLogin = BorderFactory.createLineBorder(new Color(48, 51, 107));
-        TitledBorder titleLogin = new TitledBorder(borderLogin, "");
-        titleLogin.setTitleJustification(TitledBorder.LEFT);
-        titleLogin.setTitleColor(Color.BLUE);
-        pnLogin.setBorder(titleLogin);
 
     }
 

@@ -292,7 +292,7 @@ public class ReturnManager extends CustomFrame {
 
         Font font2 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 18);
         lblTieuDe1.setFont(font2);
-        pnTieuDe1.setBackground(new Color(255, 177, 66));
+        pnTieuDe1.setBackground(new Color(2, 115, 83));
         lblTieuDe1.setForeground(Color.WHITE);
 
         JPanel pnMaPhieu = new JPanel();
@@ -383,12 +383,12 @@ public class ReturnManager extends CustomFrame {
         JPanel pnQuayLai = new JPanel();
         pnQuayLai.setLayout(new FlowLayout());
         btnQuayLai = new JButton("QUAY LẠI");
-        btnQuayLai.setBackground(new Color(255, 177, 66));
+        btnQuayLai.setBackground(new Color(2, 115, 83));
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         btnQuayLai.setFont(font4);
         pnQuayLai.add(btnQuayLai);
         btnQuayLai.setForeground(Color.WHITE);
-        pnQuayLai.setBackground(new Color(255, 177, 66));
+        pnQuayLai.setBackground(new Color(2, 115, 83));
         pnThaoTac.add(pnQuayLai, BorderLayout.NORTH);
 
         JPanel pnChucNang = new JPanel();
@@ -397,23 +397,23 @@ public class ReturnManager extends CustomFrame {
         JPanel pnHinhAnh = new JPanel();
         pnHinhAnh.setLayout(new FlowLayout());
         JLabel lblHinhAnh = new JLabel();
-        pnHinhAnh.setBackground(new Color(255, 177, 66));
+        pnHinhAnh.setBackground(new Color(4, 191, 138));
         lblHinhAnh.setIcon(Util.loadImage("nenanh.png"));
         pnHinhAnh.add(lblHinhAnh);
 
         JPanel pnTimKiem = new JPanel();
         pnTimKiem.setLayout(new FlowLayout());
         btnTimKiem = new JButton();
-        btnTimKiem.setBackground(new Color(255, 177, 66));
+        btnTimKiem.setBackground(new Color(241, 242, 246));
         pnTimKiem.add(btnTimKiem);
-        pnTimKiem.setBackground(new Color(255, 177, 66));
+        pnTimKiem.setBackground(new Color(241, 242, 246));
 
         JPanel pnTraSach = new JPanel();
         pnTraSach.setLayout(new FlowLayout());
         btnTraSach = new JButton();
         pnTraSach.add(btnTraSach);
-        btnTraSach.setBackground(new Color(255, 177, 66));
-        pnTraSach.setBackground(new Color(255, 177, 66));
+        btnTraSach.setBackground(new Color(241, 242, 246));
+        pnTraSach.setBackground(new Color(241, 242, 246));
 
         pnChucNang.add(pnHinhAnh);
         pnChucNang.add(pnTimKiem);
@@ -428,7 +428,7 @@ public class ReturnManager extends CustomFrame {
         pnThongKePhieuChuaTra.add(pnTieuDe2, BorderLayout.NORTH);
         JLabel lblTieuDe2 = new JLabel("DANH SÁCH PHIẾU CHƯA TRẢ");
         lblTieuDe2.setFont(font2);
-        pnTieuDe2.setBackground(new Color(255, 177, 66));
+        pnTieuDe2.setBackground(new Color(2, 115, 83));
         lblTieuDe2.setForeground(Color.WHITE);
         pnTieuDe2.add(lblTieuDe2);
 

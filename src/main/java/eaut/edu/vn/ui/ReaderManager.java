@@ -247,7 +247,7 @@ public class ReaderManager extends CustomFrame {
 
         Font font2 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 18);
         lblTieuDe1.setFont(font2);
-        pnTieuDe1.setBackground(new Color(255, 177, 66));
+        pnTieuDe1.setBackground(new Color(2, 115, 83));
         lblTieuDe1.setForeground(Color.WHITE);
 
         JPanel pnMaDocGia = new JPanel();
@@ -311,12 +311,12 @@ public class ReaderManager extends CustomFrame {
         JPanel pnQuayLai = new JPanel();
         pnQuayLai.setLayout(new FlowLayout());
         btnQuayLai = new JButton("QUAY LẠI");
-        btnQuayLai.setBackground(new Color(255, 177, 66));
+        btnQuayLai.setBackground(new Color(2, 115, 83));
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         btnQuayLai.setFont(font4);
         pnQuayLai.add(btnQuayLai);
         btnQuayLai.setForeground(Color.WHITE);
-        pnQuayLai.setBackground(new Color(255, 177, 66));
+        pnQuayLai.setBackground(new Color(2, 115, 83));
         pnThaoTac.add(pnQuayLai, BorderLayout.NORTH);
 
         JPanel pnChucNang = new JPanel();
@@ -326,30 +326,30 @@ public class ReaderManager extends CustomFrame {
         pnThem.setLayout(new FlowLayout());
         btnThem = new JButton();
         pnThem.add(btnThem);
-        btnThem.setBackground(new Color(255, 177, 66));
-        pnThem.setBackground(new Color(255, 177, 66));
+        btnThem.setBackground(new Color(241, 242, 246));
+        pnThem.setBackground(new Color(241, 242, 246));
 		
 		/* JPanel pnTimKiem= new JPanel();
 		pnTimKiem.setLayout(new FlowLayout());
 		btnTimKiem= new JButton();
-		btnTimKiem.setBackground(new java.awt.Color(255, 177, 66));
+		btnTimKiem.setBackground(new java.awt.Color(4, 191, 138));
 		pnTimKiem.add(btnTimKiem);
-		pnTimKiem.setBackground(new java.awt.Color(255, 177, 66)); 
+		pnTimKiem.setBackground(new java.awt.Color(4, 191, 138)); 
 		*/
 
         JPanel pnXoa = new JPanel();
         pnXoa.setLayout(new FlowLayout());
         btnXoa = new JButton();
-        btnXoa.setBackground(new Color(255, 177, 66));
+        btnXoa.setBackground(new Color(241, 242, 246));
         pnXoa.add(btnXoa);
-        pnXoa.setBackground(new Color(255, 177, 66));
+        pnXoa.setBackground(new Color(241, 242, 246));
 
         JPanel pnSua = new JPanel();
         pnSua.setLayout(new FlowLayout());
         btnSua = new JButton();
-        btnSua.setBackground(new Color(255, 177, 66));
+        btnSua.setBackground(new Color(241, 242, 246));
         pnSua.add(btnSua);
-        pnSua.setBackground(new Color(255, 177, 66));
+        pnSua.setBackground(new Color(241, 242, 246));
 
         pnChucNang.add(pnThem);
         pnChucNang.add(pnXoa);
@@ -365,7 +365,7 @@ public class ReaderManager extends CustomFrame {
         pnThongKePhieuMuon.add(pnTieuDe2, BorderLayout.NORTH);
         JLabel lblTieuDe2 = new JLabel("DANH SÁCH PHIẾU MƯỢN");
         lblTieuDe2.setFont(font2);
-        pnTieuDe2.setBackground(new Color(255, 177, 66));
+        pnTieuDe2.setBackground(new Color(2, 115, 83));
         lblTieuDe2.setForeground(Color.WHITE);
         pnTieuDe2.add(lblTieuDe2);
 
@@ -382,7 +382,7 @@ public class ReaderManager extends CustomFrame {
         btnThongTin = new JButton("CHI TIẾT");
         pnChiTiet.add(btnThongTin);
         btnThongTin.setFont(font4);
-        btnThongTin.setForeground(new Color(255, 177, 66));
+        btnThongTin.setForeground(new Color(2, 115, 83));
         btnThongTin.setBackground(new Color(255, 255, 255));
         pnChiTiet.setBackground(new Color(255, 255, 255));
 
@@ -411,7 +411,7 @@ public class ReaderManager extends CustomFrame {
         pnTieuDe3.add(lblTieuDe3);
         pnBangThongKe.add(pnTieuDe3, BorderLayout.NORTH);
         lblTieuDe3.setFont(font2);
-        pnTieuDe3.setBackground(new Color(48, 51, 107));
+        pnTieuDe3.setBackground(new Color(2, 115, 83));
         lblTieuDe3.setForeground(Color.WHITE);
 
         pnThongTin.add(pnBangThongKe, BorderLayout.SOUTH);
@@ -419,7 +419,7 @@ public class ReaderManager extends CustomFrame {
         btnThem.setIcon(Util.loadImage("themmoi.png"));
         btnXoa.setIcon(Util.loadImage("xoa.png"));
         btnSua.setIcon(Util.loadImage("chinhsua.png"));
-        btnThongTin.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnThongTin.setBorder(BorderFactory.createLineBorder(new Color(2, 115, 83)));
         btnQuayLai.setBorder(BorderFactory.createLineBorder(Color.WHITE));
         btnThem.setBorder(null);
         btnXoa.setBorder(null);

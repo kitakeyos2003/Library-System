@@ -362,7 +362,7 @@ public class Search extends Dialog {
         pnHienThiChiTiet.add(pnTieuDe1, BorderLayout.NORTH);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 16);
         lblTieuDe1.setFont(font4);
-        pnTieuDe1.setBackground(new Color(255, 177, 66));
+        pnTieuDe1.setBackground(new Color(4, 191, 138));
         lblTieuDe1.setForeground(Color.WHITE);
 
         JPanel pnMaPhieu = new JPanel();
@@ -460,13 +460,13 @@ public class Search extends Dialog {
         pnHienThiChiTiet.add(pnTraSach);
         btnTraSach = new JButton("TRẢ SÁCH");
         pnTraSach.add(btnTraSach);
-        btnTraSach.setBackground(new Color(255, 177, 66));
+        btnTraSach.setBackground(new Color(4, 191, 138));
         pnTraSach.setBackground(new Color(255, 255, 255));
         btnTraSach.setPreferredSize(new Dimension(180, 30));
         Font font8 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 17);
         btnTraSach.setFont(font8);
         btnTraSach.setForeground(Color.white);
-        btnTraSach.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnTraSach.setBorder(BorderFactory.createLineBorder(new Color(4, 191, 138)));
 
 
         JPanel pnBangThongKe = new JPanel();
@@ -493,7 +493,7 @@ public class Search extends Dialog {
         pnTieuDe2.add(lblTieuDe2);
         pnBangThongKe.add(pnTieuDe2, BorderLayout.NORTH);
         lblTieuDe2.setFont(font4);
-        pnTieuDe2.setBackground(new Color(255, 177, 66));
+        pnTieuDe2.setBackground(new Color(4, 191, 138));
         lblTieuDe2.setForeground(Color.WHITE);
 
 

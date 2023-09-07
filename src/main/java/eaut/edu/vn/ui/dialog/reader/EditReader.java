@@ -154,9 +154,9 @@ public class EditReader extends Dialog {
 
         btnSua.setFont(font5);
 
-        btnSua.setBackground(new Color(255, 177, 66));
+        btnSua.setBackground(new Color(4, 191, 138));
         btnSua.setForeground(Color.white);
-        btnSua.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnSua.setBorder(BorderFactory.createLineBorder(new Color(4, 191, 138)));
         //btnLuu.setBackground(new java.awt.Color(5, 196, 107));
 
 

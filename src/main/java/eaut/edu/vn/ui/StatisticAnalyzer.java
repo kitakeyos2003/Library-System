@@ -116,11 +116,13 @@ public class StatisticAnalyzer extends CustomFrame {
         pnChiTietSach.setLayout(new BorderLayout());
         btnChiTietSach = new JButton("Chi tiết");
         pnChiTietSach.add(btnChiTietSach, BorderLayout.EAST);
-        pnChiTietSach.setBackground(new Color(51, 217, 178));
+        pnChiTietSach.setBackground(new Color(99, 211, 165));
 
         JPanel pnThongKeSach = new JPanel();
         pnThongKeSach.setLayout(new BoxLayout(pnThongKeSach, BoxLayout.Y_AXIS));
         btnQLS = new JButton();
+        btnQLS.setBorderPainted(false);
+        btnQLS.setFocusPainted(false);
         JLabel lblTKSach = new JLabel("Có " + kqs + " đầu sách");
         pnThongKeSach.add(btnQLS);
         pnThongKeSach.add(lblTKSach);
@@ -130,11 +132,13 @@ public class StatisticAnalyzer extends CustomFrame {
         pnChiTietDocGia.setLayout(new BorderLayout());
         btnChiTietDG = new JButton("Chi tiết");
         pnChiTietDocGia.add(btnChiTietDG, BorderLayout.EAST);
-        pnChiTietDocGia.setBackground(new Color(204, 142, 53));
+        pnChiTietDocGia.setBackground(new Color(82, 78, 79));
 
         JPanel pnThongKeDocGia = new JPanel();
         pnThongKeDocGia.setLayout(new BoxLayout(pnThongKeDocGia, BoxLayout.Y_AXIS));
         btnQLDG = new JButton();
+        btnQLDG.setBorderPainted(false);
+        btnQLDG.setFocusPainted(false);
         JLabel lblTKDocGia = new JLabel("Có " + kqdg + " độc giả");
         pnThongKeDocGia.add(btnQLDG);
         pnThongKeDocGia.add(lblTKDocGia);
@@ -149,11 +153,13 @@ public class StatisticAnalyzer extends CustomFrame {
         pnChiTietPhieuMuon.setLayout(new BorderLayout());
         btnChiTietPM = new JButton("Chi tiết");
         pnChiTietPhieuMuon.add(btnChiTietPM, BorderLayout.EAST);
-        pnChiTietPhieuMuon.setBackground(new Color(37, 204, 247));
+        pnChiTietPhieuMuon.setBackground(new Color(122, 161, 94));
 
         JPanel pnThongKePhieuMuon = new JPanel();
         pnThongKePhieuMuon.setLayout(new BoxLayout(pnThongKePhieuMuon, BoxLayout.Y_AXIS));
         btnQLPM = new JButton();
+        btnQLPM.setBorderPainted(false);
+        btnQLPM.setFocusPainted(false);
         JLabel lblTKPM = new JLabel("Có " + kqpm + " phiếu mượn");
         pnThongKePhieuMuon.add(btnQLPM);
         pnThongKePhieuMuon.add(lblTKPM);
@@ -163,11 +169,13 @@ public class StatisticAnalyzer extends CustomFrame {
         pnChiTietPhieuTra.setLayout(new BorderLayout());
         btnChiTietPT = new JButton("Chi tiết");
         pnChiTietPhieuTra.add(btnChiTietPT, BorderLayout.EAST);
-        pnChiTietPhieuTra.setBackground(new Color(237, 76, 103));
+        pnChiTietPhieuTra.setBackground(new Color(120, 191, 51));
 
         JPanel pnThongKePhieuTra = new JPanel();
         pnThongKePhieuTra.setLayout(new BoxLayout(pnThongKePhieuTra, BoxLayout.Y_AXIS));
         btnQLPT = new JButton();
+        btnQLPT.setBorderPainted(false);
+        btnQLPT.setFocusPainted(false);
         JLabel lblTKPT = new JLabel("Có " + kqpt + " phiếu trả");
         pnThongKePhieuTra.add(btnQLPT);
         pnThongKePhieuTra.add(lblTKPT);
@@ -179,20 +187,20 @@ public class StatisticAnalyzer extends CustomFrame {
         btnQLDG.setPreferredSize(btnQLS.getPreferredSize());
         btnQLPT.setPreferredSize(btnQLS.getPreferredSize());
 
-        pnThongKeSach.setBackground(new Color(51, 217, 178));
-        pnThongKePhieuMuon.setBackground(new Color(37, 204, 247));
-        pnThongKePhieuTra.setBackground(new Color(237, 76, 103));
-        pnThongKeDocGia.setBackground(new Color(204, 142, 53));
+        pnThongKeSach.setBackground(new Color(99, 211, 165));
+        pnThongKePhieuMuon.setBackground(new Color(122, 161, 94));
+        pnThongKePhieuTra.setBackground(new Color(120, 191, 51));
+        pnThongKeDocGia.setBackground(new Color(82, 78, 79));
 
         btnQLS.setIcon(Util.loadImage("tksach.png"));
         btnQLPM.setIcon(Util.loadImage("tkphieumuon.png"));
         btnQLDG.setIcon(Util.loadImage("tkdocgia.png"));
         btnQLPT.setIcon(Util.loadImage("tkphieutra.png"));
 
-        btnQLS.setBackground(new Color(51, 217, 178));
-        btnQLPM.setBackground(new Color(37, 204, 247));
-        btnQLPT.setBackground(new Color(237, 76, 103));
-        btnQLDG.setBackground(new Color(204, 142, 53));
+        btnQLS.setBackground(new Color(99, 211, 165));
+        btnQLPM.setBackground(new Color(122, 161, 94));
+        btnQLPT.setBackground(new Color(120, 191, 51));
+        btnQLDG.setBackground(new Color(82, 78, 79));
 
         pnHang1.add(pnThongKeSach);
         pnHang1.add(pnThongKeDocGia);
@@ -218,17 +226,18 @@ public class StatisticAnalyzer extends CustomFrame {
         JPanel pnQuayLai = new JPanel();
         pnQuayLai.setLayout(new FlowLayout());
         btnQuayLai = new JButton("QUAY LẠI TRANG CHỦ");
+        btnQuayLai.setFocusPainted(false);
         pnQuayLai.add(btnQuayLai);
         btnQuayLai.setPreferredSize(new Dimension(300, 40));
         pnQuayLai.setBackground(Color.WHITE);
-        btnQuayLai.setBackground(new Color(255, 177, 66));
+        btnQuayLai.setBackground(new Color(4, 191, 138));
         btnQuayLai.setForeground(Color.WHITE);
         btnQuayLai.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
-        btnChiTietSach.setBackground(new Color(51, 217, 178));
-        btnChiTietPM.setBackground(new Color(37, 204, 247));
-        btnChiTietPT.setBackground(new Color(237, 76, 103));
-        btnChiTietDG.setBackground(new Color(204, 142, 53));
+        btnChiTietSach.setBackground(new Color(99, 211, 165));
+        btnChiTietPM.setBackground(new Color(122, 161, 94));
+        btnChiTietPT.setBackground(new Color(120, 191, 51));
+        btnChiTietDG.setBackground(new Color(82, 78, 79));
 
         btnChiTietSach.setForeground(Color.WHITE);
         btnChiTietPM.setForeground(Color.WHITE);
@@ -259,10 +268,10 @@ public class StatisticAnalyzer extends CustomFrame {
 
         mainPanel.add(pnChucNang, BorderLayout.WEST);
 
-        btnQLDG.setBorder(null);
-        btnQLPM.setBorder(null);
-        btnQLPT.setBorder(null);
-        btnQLS.setBorder(null);
+        btnQLDG.setBorder(BorderFactory.createEmptyBorder());
+        btnQLPM.setBorder(BorderFactory.createEmptyBorder());
+        btnQLPT.setBorder(BorderFactory.createEmptyBorder());
+        btnQLS.setBorder(BorderFactory.createEmptyBorder());
 
         btnChiTietDG.setBorder(BorderFactory.createLineBorder(Color.WHITE));
         btnChiTietPM.setBorder(BorderFactory.createLineBorder(Color.WHITE));

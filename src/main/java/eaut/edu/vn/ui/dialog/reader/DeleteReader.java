@@ -207,9 +207,9 @@ public class DeleteReader extends Dialog {
 
         btnXoa.setFont(font5);
 
-        btnXoa.setBackground(new Color(255, 177, 66));
+        btnXoa.setBackground(new Color(4, 191, 138));
         btnXoa.setForeground(Color.white);
-        btnXoa.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnXoa.setBorder(BorderFactory.createLineBorder(new Color(4, 191, 138)));
         //btnLuu.setBackground(new java.awt.Color(5, 196, 107));
 
 

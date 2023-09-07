@@ -83,7 +83,7 @@ public class AccountManager extends CustomFrame {
         pnChiTietNguoiDung.add(pnTieuDe1, BorderLayout.NORTH);
         Font font2 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 18);
         lblTieuDe1.setFont(font2);
-        pnTieuDe1.setBackground(new Color(255, 177, 66));
+        pnTieuDe1.setBackground(new Color(2, 115, 83));
         lblTieuDe1.setForeground(Color.WHITE);
 
         JPanel pnHienThiChiTiet = new JPanel();
@@ -156,12 +156,12 @@ public class AccountManager extends CustomFrame {
         JPanel pnQuayLai = new JPanel();
         pnQuayLai.setLayout(new FlowLayout());
         btnQuayLai = new JButton("QUAY LẠI");
-        btnQuayLai.setBackground(new Color(255, 177, 66));
+        btnQuayLai.setBackground(new Color(2, 115, 83));
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         btnQuayLai.setFont(font4);
         pnQuayLai.add(btnQuayLai);
         btnQuayLai.setForeground(Color.WHITE);
-        pnQuayLai.setBackground(new Color(255, 177, 66));
+        pnQuayLai.setBackground(new Color(2, 115, 83));
         pnThaoTac.add(pnQuayLai, BorderLayout.NORTH);
 
         JPanel pnChucNang = new JPanel();
@@ -171,22 +171,22 @@ public class AccountManager extends CustomFrame {
         pnThem.setLayout(new FlowLayout());
         btnThem = new JButton();
         pnThem.add(btnThem);
-        btnThem.setBackground(new Color(255, 177, 66));
-        pnThem.setBackground(new Color(255, 177, 66));
+        btnThem.setBackground(new Color(241, 242, 246));
+        pnThem.setBackground(new Color(241, 242, 246));
 
         JPanel pnXoa = new JPanel();
         pnXoa.setLayout(new FlowLayout());
         btnXoa = new JButton();
-        btnXoa.setBackground(new Color(255, 177, 66));
+        btnXoa.setBackground(new Color(241, 242, 246));
         pnXoa.add(btnXoa);
-        pnXoa.setBackground(new Color(255, 177, 66));
+        pnXoa.setBackground(new Color(241, 242, 246));
 
         JPanel pnSua = new JPanel();
         pnSua.setLayout(new FlowLayout());
         btnSua = new JButton();
-        btnSua.setBackground(new Color(255, 177, 66));
+        btnSua.setBackground(new Color(241, 242, 246));
         pnSua.add(btnSua);
-        pnSua.setBackground(new Color(255, 177, 66));
+        pnSua.setBackground(new Color(241, 242, 246));
 
         pnChucNang.add(pnThem);
         pnChucNang.add(pnXoa);
@@ -194,7 +194,7 @@ public class AccountManager extends CustomFrame {
 
         pnThaoTac.add(pnChucNang, BorderLayout.CENTER);
 
-        Border borderHienThi = BorderFactory.createLineBorder(new Color(255, 177, 66));
+        Border borderHienThi = BorderFactory.createLineBorder(new Color(241, 242, 246));
         TitledBorder titleBorderHienThi = new TitledBorder(borderHienThi);
         titleBorderHienThi.setTitleJustification(TitledBorder.LEFT);
         pnHienThiChiTiet.setBorder(titleBorderHienThi);
@@ -217,7 +217,7 @@ public class AccountManager extends CustomFrame {
         pnTieuDe2.add(lblTieuDe2);
         pnBangThongKe.add(pnTieuDe2, BorderLayout.NORTH);
         lblTieuDe2.setFont(font2);
-        pnTieuDe2.setBackground(new Color(48, 51, 107));
+        pnTieuDe2.setBackground(new Color(2, 115, 83));
         lblTieuDe2.setForeground(Color.WHITE);
 
         btnQuayLai.setPreferredSize(new Dimension(220, 30));

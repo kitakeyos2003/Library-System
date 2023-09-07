@@ -87,9 +87,9 @@ public class BookBorrowStatus extends Dialog {
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
         btnThem.setFont(font5);
 
-        btnThem.setBackground(new Color(255, 177, 66));
+        btnThem.setBackground(new Color(4, 191, 138));
         btnThem.setForeground(Color.white);
-        btnThem.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnThem.setBorder(BorderFactory.createLineBorder(new Color(4, 191, 138)));
 
         Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);

@@ -102,9 +102,9 @@ public class UpdateBorrowedBookStatus extends Dialog {
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
         btnXoa.setFont(font5);
 
-        btnXoa.setBackground(new Color(255, 177, 66));
+        btnXoa.setBackground(new Color(4, 191, 138));
         btnXoa.setForeground(Color.white);
-        btnXoa.setBorder(BorderFactory.createLineBorder(new Color(255, 177, 66)));
+        btnXoa.setBorder(BorderFactory.createLineBorder(new Color(4, 191, 138)));
 
         Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
