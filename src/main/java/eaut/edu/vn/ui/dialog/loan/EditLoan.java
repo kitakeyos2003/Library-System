@@ -130,7 +130,7 @@ public class EditLoan extends Dialog {
         pnHinhAnh.setLayout(new FlowLayout());
         JLabel lblHinhAnh = new JLabel();
         pnHinhAnh.setBackground(Color.WHITE);
-        lblHinhAnh.setIcon(Util.loadImage("kha1.png"));
+        lblHinhAnh.setIcon(Util.loadImage("qlpm.png"));
         pnHinhAnh.add(lblHinhAnh);
         pnHienThiThemPM.add(pnHinhAnh, BorderLayout.WEST);
 

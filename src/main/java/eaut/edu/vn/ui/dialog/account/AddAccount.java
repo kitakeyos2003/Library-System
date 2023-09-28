@@ -93,7 +93,7 @@ public class AddAccount extends Dialog {
         pnHinhAnh.setLayout(new FlowLayout());
         JLabel lblHinhAnh = new JLabel();
         pnHinhAnh.setBackground(Color.WHITE);
-        lblHinhAnh.setIcon(Util.loadImage("themnd.png"));
+        lblHinhAnh.setIcon(Util.loadImage("user-info.png"));
         pnHinhAnh.add(lblHinhAnh);
         pnHienThiThemNguoiDung.add(pnHinhAnh, BorderLayout.WEST);
 

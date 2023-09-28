@@ -338,9 +338,9 @@ public class ChangePassword extends CustomFrame {
         btnQuayLai.setBackground(new Color(4, 191, 138));
         btnQuayLai.setBorder(BorderFactory.createLineBorder(new Color(4, 191, 138)));
         btnQuayLai.setForeground(Color.white);
-        btnLuu.setBackground(new Color(5, 196, 107));
+        btnLuu.setBackground(new Color(4, 191, 138));
         btnLuu.setForeground(Color.white);
-        btnLuu.setBorder(BorderFactory.createLineBorder(new Color(5, 196, 107)));
+        btnLuu.setBorder(BorderFactory.createLineBorder(new Color(4, 191, 138)));
 
 
         btnLuu.setPreferredSize(btnQuayLai.getPreferredSize());

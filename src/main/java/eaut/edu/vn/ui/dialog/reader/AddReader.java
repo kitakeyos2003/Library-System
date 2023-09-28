@@ -125,7 +125,7 @@ public class AddReader extends Dialog {
         pnHinhAnh.setLayout(new FlowLayout());
         JLabel lblHinhAnh = new JLabel();
         pnHinhAnh.setBackground(Color.WHITE);
-        lblHinhAnh.setIcon(Util.loadImage("themnd.png"));
+        lblHinhAnh.setIcon(Util.loadImage("user-info.png"));
         pnHinhAnh.add(lblHinhAnh);
         pnHienThiThemDocGia.add(pnHinhAnh, BorderLayout.WEST);
 

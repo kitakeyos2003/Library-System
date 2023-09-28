@@ -31,6 +31,7 @@ import javax.swing.table.DefaultTableModel;
 
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
+import eaut.edu.vn.ui.controls.PlaceholderTextField;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.service.LoanDetailService;
 import eaut.edu.vn.database.ConnectMySQL;
@@ -40,7 +41,8 @@ import eaut.edu.vn.util.Util;
 public class Search extends Dialog {
     public String tentk = "";
     JButton btnTimKiem, btnTraSach;
-    JTextField txtTimKiem, txtMaPhieu, txtMaDG, txtMaSach, txtNgayHenTra, txtNgayTra, txtTTSachMuon, txtTTSachTra, txtThuThu, txtGhiChu;
+    PlaceholderTextField txtTimKiem;
+    JTextField txtMaPhieu, txtMaDG, txtMaSach, txtNgayHenTra, txtNgayTra, txtTTSachMuon, txtTTSachTra, txtThuThu, txtGhiChu;
     DefaultTableModel dtmPhieuMuon;
     JTable tblPhieuMuon;
     Connection conn = ConnectMySQL.connect;
@@ -306,11 +308,12 @@ public class Search extends Dialog {
         JPanel pnTimKiem = new JPanel();
         pnTimKiem.setLayout(new FlowLayout());
         btnTimKiem = new JButton("TÌM KIẾM");
+        btnTimKiem.setFocusPainted(false);
         pnTimKiem.add(btnTimKiem);
         pnThanhTimKiem.add(pnTimKiem, BorderLayout.EAST);
         btnTimKiem.setPreferredSize(new Dimension(130, 35));
-        pnTimKiem.setBackground(new Color(48, 51, 107));
-        btnTimKiem.setBackground(new Color(48, 51, 107));
+        pnTimKiem.setBackground(new Color(4, 191, 138));
+        btnTimKiem.setBackground(new Color(4, 191, 138));
         btnTimKiem.setBorder(BorderFactory.createLineBorder(Color.WHITE));
         Font font7 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         btnTimKiem.setForeground(Color.WHITE);
@@ -318,19 +321,20 @@ public class Search extends Dialog {
 
         JPanel pnTextTimKiem = new JPanel();
         pnTextTimKiem.setLayout(new BorderLayout());
-        txtTimKiem = new JTextField("Nhập mã phiếu...");
+        txtTimKiem = new PlaceholderTextField();
+        txtTimKiem.setPlaceholder("Nhập mã phiếu...");
         pnTextTimKiem.add(txtTimKiem);
         pnThanhTimKiem.add(pnTextTimKiem, BorderLayout.CENTER);
         txtTimKiem.setPreferredSize(new Dimension(100, 20));
         Font font6 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 18);
         txtTimKiem.setFont(font6);
-        txtTimKiem.setBorder(BorderFactory.createLineBorder(new Color(48, 51, 107)));
+        txtTimKiem.setBorder(BorderFactory.createLineBorder(new Color(4, 191, 138)));
 
         JPanel pnIcon = new JPanel();
         pnIcon.setLayout(new FlowLayout());
         JLabel lblIcon = new JLabel();
         pnIcon.add(lblIcon);
-        pnIcon.setBackground(new Color(48, 51, 107));
+        pnIcon.setBackground(new Color(4, 191, 138));
         lblIcon.setIcon(Util.loadImage("tim.png"));
         pnThanhTimKiem.add(pnIcon, BorderLayout.WEST);
 
@@ -346,7 +350,7 @@ public class Search extends Dialog {
         pnHienThiTimKiemPhieu.add(pnTitle, BorderLayout.NORTH);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 25);
         lblTimKiemSach.setFont(font5);
-        lblTimKiemSach.setForeground(new Color(48, 51, 107));
+        lblTimKiemSach.setForeground(new Color(4, 191, 138));
 
 
         pnThongTin.add(pnThanhTimKiem, BorderLayout.NORTH);
@@ -362,7 +366,7 @@ public class Search extends Dialog {
         pnHienThiChiTiet.add(pnTieuDe1, BorderLayout.NORTH);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 16);
         lblTieuDe1.setFont(font4);
-        pnTieuDe1.setBackground(new Color(4, 191, 138));
+        pnTieuDe1.setBackground(new Color(2, 115, 83));
         lblTieuDe1.setForeground(Color.WHITE);
 
         JPanel pnMaPhieu = new JPanel();
@@ -493,7 +497,7 @@ public class Search extends Dialog {
         pnTieuDe2.add(lblTieuDe2);
         pnBangThongKe.add(pnTieuDe2, BorderLayout.NORTH);
         lblTieuDe2.setFont(font4);
-        pnTieuDe2.setBackground(new Color(4, 191, 138));
+        pnTieuDe2.setBackground(new Color(2, 115, 83));
         lblTieuDe2.setForeground(Color.WHITE);
 
 

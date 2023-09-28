@@ -111,7 +111,7 @@ public class DeleteReader extends Dialog {
         pnHinhAnh.setLayout(new FlowLayout());
         JLabel lblHinhAnh = new JLabel();
         pnHinhAnh.setBackground(Color.WHITE);
-        lblHinhAnh.setIcon(Util.loadImage("xoand.png"));
+        lblHinhAnh.setIcon(Util.loadImage("user-info.png"));
         pnHinhAnh.add(lblHinhAnh);
         pnHienThiXoaDocGia.add(pnHinhAnh, BorderLayout.WEST);
 
