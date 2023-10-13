@@ -22,7 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 
-import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -35,7 +35,6 @@ public class UpdateBorrowedBookStatus extends Dialog {
     JTextField txtMaPM;
     JComboBox cbMaSach;
     JButton btnXoa;
-    Connection conn = ConnectMySQL.connect;
 
     public UpdateBorrowedBookStatus(String title) {
         super(title);
@@ -50,7 +49,7 @@ public class UpdateBorrowedBookStatus extends Dialog {
     public void hienThi() {
         try {
             String sql0 = "Select MaSach from ctpm where MaPM=?";
-            PreparedStatement pre0 = conn.prepareStatement(sql0);
+            PreparedStatement pre0 = DbManager.getInstance().getConnection().prepareStatement(sql0);
             pre0.setString(1, MaPM);
             ResultSet rs0 = pre0.executeQuery();
             while (rs0.next()) {
@@ -130,13 +129,13 @@ public class UpdateBorrowedBookStatus extends Dialog {
 
                 try {
                     String sql = "delete from ctpm where MaPM=? and MaSach=?";
-                    PreparedStatement pre = conn.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, txtMaPM.getText());
                     pre.setString(2, String.valueOf(cbMaSach.getSelectedItem()));
                     int soluongsach = 0;
                     try {
                         String sqlss = "Select SoLuong from sach where MaSach=?";
-                        PreparedStatement presach = ConnectMySQL.connect.prepareStatement(sqlss);
+                        PreparedStatement presach = DbManager.getInstance().getConnection().prepareStatement(sqlss);
                         presach.setString(1, String.valueOf(cbMaSach.getSelectedItem()));
                         ResultSet rssach = presach.executeQuery();
                         while (rssach.next()) {
@@ -149,7 +148,7 @@ public class UpdateBorrowedBookStatus extends Dialog {
 
                     try {
                         String sqlss1 = "update sach set SoLuong=? where MaSach=?";
-                        PreparedStatement presach1 = ConnectMySQL.connect.prepareStatement(sqlss1);
+                        PreparedStatement presach1 = DbManager.getInstance().getConnection().prepareStatement(sqlss1);
                         presach1.setInt(1, soluongsach);
                         presach1.setString(2, String.valueOf(cbMaSach.getSelectedItem()));
                         int c = presach1.executeUpdate();

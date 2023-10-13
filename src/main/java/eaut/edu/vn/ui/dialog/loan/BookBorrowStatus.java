@@ -15,11 +15,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 
-import eaut.edu.vn.database.ConnectMySQL;
+
 import eaut.edu.vn.util.Util;
 
 
@@ -28,7 +29,6 @@ public class BookBorrowStatus extends Dialog {
     public String user = "";
     JTextField txtMaPM, txtTinhTrangSach, txtMaSach;
     JButton btnThem;
-    Connection conn = ConnectMySQL.connect;
 
     public BookBorrowStatus(String title) {
         super(title);
@@ -118,7 +118,7 @@ public class BookBorrowStatus extends Dialog {
             public void actionPerformed(ActionEvent e) {
                 try {
                     String sql = "insert into ctpm values(?,?,?,?,?,?,?)";
-                    PreparedStatement pre = conn.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, txtMaPM.getText());
                     pre.setString(2, txtMaSach.getText());
                     pre.setDate(3, null);
@@ -133,7 +133,7 @@ public class BookBorrowStatus extends Dialog {
                     }
                     try {
                         String sqlss = "Select SoLuong from sach where MaSach=?";
-                        PreparedStatement presach = ConnectMySQL.connect.prepareStatement(sqlss);
+                        PreparedStatement presach = DbManager.getInstance().getConnection().prepareStatement(sqlss);
                         presach.setString(1, txtMaSach.getText());
                         ResultSet rssach = presach.executeQuery();
                         while (rssach.next()) {
@@ -151,7 +151,7 @@ public class BookBorrowStatus extends Dialog {
 
                     try {
                         String sqlss1 = "update sach set SoLuong=? where MaSach=?";
-                        PreparedStatement presach1 = ConnectMySQL.connect.prepareStatement(sqlss1);
+                        PreparedStatement presach1 = DbManager.getInstance().getConnection().prepareStatement(sqlss1);
                         presach1.setInt(1, soluongsach);
                         presach1.setString(2, txtMaSach.getText());
                         int c = presach1.executeUpdate();

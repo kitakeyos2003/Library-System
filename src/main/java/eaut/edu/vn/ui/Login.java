@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -14,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import eaut.edu.vn.main.Application;
 import eaut.edu.vn.service.AccountService;
 import eaut.edu.vn.model.Account;
 import eaut.edu.vn.ui.controls.*;
@@ -104,35 +106,7 @@ public class Login extends CustomFrame {
             }
         });
         btnLogin.addActionListener(e -> {
-            AccountService tksv = new AccountService();
-            ArrayList<Account> dstk = tksv.layTaiKhoan();
-            if (txtUsername.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Tài khoản không được để trống");
-                return;
-            }
-            if (pwdPassword.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Mật khẩu không được để trống");
-                return;
-            }
-            for (Account tk : dstk) {
-                if (txtUsername.getText().equals(tk.getUser()) && pwdPassword.getText().equals(tk.getPass()) && tk.getPhanQuyen() == 1) {
-                    AdminManager qlad = new AdminManager("Trang Chủ Phần Mềm Quản Lý Thư Viện");
-                    qlad.tentk = txtUsername.getText();
-                    qlad.showWindow();
-                    dispose();
-                    return;
-                }
-                if (txtUsername.getText().equals(tk.getUser()) && pwdPassword.getText().equals(tk.getPass()) && tk.getPhanQuyen() == 2) {
-                    LibrarianManager ql = new LibrarianManager("Thủ thư");
-                    ql.tentk = txtUsername.getText();
-                    ql.showWindow();
-                    dispose();
-                    return;
-                }
-            }
-            JOptionPane.showMessageDialog(null, "Sai tài khoản hoặc mật khẩu. Vui lòng nhập lại");
-            txtUsername.setText(null);
-            pwdPassword.setText(null);
+            authenticate();
 
         });
         txtUsername.addKeyListener(new KeyListener() {
@@ -157,36 +131,7 @@ public class Login extends CustomFrame {
                 }
                 // TODO Auto-generated method stub
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    AccountService tksv = new AccountService();
-                    ArrayList<Account> dstk = new ArrayList<Account>();
-                    dstk = tksv.layTaiKhoan();
-                    if (txtUsername.getText().length() == 0) {
-                        JOptionPane.showMessageDialog(null, "Tài khoản không được để trống");
-                        return;
-                    }
-                    if (pwdPassword.getText().length() == 0) {
-                        JOptionPane.showMessageDialog(null, "Mật khẩu không được để trống");
-                        return;
-                    }
-                    for (Account ac : dstk) {
-                        if (txtUsername.getText().equals(ac.getUser()) && pwdPassword.getText().equals(ac.getPass()) && ac.getPhanQuyen() == 1) {
-                            AdminManager ql = new AdminManager("Trang Chủ Phần Mềm Quản Lý Thư Viện");
-                            ql.tentk = txtUsername.getText();
-                            ql.showWindow();
-                            dispose();
-                            return;
-                        }
-                        if (txtUsername.getText().equals(ac.getUser()) && pwdPassword.getText().equals(ac.getPass()) && ac.getPhanQuyen() == 2) {
-                            LibrarianManager ql = new LibrarianManager("Thủ thư");
-                            ql.tentk = txtUsername.getText();
-                            ql.showWindow();
-                            dispose();
-                            return;
-                        }
-                    }
-                    JOptionPane.showMessageDialog(null, "Sai tài khoản hoặc mật khẩu. Vui lòng Nhập lại");
-                    txtUsername.setText(null);
-                    pwdPassword.setText(null);
+                    authenticate();
                 }
             }
         });
@@ -209,36 +154,7 @@ public class Login extends CustomFrame {
                 // TODO Auto-generated method stub
 
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    AccountService tksv = new AccountService();
-                    ArrayList<Account> dstk = new ArrayList<Account>();
-                    dstk = tksv.layTaiKhoan();
-                    if (txtUsername.getText().length() == 0) {
-                        JOptionPane.showMessageDialog(null, "Tài khoản không được để trống");
-                        return;
-                    }
-                    if (pwdPassword.getText().length() == 0) {
-                        JOptionPane.showMessageDialog(null, "Mật khẩu không được để trống");
-                        return;
-                    }
-                    for (Account ac : dstk) {
-                        if (txtUsername.getText().equals(ac.getUser()) && pwdPassword.getText().equals(ac.getPass()) && ac.getPhanQuyen() == 1) {
-                            AdminManager ql = new AdminManager("Trang Chủ Phần Mềm Quản Lý Thư Viện");
-                            ql.tentk = txtUsername.getText();
-                            ql.showWindow();
-                            dispose();
-                            return;
-                        }
-                        if (txtUsername.getText().equals(ac.getUser()) && pwdPassword.getText().equals(ac.getPass()) && ac.getPhanQuyen() == 2) {
-                            LibrarianManager ql = new LibrarianManager("Thủ thư");
-                            ql.tentk = txtUsername.getText();
-                            ql.showWindow();
-                            dispose();
-                            return;
-                        }
-                    }
-                    JOptionPane.showMessageDialog(null, "Sai tài khoản hoặc mật khẩu. Vui lòng Nhập lại");
-                    txtUsername.setText(null);
-                    pwdPassword.setText(null);
+                    authenticate();
                 }
             }
         });
@@ -351,6 +267,34 @@ public class Login extends CustomFrame {
 
         btnExit.setPreferredSize(btnLogin.getPreferredSize());
 
+    }
+
+    private void authenticate() {
+        String username = txtUsername.getText();
+        String password = pwdPassword.getText();
+        if (username.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Tài khoản không được để trống");
+            return;
+        }
+        if (password.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Mật khẩu không được để trống");
+            return;
+        }
+        Account account = AccountService.getInstance().authenticate(username, password);
+        if (account == null) {
+            JOptionPane.showMessageDialog(null, "Sai tài khoản hoặc mật khẩu. Vui lòng Nhập lại");
+            return;
+        }
+        Application.account = account;
+        if (account.getRole() == 1) {
+            AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
+            ql.showWindow();
+            dispose();
+        } else if (account.getRole() == 2) {
+            LibrarianManager ql = Application.SINGLETON.LIBRARIAN_MANAGER;
+            ql.showWindow();
+            dispose();
+        }
     }
 
 }

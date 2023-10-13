@@ -1,6 +1,7 @@
 package eaut.edu.vn.ui.dialog.book;
 
-import eaut.edu.vn.database.ConnectMySQL;
+
+import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -36,7 +37,6 @@ public class SearchBook extends Dialog {
     JTextField txtTimKiem, txtMaSach, txtTenSach, txtTacGia, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
     DefaultTableModel dtmSach;
     JTable tblSach;
-    Connection conn = ConnectMySQL.connect;
 
     public SearchBook(String title) {
         super(title);
@@ -52,7 +52,7 @@ public class SearchBook extends Dialog {
             String tensach = txtTimKiem.getText();
             try {
                 String sql = "select * from sach where tensach like ?";
-                PreparedStatement pre = conn.prepareStatement(sql);
+                PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                 pre.setString(1, '%' + tensach + '%');
                 ResultSet rs = pre.executeQuery();
                 while (rs.next()) {
@@ -144,7 +144,7 @@ public class SearchBook extends Dialog {
                     String tensach = txtTimKiem.getText();
                     try {
                         String sql = "select * from sach where tensach like ?";
-                        PreparedStatement pre = conn.prepareStatement(sql);
+                        PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                         pre.setString(1, '%' + tensach + '%');
                         ResultSet rs = pre.executeQuery();
                         while (rs.next()) {

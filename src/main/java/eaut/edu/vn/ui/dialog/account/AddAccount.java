@@ -1,6 +1,7 @@
 package eaut.edu.vn.ui.dialog.account;
 
-import eaut.edu.vn.database.ConnectMySQL;
+
+import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -33,7 +34,6 @@ public class AddAccount extends Dialog {
     JPasswordField pwdMatKhau;
     JButton btnThem;
     ButtonGroup gr;
-    Connection connect = ConnectMySQL.connect;
 
     public AddAccount(String title) {
         super(title);
@@ -53,7 +53,7 @@ public class AddAccount extends Dialog {
             }
             try {
                 String sql = "insert into taikhoan values (?,?,?,?,?,?)";
-                PreparedStatement pre = connect.prepareStatement(sql);
+                PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                 pre.setString(1, txtTaiKhoan.getText());
                 pre.setString(2, pwdMatKhau.getText());
                 pre.setInt(3, n);
@@ -65,6 +65,7 @@ public class AddAccount extends Dialog {
                     return;
                 }
                 int x = pre.executeUpdate();
+                pre.close();
                 if (x > 0) {
                     JOptionPane.showMessageDialog(null, "Thêm thành công");
                     txtHoTen.setText(null);

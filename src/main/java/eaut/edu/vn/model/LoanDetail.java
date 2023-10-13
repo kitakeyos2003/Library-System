@@ -3,68 +3,68 @@ package eaut.edu.vn.model;
 import java.sql.Date;
 
 public class LoanDetail {
-    private String MaPM;
-    private String MaSach;
-    private Date NgayTra;
-    private int TinhTrangSach;
-    private int TinhTrangTra;
-    private String User;
-    private String GhiChu;
+    private String loanId;
+    private String bookId;
+    private Date returnDate;
+    private int borrowedStatus;
+    private int returnStatus;
+    private String userName;
+    private String note;
 
-    public String getMaPM() {
-        return MaPM;
+    public String getLoanId() {
+        return loanId;
     }
 
-    public void setMaPM(String maPM) {
-        MaPM = maPM;
+    public void setLoanId(String loanId) {
+        this.loanId = loanId;
     }
 
-    public String getMaSach() {
-        return MaSach;
+    public String getBookId() {
+        return bookId;
     }
 
-    public void setMaSach(String maSach) {
-        MaSach = maSach;
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
     }
 
-    public Date getNgayTra() {
-        return NgayTra;
+    public Date getReturnDate() {
+        return returnDate;
     }
 
-    public void setNgayTra(Date ngayTra) {
-        NgayTra = ngayTra;
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
     }
 
-    public int getTinhTrangSach() {
-        return TinhTrangSach;
+    public int getBorrowedStatus() {
+        return borrowedStatus;
     }
 
-    public void setTinhTrangSach(int tinhTrangSach) {
-        TinhTrangSach = tinhTrangSach;
+    public void setBorrowedStatus(int borrowedStatus) {
+        this.borrowedStatus = borrowedStatus;
     }
 
-    public int getTinhTrangTra() {
-        return TinhTrangTra;
+    public int getReturnStatus() {
+        return returnStatus;
     }
 
-    public void setTinhTrangTra(int tinhTrangTra) {
-        TinhTrangTra = tinhTrangTra;
+    public void setReturnStatus(int returnStatus) {
+        this.returnStatus = returnStatus;
     }
 
-    public String getUser() {
-        return User;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser(String user) {
-        User = user;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getGhiChu() {
-        return GhiChu;
+    public String getNote() {
+        return note;
     }
 
-    public void setGhiChu(String ghiChu) {
-        GhiChu = ghiChu;
+    public void setNote(String note) {
+        this.note = note;
     }
 
 

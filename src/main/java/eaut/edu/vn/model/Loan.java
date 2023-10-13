@@ -3,60 +3,58 @@ package eaut.edu.vn.model;
 import java.sql.Date;
 
 public class Loan {
-    private String MaPM;
-    private String MaDG;
-    private Date NgayMuon;
-    private Date NgayTra;
-    private int SoLuong;
-    private String User;
+    private String id;
+    private String readerName;
+    private Date borrowedDate;
+    private Date returnDate;
+    private int quantity;
+    private String userId;
 
-    public String getMaPM() {
-        return MaPM;
+    public String getId() {
+        return id;
     }
 
-    public void setMaPM(String maPM) {
-        MaPM = maPM;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getMaDG() {
-        return MaDG;
+    public String getReaderName() {
+        return readerName;
     }
 
-    public void setMaDG(String maDG) {
-        MaDG = maDG;
+    public void setReaderName(String readerName) {
+        this.readerName = readerName;
     }
 
-    public Date getNgayMuon() {
-        return NgayMuon;
+    public Date getBorrowedDate() {
+        return borrowedDate;
     }
 
-    public void setNgayMuon(Date ngayMuon) {
-        NgayMuon = ngayMuon;
+    public void setBorrowedDate(Date borrowedDate) {
+        this.borrowedDate = borrowedDate;
     }
 
-    public Date getNgayTra() {
-        return NgayTra;
+    public Date getReturnDate() {
+        return returnDate;
     }
 
-    public void setNgayTra(Date ngayTra) {
-        NgayTra = ngayTra;
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
     }
 
-    public int getSoLuong() {
-        return SoLuong;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setSoLuong(int soLuong) {
-        SoLuong = soLuong;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
-    public String getUser() {
-        return User;
+    public String getUserName() {
+        return userId;
     }
 
-    public void setUser(String user) {
-        User = user;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
-
-
 }

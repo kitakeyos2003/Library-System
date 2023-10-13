@@ -2,13 +2,11 @@ package eaut.edu.vn.ui.dialog.loan;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DateFormat;
@@ -26,8 +24,8 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import com.toedter.calendar.JDateChooser;
-
-import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.database.DbManager;
+import eaut.edu.vn.main.Application;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -38,23 +36,20 @@ import eaut.edu.vn.util.Util;
 
 public class AddLoan extends Dialog {
     public String ma = "";
-    public String tentk = "";
+
     JTextField txtMaPhieu, txtMaDG, txtTenDG, txtNgayMuon, txtNgayHenTra, txtSachMuon, txtThuThu;
     JButton btnThem;
-    Connection conn = ConnectMySQL.connect;
     JDateChooser choosedate, choosedate1;
 
     public AddLoan(String title) {
         super(title);
         setHeader(new Header("QUẢN LÝ PHIẾU MƯỢN"));
         setFooter(new Footer());
-        if (tentk.length() != 0) {
-            hienThi();
-        }
+        hienThi();
     }
 
     public void hienThi() {
-        txtThuThu.setText(tentk);
+        txtThuThu.setText(Application.account.getUsername());
     }
 
     @Override
@@ -64,7 +59,7 @@ public class AddLoan extends Dialog {
                 try {
 
                     String sql = "select * from phieumuon where mapm=?";
-                    PreparedStatement pre = conn.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, txtMaPhieu.getText());
                     ResultSet rs = pre.executeQuery();
 
@@ -88,7 +83,7 @@ public class AddLoan extends Dialog {
                 int flag = 1;
                 try {
                     String sql = "insert into phieumuon values(?,?,?,?,?,?)";
-                    PreparedStatement pre = conn.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, txtMaPhieu.getText());
                     pre.setString(2, txtMaDG.getText());
                     pre.setString(3, datemuon);
@@ -103,7 +98,7 @@ public class AddLoan extends Dialog {
 
                     try {
                         String sqldocgia1 = "Select MatSach from docgia where MaDG=?";
-                        PreparedStatement prex = ConnectMySQL.connect.prepareStatement(sqldocgia1);
+                        PreparedStatement prex = DbManager.getInstance().getConnection().prepareStatement(sqldocgia1);
                         prex.setString(1, txtMaDG.getText());
                         ResultSet b = prex.executeQuery();
                         while (b.next()) {
@@ -126,7 +121,7 @@ public class AddLoan extends Dialog {
                         for (int i = 0; i < soluong1; i++) {
                             BookBorrowStatus qlts = new BookBorrowStatus("Thêm Sách");
                             qlts.MaPM = txtMaPhieu.getText();
-                            qlts.user = tentk;
+                            qlts.user = Application.account.getUsername();
                             qlts.hienThi();
                             qlts.showWindow();
                         }
@@ -142,7 +137,7 @@ public class AddLoan extends Dialog {
     public int DemPhieuMuon() {
         int SoLuongPM = 0;
         LoanService pmsv = new LoanService();
-        ArrayList<Loan> ds = pmsv.layThongTinPhieuMuon();
+        ArrayList<Loan> ds = pmsv.getAll();
         for (Loan pm : ds) {
             SoLuongPM++;
         }

@@ -26,7 +26,8 @@ import javax.swing.border.TitledBorder;
 
 import com.toedter.calendar.JDateChooser;
 
-import eaut.edu.vn.database.ConnectMySQL;
+
+import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -36,7 +37,6 @@ public class EditLoan extends Dialog {
     public String maPM = "";
     JTextField txtMaPhieu, txtMaDG, txtTenDG, txtNgayMuon, txtNgayHenTra, txtSachMuon, txtThuThu;
     JButton btnSua;
-    Connection conn = ConnectMySQL.connect;
     int soluongtruoc = 0;
     int soluongsau = 0;
     JDateChooser choosedate, choosedate1;
@@ -53,7 +53,7 @@ public class EditLoan extends Dialog {
     public void hienThi() {
         try {
             String sql = "select * from phieumuon where MaPM=?";
-            PreparedStatement pre = conn.prepareStatement(sql);
+            PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
             pre.setString(1, maPM);
             ResultSet rs = pre.executeQuery();
             if (rs.next()) {
@@ -82,7 +82,7 @@ public class EditLoan extends Dialog {
                 String datehantra = df.format(choosedate1.getDate());
                 try {
                     String sql = "update phieumuon set MaDg=?,NgayMuon=?,NgayHenTra=?,SoLuongMuon=?,User=? where MaPM=?";
-                    PreparedStatement pre = conn.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, txtMaDG.getText());
                     pre.setString(2, datemuon);
                     pre.setString(3, datehantra);

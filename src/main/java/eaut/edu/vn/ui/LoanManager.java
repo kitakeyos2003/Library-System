@@ -9,10 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -25,7 +22,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import eaut.edu.vn.database.ConnectMySQL;
+
+import eaut.edu.vn.main.Application;
 import eaut.edu.vn.service.LoanService;
 import eaut.edu.vn.service.BookService;
 import eaut.edu.vn.ui.controls.CustomFrame;
@@ -40,22 +38,21 @@ import eaut.edu.vn.util.Util;
 
 
 public class LoanManager extends CustomFrame {
-    public String tentk = "";
+    
     public int thongke = 0;
-    JTextField txtMaPhieu, txtTenDG, txtNgayMuon, txtNgayHenTra, txtSoSachMuon, txtThuThu, txtMaDG;
+    JTextField txtMaPhieu, txtNgayMuon, txtNgayHenTra, txtSoSachMuon, txtThuThu, txtMaDG;
     JButton btnThem, btnXoa, btnSua, btnQuayLai;
     DefaultTableModel dtmPhieuMuon, dtmSachMuon;
     JTable tblPhieuMuon, tblSachMuon;
-    ArrayList<Loan> dspm;
-    ArrayList<Book> dssaches;
-    Connection conn = ConnectMySQL.connect;
+    List<Loan> loans;
+    List<Book> books;
 
     public LoanManager(String tieude) {
         super(tieude);
         this.setSize(1130, 775);
         setHeader(new Header("QUẢN LÝ PHIẾU MƯỢN"));
         setFooter(new Footer());
-        hienThiPhieuMuon();
+        loadAllLoan();
     }
 
     public void addEvents() {
@@ -64,36 +61,21 @@ public class LoanManager extends CustomFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                int phanquyen = 0;
                 if (thongke == 1) {
-                    StatisticAnalyzer ui = new StatisticAnalyzer("Thống kê");
-                    ui.tenTk = tentk;
+                    StatisticAnalyzer ui = Application.SINGLETON.STATISTIC_ANALYZER;
                     ui.showWindow();
                     dispose();
                     thongke = 0;
                     return;
                 }
-                try {
-
-                    String sql = "select PhanQuyen from taikhoan where User=?";
-                    PreparedStatement pre = ConnectMySQL.connect.prepareStatement(sql);
-                    pre.setString(1, tentk);
-                    ResultSet rs = pre.executeQuery();
-                    while (rs.next()) {
-                        phanquyen = rs.getInt(1);
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                int phanquyen = Application.account.getRole();
                 if (phanquyen == 1) {
-                    AdminManager ql = new AdminManager("Trang Chủ Phần Mềm Quản Lý Thư Viện");
-                    ql.tentk = tentk;
+                    AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
                     ql.showWindow();
                     dispose();
                 }
                 if (phanquyen == 2) {
-                    LibrarianManager ql = new LibrarianManager("Thủ thư: " + tentk);
-                    ql.tentk = tentk;
+                    LibrarianManager ql = Application.SINGLETON.LIBRARIAN_MANAGER;
                     ql.showWindow();
                     dispose();
                 }
@@ -104,10 +86,9 @@ public class LoanManager extends CustomFrame {
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
                 AddLoan tpm = new AddLoan("Thêm phiếu mượn");
-                tpm.tentk = tentk;
                 tpm.hienThi();
                 tpm.showWindow();
-                hienThiPhieuMuon();
+                loadAllLoan();
             }
         });
         btnSua.addActionListener(new ActionListener() {
@@ -117,7 +98,7 @@ public class LoanManager extends CustomFrame {
                 suapm.maPM = txtMaPhieu.getText();
                 suapm.hienThi();
                 suapm.showWindow();
-                hienThiPhieuMuon();
+                loadAllLoan();
                 dtmSachMuon.setRowCount(0);
             }
         });
@@ -129,7 +110,7 @@ public class LoanManager extends CustomFrame {
                 xoapm.hienThi();
                 xoapm.showWindow();
                 dtmPhieuMuon.setRowCount(0);
-                hienThiPhieuMuon();
+                loadAllLoan();
             }
         });
         tblPhieuMuon.addMouseListener(new MouseListener() {
@@ -163,34 +144,26 @@ public class LoanManager extends CustomFrame {
                 int n = tblPhieuMuon.getSelectedRow();
                 Object obj = dtmPhieuMuon.getValueAt(n, 0);
                 String mapm = String.valueOf(obj);
-                BookService sachsv = new BookService();
-                dssaches = sachsv.laySachTheoPhieuMuon(mapm);
+                books = BookService.getInstance().search(mapm);
                 dtmSachMuon.setRowCount(0);
-                for (Book s : dssaches) {
+                for (Book s : books) {
                     Vector<Object> vec = new Vector<>();
-                    vec.add(s.getMaSach());
-                    vec.add(s.getTenSach());
-                    vec.add(s.getTheLoai());
+                    vec.add(s.getId());
+                    vec.add(s.getName());
+                    vec.add(s.getCategory());
                     dtmSachMuon.addRow(vec);
                 }
-                try {
-                    String sql = "Select a.MaPM,a.MaDG,b.TenDG,NgayMuon,NgayHenTra,SoLuongMuon,c.TenND from PhieuMuon a,DocGia b,Taikhoan c where b.MaDG=? and c.User=?";
-                    PreparedStatement pre = conn.prepareStatement(sql);
-                    pre.setString(1, String.valueOf(dtmPhieuMuon.getValueAt(n, 1)));
-                    pre.setString(2, String.valueOf(dtmPhieuMuon.getValueAt(n, 5)));
-                    ResultSet rs = pre.executeQuery();
-                    while (rs.next()) {
-                        txtMaPhieu.setText(mapm);
-                        txtMaDG.setText(String.valueOf(dtmPhieuMuon.getValueAt(n, 1)));
-                        txtTenDG.setText(rs.getString(3));
-                        txtNgayMuon.setText(String.valueOf(dtmPhieuMuon.getValueAt(n, 2)));
-                        txtNgayHenTra.setText(String.valueOf(dtmPhieuMuon.getValueAt(n, 3)));
-                        txtSoSachMuon.setText(String.valueOf(dtmPhieuMuon.getValueAt(n, 4)));
-                        txtThuThu.setText(rs.getString(7));
-                    }
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                String readerId = String.valueOf(dtmPhieuMuon.getValueAt(n, 1));
+                String username = String.valueOf(dtmPhieuMuon.getValueAt(n, 5));
+                Loan l = loans.stream().filter(loan -> loan.getReaderName().equals(readerId) && loan.getUserName().equals(username))
+                        .findFirst().orElse(null);
+                if (l != null) {
+                    txtMaPhieu.setText(mapm);
+                    txtMaDG.setText(String.valueOf(dtmPhieuMuon.getValueAt(n, 1)));
+                    txtNgayMuon.setText(String.valueOf(dtmPhieuMuon.getValueAt(n, 2)));
+                    txtNgayHenTra.setText(String.valueOf(dtmPhieuMuon.getValueAt(n, 3)));
+                    txtSoSachMuon.setText(String.valueOf(dtmPhieuMuon.getValueAt(n, 4)));
+                    txtThuThu.setText(l.getUserName());
                 }
             }
         });
@@ -239,15 +212,6 @@ public class LoanManager extends CustomFrame {
         txtMaDG = new JTextField();
         txtMaDG.setPreferredSize(new Dimension(240, 22));
         pnMaDG.add(txtMaDG);
-
-        JPanel pnTenDG = new JPanel();
-        pnTenDG.setLayout(new FlowLayout());
-        pnThongTinChiTiet.add(pnTenDG);
-        JLabel lblTenDG = new JLabel("Tên độc giả: ");
-        pnTenDG.add(lblTenDG);
-        txtTenDG = new JTextField();
-        txtTenDG.setPreferredSize(new Dimension(240, 22));
-        pnTenDG.add(txtTenDG);
 
         JPanel pnNgayMuon = new JPanel();
         pnNgayMuon.setLayout(new FlowLayout());
@@ -393,7 +357,6 @@ public class LoanManager extends CustomFrame {
         Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 14);
         lblMaDG.setFont(font3);
         lblMaPhieu.setFont(font3);
-        lblTenDG.setFont(font3);
         lblNgayMuon.setFont(font3);
         lblNgayHenTra.setFont(font3);
         lblSachMuon.setFont(font3);
@@ -402,12 +365,10 @@ public class LoanManager extends CustomFrame {
         lblMaPhieu.setPreferredSize(lblNgayHenTra.getPreferredSize());
         lblMaDG.setPreferredSize(lblNgayHenTra.getPreferredSize());
         lblNgayMuon.setPreferredSize(lblNgayHenTra.getPreferredSize());
-        lblTenDG.setPreferredSize(lblNgayHenTra.getPreferredSize());
         lblThuThu.setPreferredSize(lblNgayHenTra.getPreferredSize());
         lblSachMuon.setPreferredSize(lblNgayHenTra.getPreferredSize());
 
         pnMaDG.setBackground(new Color(255, 255, 255));
-        pnTenDG.setBackground(new Color(255, 255, 255));
         pnMaPhieu.setBackground(new Color(255, 255, 255));
         pnNgayHenTra.setBackground(new Color(255, 255, 255));
         pnNgayMuon.setBackground(new Color(255, 255, 255));
@@ -416,7 +377,6 @@ public class LoanManager extends CustomFrame {
 
 
         txtMaPhieu.setEditable(false);
-        txtTenDG.setEditable(false);
         txtMaDG.setEditable(false);
         txtNgayMuon.setEditable(false);
         txtNgayHenTra.setEditable(false);
@@ -424,18 +384,17 @@ public class LoanManager extends CustomFrame {
         txtThuThu.setEditable(false);
     }
 
-    private void hienThiPhieuMuon() {
-        LoanService pmsv = new LoanService();
-        dspm = pmsv.layThongTinPhieuMuon();
+    private void loadAllLoan() {
+        loans = LoanService.getInstance().getAll();
         dtmPhieuMuon.setRowCount(0);
-        for (Loan pm : dspm) {
+        for (Loan pm : loans) {
             Vector<Object> vec = new Vector<>();
-            vec.add(pm.getMaPM());
-            vec.add(pm.getMaDG());
-            vec.add(pm.getNgayMuon());
-            vec.add(pm.getNgayTra());
-            vec.add(pm.getSoLuong());
-            vec.add(pm.getUser());
+            vec.add(pm.getId());
+            vec.add(pm.getReaderName());
+            vec.add(pm.getBorrowedDate());
+            vec.add(pm.getReturnDate());
+            vec.add(pm.getQuantity());
+            vec.add(pm.getUserName());
             dtmPhieuMuon.addRow(vec);
         }
     }

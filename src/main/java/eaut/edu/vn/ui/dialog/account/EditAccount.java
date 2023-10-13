@@ -5,9 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -20,7 +20,8 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import eaut.edu.vn.database.ConnectMySQL;
+
+import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -33,7 +34,6 @@ public class EditAccount extends Dialog {
     JTextField txtTaiKhoan, txtHoTen, txtSDT, txtCMND, txtPhanQuyen;
     JPasswordField pwdMatKhau;
     JButton btnSua;
-    Connection connect = ConnectMySQL.connect;
 
     public EditAccount(String title) {
         super(title);
@@ -49,7 +49,7 @@ public class EditAccount extends Dialog {
         btnSua.addActionListener(e -> {
             try {
                 String sql = "Update taikhoan set Password=?,PhanQuyen=?,TenND=?,SDT=?,CMND=? where User=?";
-                PreparedStatement pre = connect.prepareStatement(sql);
+                PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                 pre.setString(1, pwdMatKhau.getText());
                 if (txtPhanQuyen.getText().equals("Admin")) {
                     pre.setInt(2, 1);
@@ -219,20 +219,18 @@ public class EditAccount extends Dialog {
     }
 
     public void hienThi() {
-        AccountService tksv = new AccountService();
-        ArrayList<Account> dstk = new ArrayList<Account>();
-        dstk = tksv.layTaiKhoanTheoUser(machon);
+        List<Account> dstk = AccountService.getInstance().search(machon);
         for (Account tk : dstk) {
-            txtTaiKhoan.setText(tk.getUser());
-            txtCMND.setText(tk.getCMND());
-            txtHoTen.setText(tk.getTenND());
-            int phanquyen = tk.getPhanQuyen();
+            txtTaiKhoan.setText(tk.getUsername());
+            txtCMND.setText(tk.getIdentityNumber());
+            txtHoTen.setText(tk.getName());
+            int phanquyen = tk.getRole();
             if (phanquyen == 1) {
                 txtPhanQuyen.setText("Admin");
             } else
                 txtPhanQuyen.setText("Thủ thư");
-            txtSDT.setText(tk.getSoDienThoai());
-            pwdMatKhau.setText(tk.getPass());
+            txtSDT.setText(tk.getPhoneNumber());
+            pwdMatKhau.setText(tk.getPassword());
         }
     }
 

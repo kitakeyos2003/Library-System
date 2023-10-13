@@ -9,10 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -26,8 +25,10 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import eaut.edu.vn.database.DbManager;
+import eaut.edu.vn.main.Application;
 import eaut.edu.vn.service.LoanDetailService;
-import eaut.edu.vn.database.ConnectMySQL;
+
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Header;
@@ -37,14 +38,13 @@ import eaut.edu.vn.model.LoanDetail;
 import eaut.edu.vn.util.Util;
 
 public class ReturnManager extends CustomFrame {
-    public String tentk = "";
+    
     public int thongke = 0;
     JTextField txtMaPhieu, txtMaDG, txtMaSach, txtNgayHenTra, txtNgayTra, txtTTSachMuon, txtTTSachTra, txtThuThuNhanSach, txtGhiChu;
     JButton btnTraSach, btnQuayLai, btnTimKiem;
     DefaultTableModel dtmPhieuTra, dtmPhieuChuaTra;
     JTable tblPhieuTra, tblPhieuChuaTra;
-    ArrayList<LoanDetail> dsctpm;
-    Connection conn = ConnectMySQL.connect;
+    List<LoanDetail> dsctpm;
 
     public ReturnManager(String tieude) {
         super(tieude);
@@ -57,18 +57,18 @@ public class ReturnManager extends CustomFrame {
 
     private void hienThiPhieuMuonDaTra() {
         LoanDetailService ctpmsv = new LoanDetailService();
-        dsctpm = ctpmsv.layChiTietPhieuMuon();
+        dsctpm = ctpmsv.getAll();
         dtmPhieuTra.setRowCount(0);
         for (LoanDetail ctpm : dsctpm) {
-            if (ctpm.getNgayTra() != null) {
+            if (ctpm.getReturnDate() != null) {
                 Vector<Object> vec = new Vector<Object>();
-                vec.add(ctpm.getMaPM());
-                vec.add(ctpm.getMaSach());
-                vec.add(ctpm.getNgayTra());
-                vec.add(ctpm.getTinhTrangSach());
-                vec.add(ctpm.getTinhTrangTra());
-                vec.add(ctpm.getUser());
-                vec.add(ctpm.getGhiChu());
+                vec.add(ctpm.getLoanId());
+                vec.add(ctpm.getBookId());
+                vec.add(ctpm.getReturnDate());
+                vec.add(ctpm.getBorrowedStatus());
+                vec.add(ctpm.getReturnStatus());
+                vec.add(ctpm.getUserName());
+                vec.add(ctpm.getNote());
                 dtmPhieuTra.addRow(vec);
             }
         }
@@ -77,14 +77,14 @@ public class ReturnManager extends CustomFrame {
 
     private void hienThiPhieuMuonChuaTra() {
         LoanDetailService ctpmsv = new LoanDetailService();
-        dsctpm = ctpmsv.layChiTietPhieuMuon();
+        dsctpm = ctpmsv.getAll();
         dtmPhieuChuaTra.setRowCount(0);
         for (LoanDetail ctpm : dsctpm) {
-            if (ctpm.getNgayTra() == null) {
+            if (ctpm.getReturnDate() == null) {
                 Vector<Object> vec = new Vector<Object>();
-                vec.add(ctpm.getMaPM());
-                vec.add(ctpm.getMaSach());
-                vec.add(ctpm.getTinhTrangSach());
+                vec.add(ctpm.getLoanId());
+                vec.add(ctpm.getBookId());
+                vec.add(ctpm.getBorrowedStatus());
                 dtmPhieuChuaTra.addRow(vec);
             }
         }
@@ -95,36 +95,20 @@ public class ReturnManager extends CustomFrame {
 
         btnQuayLai.addActionListener(e -> {
             // TODO Auto-generated method stub
-            int phanquyen = 0;
             if (thongke == 1) {
-                StatisticAnalyzer ui = new StatisticAnalyzer("Thống kê");
-                ui.tenTk = tentk;
-                ui.showWindow();
+                StatisticAnalyzer ui = Application.SINGLETON.STATISTIC_ANALYZER;
                 dispose();
                 thongke = 0;
                 return;
             }
-            try {
-
-                String sql = "select PhanQuyen from taikhoan where User=?";
-                PreparedStatement pre = ConnectMySQL.connect.prepareStatement(sql);
-                pre.setString(1, tentk);
-                ResultSet rs = pre.executeQuery();
-                while (rs.next()) {
-                    phanquyen = rs.getInt(1);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            int phanquyen = Application.account.getRole();
             if (phanquyen == 1) {
-                AdminManager ql = new AdminManager("Trang Chủ Phần Mềm Quản Lý Thư Viện");
-                ql.tentk = tentk;
+                AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
                 ql.showWindow();
                 dispose();
             }
             if (phanquyen == 2) {
-                LibrarianManager ql = new LibrarianManager("Thủ thư: " + tentk);
-                ql.tentk = tentk;
+                LibrarianManager ql = Application.SINGLETON.LIBRARIAN_MANAGER;
                 ql.showWindow();
                 dispose();
             }
@@ -161,7 +145,7 @@ public class ReturnManager extends CustomFrame {
                 int n = tblPhieuChuaTra.getSelectedRow();
                 try {
                     String sql = "Select c.MaPM,a.MaDG,c.MaSach,c.NgayTra,a.NgayHenTra,c.TinhTrangSach,c.TinhTrangTra,c.GhiChu,b.TenND FROM ctpm c,phieumuon a,taikhoan b  where a.MaPM=c.MaPM and b.User=a.User HAVING c.MaSach=? and c.MaPM=?";
-                    PreparedStatement pre = conn.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, String.valueOf(dtmPhieuChuaTra.getValueAt(n, 1)));
                     pre.setString(2, String.valueOf(dtmPhieuChuaTra.getValueAt(n, 0)));
                     ResultSet rs = pre.executeQuery();
@@ -176,6 +160,8 @@ public class ReturnManager extends CustomFrame {
                         txtGhiChu.setText(rs.getString(8));
                         txtThuThuNhanSach.setText(null);
                     }
+                    rs.close();
+                    pre.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -216,7 +202,7 @@ public class ReturnManager extends CustomFrame {
 
                 try {
                     String sql = "Select c.MaPM,a.MaDG,c.MaSach,c.NgayTra,a.NgayHenTra,c.TinhTrangSach,c.TinhTrangTra,c.GhiChu,b.TenND FROM ctpm c,phieumuon a,taikhoan b  where a.MaPM=c.MaPM and b.User=c.User HAVING c.MaSach=? and c.MaPM=?";
-                    PreparedStatement pre = conn.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, String.valueOf(dtmPhieuTra.getValueAt(n, 1)));
                     pre.setString(2, String.valueOf(dtmPhieuTra.getValueAt(n, 0)));
                     ResultSet rs = pre.executeQuery();
@@ -231,6 +217,8 @@ public class ReturnManager extends CustomFrame {
                         txtGhiChu.setText(rs.getString(8));
                         txtThuThuNhanSach.setText(rs.getString(9));
                     }
+                    rs.close();
+                    pre.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -245,7 +233,7 @@ public class ReturnManager extends CustomFrame {
                     return;
                 }
                 ReturnReceipt ts = new ReturnReceipt("Trả sách");
-                ts.tentk = tentk;
+                ts.tentk = Application.account.getUsername();
                 ts.MaDG = txtMaDG.getText();
                 ts.MaPM = txtMaPhieu.getText();
                 ts.MaSach = txtMaSach.getText();

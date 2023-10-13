@@ -5,11 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -25,6 +23,8 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import eaut.edu.vn.main.Application;
+import eaut.edu.vn.model.Account;
 import eaut.edu.vn.service.AccountService;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.CustomFrame;
@@ -35,14 +35,14 @@ import eaut.edu.vn.ui.dialog.account.DeleteAccount;
 import eaut.edu.vn.util.Util;
 
 public class AccountManager extends CustomFrame {
-    public String tentk = "";
+    
     public int ThongKe = 0;
     JButton btnThem, btnXoa, btnSua, btnQuayLai, btnIcon;
     JTable tblNguoiDung;
     DefaultTableModel dtmNguoiDung;
     JTextField txtTaiKhoạn, txtHoVaTen, txtPhanQuyen, txtCMND, txtSoDienThoai;
     JPasswordField pwdPass;
-    ArrayList<eaut.edu.vn.model.Account> dstk;
+    List<Account> accounts;
     int dem = 2;
 
     public AccountManager(String title) {
@@ -50,19 +50,18 @@ public class AccountManager extends CustomFrame {
         this.setSize(865, 780);
         setHeader(new Header("QUẢN LÝ NGƯỜI DÙNG"));
         setFooter(new Footer());
-        hienThiQLND();
+        loadAllAccount();
     }
 
-    public void hienThiQLND() {
-        AccountService tksv = new AccountService();
-        dstk = tksv.layTaiKhoan();
+    public void loadAllAccount() {
+        accounts = AccountService.getInstance().getAll();
         dtmNguoiDung.setRowCount(0);
-        for (eaut.edu.vn.model.Account tk : dstk) {
+        for (Account tk : accounts) {
             Vector<Object> vec = new Vector<Object>();
-            vec.add(tk.getUser());
-            vec.add(tk.getTenND());
-            vec.add(tk.getSoDienThoai());
-            vec.add(tk.getPhanQuyen());
+            vec.add(tk.getUsername());
+            vec.add(tk.getName());
+            vec.add(tk.getPhoneNumber());
+            vec.add(tk.getRole());
             dtmNguoiDung.addRow(vec);
         }
 
@@ -272,15 +271,13 @@ public class AccountManager extends CustomFrame {
         btnQuayLai.addActionListener(e -> {
             // TODO Auto-generated method stub
             if (ThongKe == 1) {
-                StatisticAnalyzer ui = new StatisticAnalyzer("Thống kê");
-                ui.tenTk = tentk;
+                StatisticAnalyzer ui = Application.SINGLETON.STATISTIC_ANALYZER;
                 ui.showWindow();
                 dispose();
                 ThongKe = 0;
                 return;
             }
-            AdminManager ql = new AdminManager("Trang Chủ Phần Mềm Quản Lý Thư Viện");
-            ql.tentk = tentk;
+            AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
             ql.showWindow();
             dispose();
         });
@@ -313,76 +310,62 @@ public class AccountManager extends CustomFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 pwdPass.setEchoChar('*');
-                int n = tblNguoiDung.getSelectedRow();
-                String user = String.valueOf(dtmNguoiDung.getValueAt(n, 0));
-                AccountService tksv = new AccountService();
-                dstk = tksv.layTaiKhoanTheoUser(user);
-                for (eaut.edu.vn.model.Account tk : dstk) {
-                    txtTaiKhoạn.setText(tk.getUser());
-                    txtCMND.setText(tk.getCMND());
-                    txtHoVaTen.setText(tk.getTenND());
-                    int phanquyen = tk.getPhanQuyen();
-                    if (phanquyen == 1) {
-                        txtPhanQuyen.setText("Admin");
-                    } else
-                        txtPhanQuyen.setText("Thủ thư");
-                    txtSoDienThoai.setText(tk.getSoDienThoai());
-                    pwdPass.setText(tk.getPass());
+                int index = tblNguoiDung.getSelectedRow();
+                Account account = accounts.get(index);
+                txtTaiKhoạn.setText(account.getUsername());
+                txtCMND.setText(account.getIdentityNumber());
+                txtHoVaTen.setText(account.getName());
+                int role = account.getRole();
+                if (role == 1) {
+                    txtPhanQuyen.setText("Admin");
+                } else {
+                    txtPhanQuyen.setText("Thủ thư");
                 }
-
+                txtSoDienThoai.setText(account.getPhoneNumber());
+                pwdPass.setText(account.getPassword());
 
             }
         });
-        btnIcon.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (dem % 2 == 0) {
-                    pwdPass.setEchoChar((char) 0);
-                }
-                if (dem % 2 != 0) {
-                    pwdPass.setEchoChar('*');
-                }
-                dem++;
+        btnIcon.addActionListener(e -> {
+            if (dem % 2 == 0) {
+                pwdPass.setEchoChar((char) 0);
             }
+            if (dem % 2 != 0) {
+                pwdPass.setEchoChar('*');
+            }
+            dem++;
         });
-        btnThem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                AddAccount themqlnd = new AddAccount("Thêm người dùng");
-                themqlnd.showWindow();
-                hienThiQLND();
-            }
+        btnThem.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            AddAccount themqlnd = new AddAccount("Thêm người dùng");
+            themqlnd.showWindow();
+            loadAllAccount();
         });
-        btnXoa.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                DeleteAccount xoand = new DeleteAccount("Xóa người dùng");
-                xoand.machon = txtTaiKhoạn.getText();
-                xoand.hienThi();
-                xoand.showWindow();
-                hienThiQLND();
-                txtCMND.setText(null);
-                txtSoDienThoai.setText(null);
-                txtHoVaTen.setText(null);
-                txtTaiKhoạn.setText(null);
-                txtPhanQuyen.setText(null);
-                pwdPass.setText(null);
-            }
+        btnXoa.addActionListener(e -> {
+            DeleteAccount xoand = new DeleteAccount("Xóa người dùng");
+            xoand.machon = txtTaiKhoạn.getText();
+            xoand.hienThi();
+            xoand.showWindow();
+            loadAllAccount();
+            txtCMND.setText(null);
+            txtSoDienThoai.setText(null);
+            txtHoVaTen.setText(null);
+            txtTaiKhoạn.setText(null);
+            txtPhanQuyen.setText(null);
+            pwdPass.setText(null);
         });
-        btnSua.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                EditAccount suand = new EditAccount("Sửa người dùng");
-                suand.machon = txtTaiKhoạn.getText();
-                suand.hienThi();
-                suand.showWindow();
-                hienThiQLND();
-                txtCMND.setText(null);
-                txtSoDienThoai.setText(null);
-                txtHoVaTen.setText(null);
-                txtTaiKhoạn.setText(null);
-                txtPhanQuyen.setText(null);
-                pwdPass.setText(null);
-            }
+        btnSua.addActionListener(e -> {
+            EditAccount suand = new EditAccount("Sửa người dùng");
+            suand.machon = txtTaiKhoạn.getText();
+            suand.hienThi();
+            suand.showWindow();
+            loadAllAccount();
+            txtCMND.setText(null);
+            txtSoDienThoai.setText(null);
+            txtHoVaTen.setText(null);
+            txtTaiKhoạn.setText(null);
+            txtPhanQuyen.setText(null);
+            pwdPass.setText(null);
         });
     }
 

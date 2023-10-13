@@ -26,7 +26,8 @@ import javax.swing.border.TitledBorder;
 
 import com.toedter.calendar.JDateChooser;
 
-import eaut.edu.vn.database.ConnectMySQL;
+
+import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -68,7 +69,7 @@ public class ReturnReceipt extends Dialog {
 
                 try {
                     String sql = "Update ctpm set NgayTra=?, TinhTrangTra=?, GhiChu=?,User=? where MaPM=? and MaSach=?";
-                    PreparedStatement pre = ConnectMySQL.connect.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, datetra);
                     pre.setString(2, txtTTSachTra.getText());
                     pre.setString(3, txtGhiChu.getText());
@@ -90,7 +91,7 @@ public class ReturnReceipt extends Dialog {
                         if (tra == 0) {
                             try {
                                 String sqldocgia1 = "Select MatSach from docgia where MaDG=?";
-                                PreparedStatement prex = ConnectMySQL.connect.prepareStatement(sqldocgia1);
+                                PreparedStatement prex = DbManager.getInstance().getConnection().prepareStatement(sqldocgia1);
                                 prex.setString(1, MaDG);
                                 ResultSet b = prex.executeQuery();
                                 while (b.next()) {
@@ -101,7 +102,7 @@ public class ReturnReceipt extends Dialog {
                             }
                             try {
                                 String sqlsach = "Select GiaTien from sach where MaSach=?";
-                                PreparedStatement presach = ConnectMySQL.connect.prepareStatement(sqlsach);
+                                PreparedStatement presach = DbManager.getInstance().getConnection().prepareStatement(sqlsach);
                                 presach.setString(1, txtMaSach.getText());
                                 ResultSet rs1 = presach.executeQuery();
                                 while (rs1.next()) {
@@ -114,7 +115,7 @@ public class ReturnReceipt extends Dialog {
                             soluong++;
                             try {
                                 String sqldocgia = "update docgia set MatSach=? where MaDG=?";
-                                PreparedStatement pre1 = ConnectMySQL.connect.prepareStatement(sqldocgia);
+                                PreparedStatement pre1 = DbManager.getInstance().getConnection().prepareStatement(sqldocgia);
                                 pre1.setInt(1, soluong);
                                 pre1.setString(2, MaDG);
                                 int a = pre1.executeUpdate();
@@ -135,7 +136,7 @@ public class ReturnReceipt extends Dialog {
                         int soluongsach = 0;
                         try {
                             String sqlss = "Select SoLuong from sach where MaSach=?";
-                            PreparedStatement presach = ConnectMySQL.connect.prepareStatement(sqlss);
+                            PreparedStatement presach = DbManager.getInstance().getConnection().prepareStatement(sqlss);
                             presach.setString(1, MaSach);
                             ResultSet rssach = presach.executeQuery();
                             while (rssach.next()) {
@@ -147,7 +148,7 @@ public class ReturnReceipt extends Dialog {
                         soluongsach++;
                         try {
                             String sqlss1 = "update sach set SoLuong=? where MaSach=?";
-                            PreparedStatement presach1 = ConnectMySQL.connect.prepareStatement(sqlss1);
+                            PreparedStatement presach1 = DbManager.getInstance().getConnection().prepareStatement(sqlss1);
                             presach1.setInt(1, soluongsach);
                             presach1.setString(2, MaSach);
                             int c = presach1.executeUpdate();

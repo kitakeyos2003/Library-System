@@ -23,7 +23,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import eaut.edu.vn.database.ConnectMySQL;
+
+import eaut.edu.vn.database.DbManager;
+import eaut.edu.vn.main.Application;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Header;
@@ -35,13 +37,12 @@ import eaut.edu.vn.util.Util;
 
 
 public class ReaderManager extends CustomFrame {
-    public String tentk = "";
+    
     public int thongke = 0;
     JTextField txtMaDocGia, txtTenDocGia, txtSDT, txtDiaChi, txtGioiTinh, txtLanMatSach;
     JButton btnThem, btnXoa, btnSua, btnQuayLai, btnThongTin;
     DefaultTableModel dtmPhieuMuon, dtmDocGia;
     JTable tblDocGia, tblPhieuMuon;
-    Connection conn = ConnectMySQL.connect;
 
     public ReaderManager(String tieude) {
         super(tieude);
@@ -54,36 +55,14 @@ public class ReaderManager extends CustomFrame {
     public void addEvents() {
         btnQuayLai.addActionListener(e -> {
             // TODO Auto-generated method stub
-            int phanquyen = 0;
-            if (thongke == 1) {
-                StatisticAnalyzer ui = new StatisticAnalyzer("Thống kê");
-                ui.tenTk = tentk;
-                ui.showWindow();
-                dispose();
-                thongke = 0;
-                return;
-            }
-            try {
-
-                String sql = "select PhanQuyen from taikhoan where User=?";
-                PreparedStatement pre = ConnectMySQL.connect.prepareStatement(sql);
-                pre.setString(1, tentk);
-                ResultSet rs = pre.executeQuery();
-                while (rs.next()) {
-                    phanquyen = rs.getInt(1);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            int phanquyen = Application.account.getRole();
             if (phanquyen == 1) {
-                AdminManager ql = new AdminManager("Trang Chủ Phần Mềm Quản Lý Thư Viện");
-                ql.tentk = tentk;
+                AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
                 ql.showWindow();
                 dispose();
             }
             if (phanquyen == 2) {
-                LibrarianManager ql = new LibrarianManager("Thủ thư: " + tentk);
-                ql.tentk = tentk;
+                LibrarianManager ql = Application.SINGLETON.LIBRARIAN_MANAGER;
                 ql.showWindow();
                 dispose();
             }
@@ -176,7 +155,7 @@ public class ReaderManager extends CustomFrame {
     private void lietKeDocGia() {
         try {
             String sql = "select * from docgia";
-            PreparedStatement stat = conn.prepareStatement(sql);
+            PreparedStatement stat = DbManager.getInstance().getConnection().prepareStatement(sql);
             ResultSet result = stat.executeQuery(sql);
             while (result.next()) {
                 String ma = result.getString(1);
@@ -206,7 +185,7 @@ public class ReaderManager extends CustomFrame {
     void lietKePhieuMuonTheoDocGia(String ma) {
         try {
             String sql = "select * from phieumuon where madg=?";
-            PreparedStatement pre = conn.prepareStatement(sql);
+            PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
             pre.setString(1, ma);
             ResultSet result = pre.executeQuery();
             while (result.next()) {
@@ -219,7 +198,8 @@ public class ReaderManager extends CustomFrame {
 
                 dtmPhieuMuon.addRow(vec);
             }
-
+            result.close();
+            pre.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

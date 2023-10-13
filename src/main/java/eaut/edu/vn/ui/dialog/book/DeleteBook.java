@@ -1,6 +1,7 @@
 package eaut.edu.vn.ui.dialog.book;
 
-import eaut.edu.vn.database.ConnectMySQL;
+
+import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -32,7 +33,6 @@ public class DeleteBook extends Dialog {
     public String ma = "";
     JTextField txtMaSach, txtTenSach, txtTenTG, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
     JButton btnXoa;
-    Connection conn = ConnectMySQL.connect;
 
     public DeleteBook(String title) {
         super(title);
@@ -44,7 +44,7 @@ public class DeleteBook extends Dialog {
     public void hienThi() {
         try {
             String sql = "select * from sach where masach=?";
-            PreparedStatement pre = conn.prepareStatement(sql);
+            PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
             pre.setString(1, ma);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
@@ -64,6 +64,8 @@ public class DeleteBook extends Dialog {
                 txtSoLuong.setText(sl);
                 txtGia.setText(gia);
             }
+            rs.close();
+            pre.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -82,13 +84,15 @@ public class DeleteBook extends Dialog {
                 try {
 
                     String sql = "select * from ctpm where masach=?";
-                    PreparedStatement pre = conn.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, ma);
                     ResultSet rs = pre.executeQuery();
 
                     if (rs.next()) {
                         flag = 0;
                     }
+                    rs.close();
+                    pre.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -99,7 +103,7 @@ public class DeleteBook extends Dialog {
                 try {
 
                     String sql = "delete from sach where masach=?";
-                    PreparedStatement pre = conn.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, ma);
 
                     int x = pre.executeUpdate();

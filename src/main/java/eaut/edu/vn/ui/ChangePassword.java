@@ -9,10 +9,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -25,7 +25,9 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import eaut.edu.vn.database.ConnectMySQL;
+
+import eaut.edu.vn.database.DbManager;
+import eaut.edu.vn.main.Application;
 import eaut.edu.vn.service.AccountService;
 import eaut.edu.vn.model.Account;
 import eaut.edu.vn.ui.controls.Footer;
@@ -34,12 +36,9 @@ import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.util.Util;
 
 public class ChangePassword extends CustomFrame {
-    public String tentk = "";
+
     JButton btnLuu, btnQuayLai, btnLamLai;
     JPasswordField pwdMatKhauCu, pwdMatKhauMoi, pwdNhapLaiMKM;
-    Connection connect = ConnectMySQL.connect;
-    JTextField txtTaiKhoan, txtMatKhauCu, txtMatKhauMoi, txtNhapLaiMKM;
-    Connection con = ConnectMySQL.connect;
 
 
     public ChangePassword(String tieude) {
@@ -47,41 +46,20 @@ public class ChangePassword extends CustomFrame {
         this.setSize(780, 430);
         setHeader(new Header("PHẦN MỀM QUẢN LÝ THƯ VIỆN"));
         setFooter(new Footer());
-        if (tentk.length() != 0) {
-            HienThi();
-        }
-    }
-
-    public void HienThi() {
-        txtTaiKhoan.setText(tentk);
     }
 
     @Override
     public void addEvents() {
         btnQuayLai.addActionListener(e -> {
             // TODO Auto-generated method stub
-            int phanquyen = 0;
-            try {
-
-                String sql = "select PhanQuyen from taikhoan where User=?";
-                PreparedStatement pre = ConnectMySQL.connect.prepareStatement(sql);
-                pre.setString(1, tentk);
-                ResultSet rs = pre.executeQuery();
-                while (rs.next()) {
-                    phanquyen = rs.getInt(1);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            int phanquyen = Application.account.getRole();
             if (phanquyen == 1) {
-                AdminManager ql = new AdminManager("Admin");
-                ql.tentk = tentk;
+                AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
                 ql.showWindow();
                 dispose();
             }
             if (phanquyen == 2) {
-                LibrarianManager ql = new LibrarianManager("Thủ thư: " + tentk);
-                ql.tentk = tentk;
+                LibrarianManager ql = Application.SINGLETON.LIBRARIAN_MANAGER;
                 ql.showWindow();
                 dispose();
             }
@@ -188,54 +166,38 @@ public class ChangePassword extends CustomFrame {
 
             }
         });
-        btnLamLai.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                pwdMatKhauCu.setText(null);
-                pwdMatKhauMoi.setText(null);
-                pwdNhapLaiMKM.setText(null);
+        btnLamLai.addActionListener(e -> {
+            pwdMatKhauCu.setText(null);
+            pwdMatKhauMoi.setText(null);
+            pwdNhapLaiMKM.setText(null);
 
-            }
         });
 
-        btnLuu.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                AccountService tksv = new AccountService();
-                ArrayList<Account> dstk = new ArrayList<Account>();
-                dstk = tksv.layTaiKhoan();
-                for (Account tk : dstk) {
-                    if (txtTaiKhoan.getText().equals(tk.getUser()) && pwdMatKhauCu.getText().equals(tk.getPass())) {
-                        if (pwdMatKhauMoi.getText().equals(pwdNhapLaiMKM.getText())) {
-                            try {
-                                String sql = "Update taikhoan set password=? where user=?";
-                                PreparedStatement pre = con.prepareStatement(sql);
-                                pre.setString(1, pwdNhapLaiMKM.getText());
-                                pre.setString(2, txtTaiKhoan.getText());
-                                int x = pre.executeUpdate();
-                                if (x > 0) {
-                                    JOptionPane.showMessageDialog(null, "Đổi mật khẩu thành công");
-                                    pwdMatKhauCu.setText(null);
-                                    pwdMatKhauMoi.setText(null);
-                                    pwdNhapLaiMKM.setText(null);
-                                    return;
-                                }
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Mật khẩu mới chưa trùng khớp");
-                            pwdMatKhauMoi.setText(null);
-                            pwdNhapLaiMKM.setText(null);
-                            return;
-                        }
-                    }
-                }
+        btnLuu.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            Account account = Application.account;
+            if (account == null || !account.getPassword().equals(pwdMatKhauCu.getText())) {
                 JOptionPane.showMessageDialog(null, "Mật khẩu cũ chưa đúng. Mời nhập lại!");
                 pwdMatKhauCu.setText(null);
                 pwdMatKhauMoi.setText(null);
                 pwdNhapLaiMKM.setText(null);
+                return;
             }
-
+            if (!pwdMatKhauMoi.getText().equals(pwdNhapLaiMKM.getText())) {
+                JOptionPane.showMessageDialog(null, "Mật khẩu mới chưa trùng khớp");
+                pwdMatKhauMoi.setText(null);
+                pwdNhapLaiMKM.setText(null);
+                return;
+            }
+            String username = account.getUsername();
+            int x = DbManager.getInstance().update("Update taikhoan set password=? where user=?", pwdNhapLaiMKM.getText(), username);
+            if (x > 0) {
+                account.setPassword(pwdMatKhauMoi.getText());
+                JOptionPane.showMessageDialog(null, "Đổi mật khẩu thành công");
+                pwdMatKhauCu.setText(null);
+                pwdMatKhauMoi.setText(null);
+                pwdNhapLaiMKM.setText(null);
+            }
         });
     }
 
@@ -262,13 +224,6 @@ public class ChangePassword extends CustomFrame {
         JLabel lblDoiMatKhau = new JLabel("ĐỔI MẬT KHẨU");
         pnTitle.add(lblDoiMatKhau);
 
-        JPanel pnTaiKhoan = new JPanel();
-        pnTaiKhoan.setLayout(new FlowLayout());
-        txtTaiKhoan = new JTextField();
-        txtTaiKhoan.setPreferredSize(new Dimension(340, 30));
-        pnTaiKhoan.add(txtTaiKhoan);
-        txtTaiKhoan.setEditable(false);
-
         JPanel pnMatKhauCu = new JPanel();
         pnMatKhauCu.setLayout(new FlowLayout());
         pwdMatKhauCu = new JPasswordField("Mật khẩu cũ");
@@ -291,7 +246,6 @@ public class ChangePassword extends CustomFrame {
         pnNhapLaiMKM.add(pwdNhapLaiMKM);
 
         pnHienThiChiTiet.add(pnTitle);
-        pnHienThiChiTiet.add(pnTaiKhoan);
         pnHienThiChiTiet.add(pnMatKhauCu);
         pnHienThiChiTiet.add(pnMatKhauMoi);
         pnHienThiChiTiet.add(pnNhapLaiMKM);
@@ -311,7 +265,6 @@ public class ChangePassword extends CustomFrame {
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
         lblDoiMatKhau.setFont(font2);
-        txtTaiKhoan.setFont(font4);
         pwdMatKhauCu.setFont(font4);
         pwdNhapLaiMKM.setFont(font4);
         pwdMatKhauMoi.setFont(font4);
@@ -325,7 +278,6 @@ public class ChangePassword extends CustomFrame {
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblDoiMatKhau.setForeground(new Color(48, 51, 107));
-        pnTaiKhoan.setBackground(new Color(241, 242, 246));
         pnMatKhauCu.setBackground(new Color(241, 242, 246));
         pnMatKhauMoi.setBackground(new Color(241, 242, 246));
         pnNhapLaiMKM.setBackground(new Color(241, 242, 246));

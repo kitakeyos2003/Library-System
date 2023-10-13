@@ -22,7 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import eaut.edu.vn.database.ConnectMySQL;
+
+import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -32,7 +33,6 @@ public class DeleteReader extends Dialog {
     public String machon = "";
     JTextField txtMaDocGia, txtHoTen, txtSDT, txtDiaChi, txtGioiTinh;
     JButton btnXoa;
-    Connection connect = ConnectMySQL.connect;
 
     public DeleteReader(String title) {
         super(title);
@@ -44,7 +44,7 @@ public class DeleteReader extends Dialog {
     public void hienThi() {
         try {
             String sql = "select * from docgia where madg=?";
-            PreparedStatement pre = connect.prepareStatement(sql);
+            PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
             pre.setString(1, machon);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
@@ -68,7 +68,7 @@ public class DeleteReader extends Dialog {
                 try {
 
                     String sql = "select * from phieumuon where madg=?";
-                    PreparedStatement pre = connect.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, ma);
                     ResultSet rs = pre.executeQuery();
 
@@ -85,7 +85,7 @@ public class DeleteReader extends Dialog {
                 try {
 
                     String sql = "delete from docgia where madg=?";
-                    PreparedStatement pre = connect.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, ma);
                     int x = pre.executeUpdate();
                     if (x > 0) {

@@ -1,59 +1,59 @@
 package eaut.edu.vn.model;
 
 public class Reader {
-    private String MaDG;
-    private String TenDG;
-    private String SoDienThoai;
-    private String DiaChi;
-    private String GioiTinh;
-    private int MatSach;
+    private String id;
+    private String name;
+    private String phoneNumber;
+    private String address;
+    private String sex;
+    private int bookId;
 
-    public String getMaDG() {
-        return MaDG;
+    public String getId() {
+        return id;
     }
 
-    public void setMaDG(String maDG) {
-        MaDG = maDG;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getTenDG() {
-        return TenDG;
+    public String getName() {
+        return name;
     }
 
-    public void setTenDG(String tenDG) {
-        TenDG = tenDG;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getSoDienThoai() {
-        return SoDienThoai;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setSoDienThoai(String soDienThoai) {
-        SoDienThoai = soDienThoai;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public String getDiaChi() {
-        return DiaChi;
+    public String getAddress() {
+        return address;
     }
 
-    public void setDiaChi(String diaChi) {
-        DiaChi = diaChi;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getGioiTinh() {
-        return GioiTinh;
+    public String getSex() {
+        return sex;
     }
 
-    public void setGioiTinh(String gioiTinh) {
-        GioiTinh = gioiTinh;
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
-    public int getMatSach() {
-        return MatSach;
+    public int getBookId() {
+        return bookId;
     }
 
-    public void setMatSach(int matSach) {
-        MatSach = matSach;
+    public void setBookId(int bookId) {
+        this.bookId = bookId;
     }
 
 

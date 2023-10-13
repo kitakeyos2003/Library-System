@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -16,8 +17,10 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import eaut.edu.vn.database.DbManager;
+import eaut.edu.vn.main.Application;
 import eaut.edu.vn.service.LoanDetailService;
-import eaut.edu.vn.database.ConnectMySQL;
+
 import eaut.edu.vn.service.ReaderService;
 import eaut.edu.vn.service.LoanService;
 import eaut.edu.vn.service.BookService;
@@ -37,7 +40,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 
 public class StatisticAnalyzer extends CustomFrame {
-    public String tenTk = "";
+    
     public int thongke = 1;
     JButton btnQLDG, btnQLPM, btnQLPT, btnQLS, btnQuayLai, btnChiTietSach, btnChiTietDG, btnChiTietPM, btnChiTietPT;
     DefaultTableModel dtmPM;
@@ -59,7 +62,7 @@ public class StatisticAnalyzer extends CustomFrame {
     public int DemSach() {
         int SoLuongSach = 0;
         BookService sv = new BookService();
-        ArrayList<Book> ds = sv.layToanBoSach();
+        List<Book> ds = sv.getAll();
         for (Book s : ds) {
             SoLuongSach++;
         }
@@ -69,7 +72,7 @@ public class StatisticAnalyzer extends CustomFrame {
     public int DemPhieuMuon() {
         int SoLuongPM = 0;
         LoanService pmsv = new LoanService();
-        ArrayList<Loan> ds = pmsv.layThongTinPhieuMuon();
+        ArrayList<Loan> ds = pmsv.getAll();
         for (Loan pm : ds) {
             SoLuongPM++;
         }
@@ -79,9 +82,9 @@ public class StatisticAnalyzer extends CustomFrame {
     public int DemPhieuPhieuTra() {
         int SoLuongPT = 0;
         LoanDetailService ctsv = new LoanDetailService();
-        ArrayList<LoanDetail> ds = ctsv.layChiTietPhieuMuon();
+        ArrayList<LoanDetail> ds = ctsv.getAll();
         for (LoanDetail ctpm : ds) {
-            if (ctpm.getNgayTra() != null) {
+            if (ctpm.getReturnDate() != null) {
                 SoLuongPT++;
             }
         }
@@ -92,7 +95,7 @@ public class StatisticAnalyzer extends CustomFrame {
     public int DemDocGia() {
         int SoLuongDG = 0;
         ReaderService dgsv = new ReaderService();
-        ArrayList<Reader> ds = dgsv.layToanBoDocGia();
+        ArrayList<Reader> ds = dgsv.getAll();
         for (Reader dg : ds) {
             SoLuongDG++;
         }
@@ -288,39 +291,34 @@ public class StatisticAnalyzer extends CustomFrame {
     public void addEvents() {
         btnQuayLai.addActionListener(e -> {
             // TODO Auto-generated method stub
-            AdminManager ql = new AdminManager("Trang Chủ Phần Mềm Quản Lý Thư Viện");
-            ql.tentk = tenTk;
+            AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
             ql.showWindow();
             dispose();
         });
         btnChiTietDG.addActionListener(e -> {
             // TODO Auto-generated method stub
-            ReaderManager ql = new ReaderManager("Quản lý độc giả");
-            ql.tentk = tenTk;
+            ReaderManager ql = Application.SINGLETON.READER_MANAGER;
             ql.thongke = thongke;
             ql.showWindow();
             dispose();
         });
         btnChiTietSach.addActionListener(e -> {
             // TODO Auto-generated method stub
-            BookManager ql = new BookManager("Quản lý sách");
-            ql.tentk = tenTk;
+            BookManager ql = Application.SINGLETON.BOOK_MANAGER;
             ql.thongke = thongke;
             ql.showWindow();
             dispose();
         });
         btnChiTietPM.addActionListener(e -> {
             // TODO Auto-generated method stub
-            LoanManager ql = new LoanManager("Quản lý phiếu mượn");
-            ql.tentk = tenTk;
+            LoanManager ql = Application.SINGLETON.LOAN_MANAGER;
             ql.thongke = thongke;
             ql.showWindow();
             dispose();
         });
         btnChiTietPT.addActionListener(e -> {
             // TODO Auto-generated method stub
-            ReturnManager ql = new ReturnManager("Quản lý phiếu trả");
-            ql.tentk = tenTk;
+            ReturnManager ql = Application.SINGLETON.RETURN_MANAGER;
             ql.thongke = thongke;
             ql.showWindow();
             dispose();
@@ -330,7 +328,7 @@ public class StatisticAnalyzer extends CustomFrame {
             try {
                 String report = "jasper/DocGiaReport.jrxml";
                 JasperReport jr = JasperCompileManager.compileReport(report);
-                JasperPrint jp = JasperFillManager.fillReport(jr, null, ConnectMySQL.connect);
+                JasperPrint jp = JasperFillManager.fillReport(jr, null, DbManager.getInstance().getConnection());
                 JasperViewer jv = new JasperViewer(jp, false);
                 JasperViewer.viewReport(jp, false);
             } catch (Exception ex) {
@@ -344,7 +342,7 @@ public class StatisticAnalyzer extends CustomFrame {
             try {
                 String report = "jasper/PhieuTraReport.jrxml";
                 JasperReport jr = JasperCompileManager.compileReport(report);
-                JasperPrint jp = JasperFillManager.fillReport(jr, null, ConnectMySQL.connect);
+                JasperPrint jp = JasperFillManager.fillReport(jr, null, DbManager.getInstance().getConnection());
                 JasperViewer jv = new JasperViewer(jp, false);
                 JasperViewer.viewReport(jp, false);
             } catch (Exception ex) {
@@ -356,7 +354,7 @@ public class StatisticAnalyzer extends CustomFrame {
             try {
                 String report = "jasper/SachReport.jrxml";
                 JasperReport jr = JasperCompileManager.compileReport(report);
-                JasperPrint jp = JasperFillManager.fillReport(jr, null, ConnectMySQL.connect);
+                JasperPrint jp = JasperFillManager.fillReport(jr, null, DbManager.getInstance().getConnection());
                 JasperViewer jv = new JasperViewer(jp, false);
                 JasperViewer.viewReport(jp, false);
             } catch (Exception ex) {
@@ -368,7 +366,7 @@ public class StatisticAnalyzer extends CustomFrame {
             try {
                 String report = "jasper/PhieuMuonReport.jrxml";
                 JasperReport jr = JasperCompileManager.compileReport(report);
-                JasperPrint jp = JasperFillManager.fillReport(jr, null, ConnectMySQL.connect);
+                JasperPrint jp = JasperFillManager.fillReport(jr, null, DbManager.getInstance().getConnection());
                 JasperViewer jv = new JasperViewer(jp, false);
                 JasperViewer.viewReport(jp, false);
             } catch (Exception ex) {

@@ -2,7 +2,6 @@ package eaut.edu.vn.ui.dialog.reader;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -25,7 +24,8 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import eaut.edu.vn.database.ConnectMySQL;
+
+import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -34,12 +34,11 @@ import eaut.edu.vn.model.Reader;
 import eaut.edu.vn.util.Util;
 
 public class AddReader extends Dialog {
-    public String tentk = "";
+    
     JTextField txtMaDocGia, txtHoTen, txtSDT, txtDiaChi, txtGioiTinh;
     JRadioButton radNam, radNu;
     JButton btnThem;
     JComboBox cb;
-    Connection connect = ConnectMySQL.connect;
 
     public AddReader(String title) {
         super(title);
@@ -50,7 +49,7 @@ public class AddReader extends Dialog {
     public int DemDocGia() {
         int SoLuongDG = 0;
         ReaderService dgsv = new ReaderService();
-        ArrayList<Reader> ds = dgsv.layToanBoDocGia();
+        ArrayList<Reader> ds = dgsv.getAll();
         for (Reader dg : ds) {
             SoLuongDG++;
         }
@@ -65,7 +64,7 @@ public class AddReader extends Dialog {
                 try {
 
                     String sql = "select * from docgia where madg=?";
-                    PreparedStatement pre = connect.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, txtMaDocGia.getText());
                     ResultSet rs = pre.executeQuery();
 
@@ -91,7 +90,7 @@ public class AddReader extends Dialog {
                 try {
 
                     String sql = "insert into docgia values (?,?,?,?,?,0)";
-                    PreparedStatement pre = connect.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, txtMaDocGia.getText());
                     pre.setString(2, txtHoTen.getText());
                     pre.setString(3, txtSDT.getText());

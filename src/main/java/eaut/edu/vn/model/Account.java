@@ -1,59 +1,59 @@
 package eaut.edu.vn.model;
 
 public class Account {
-    private String User;
-    private String Pass;
-    private int PhanQuyen;
-    private String TenND;
-    private String SoDienThoai;
-    private String CMND;
+    private String username;
+    private String password;
+    private int role;
+    private String name;
+    private String phoneNumber;
+    private String identityNumber;
 
-    public String getUser() {
-        return User;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUser(String user) {
-        User = user;
+    public void setUsername(String user) {
+        username = user;
     }
 
-    public String getPass() {
-        return Pass;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPass(String pass) {
-        Pass = pass;
+    public void setPassword(String pass) {
+        password = pass;
     }
 
-    public int getPhanQuyen() {
-        return PhanQuyen;
+    public int getRole() {
+        return role;
     }
 
-    public void setPhanQuyen(int phanQuyen) {
-        PhanQuyen = phanQuyen;
+    public void setRole(int phanQuyen) {
+        role = phanQuyen;
     }
 
-    public String getTenND() {
-        return TenND;
+    public String getName() {
+        return name;
     }
 
-    public void setTenND(String tenND) {
-        TenND = tenND;
+    public void setName(String tenND) {
+        name = tenND;
     }
 
-    public String getSoDienThoai() {
-        return SoDienThoai;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setSoDienThoai(String soDienThoai) {
-        SoDienThoai = soDienThoai;
+    public void setPhoneNumber(String soDienThoai) {
+        phoneNumber = soDienThoai;
     }
 
-    public String getCMND() {
-        return CMND;
+    public String getIdentityNumber() {
+        return identityNumber;
     }
 
-    public void setCMND(String cMND) {
-        CMND = cMND;
+    public void setIdentityNumber(String cMND) {
+        identityNumber = cMND;
     }
 
 

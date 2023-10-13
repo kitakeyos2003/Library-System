@@ -1,5 +1,7 @@
 package eaut.edu.vn.ui;
 
+import eaut.edu.vn.main.Application;
+import eaut.edu.vn.model.Account;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Header;
@@ -17,7 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class AdminManager extends CustomFrame {
-    public String tentk = "";
     JButton btnQLND, btnQLDG, btnQLPM, btnQLPT, btnThongKe, btnQLS, btnDoiMK, btnDangXuat;
 
     public AdminManager(String title) {
@@ -29,56 +30,49 @@ public class AdminManager extends CustomFrame {
 
     public void addEvents() {
         btnDangXuat.addActionListener(e -> {
-            Login login = new Login("Đăng nhập");
+            Application.account = null;
+            Login login = Application.SINGLETON.LOGIN;
             login.showWindow();
             dispose();
         });
         btnQLND.addActionListener(e -> {
-            AccountManager qlnd = new AccountManager("Quản lý người dùng");
-            qlnd.tentk = tentk;
+            AccountManager qlnd = Application.SINGLETON.ACCOUNT_MANAGER;
             qlnd.showWindow();
             dispose();
         });
         btnQLPM.addActionListener(e -> {
-            LoanManager qlpm = new LoanManager("Quản lý phiếu mượn");
-            qlpm.tentk = tentk;
+            LoanManager qlpm = Application.SINGLETON.LOAN_MANAGER;
             qlpm.showWindow();
             dispose();
         });
         btnQLPT.addActionListener(e -> {
-            ReturnManager qlpt = new ReturnManager("Quản lý phiếu trả");
-            qlpt.tentk = tentk;
+            ReturnManager qlpt = Application.SINGLETON.RETURN_MANAGER;
             qlpt.showWindow();
             dispose();
 
         });
         btnQLDG.addActionListener(e -> {
-            ReaderManager qldg = new ReaderManager("Quản lý độc giả");
-            qldg.tentk = tentk;
+            ReaderManager qldg = Application.SINGLETON.READER_MANAGER;
             qldg.showWindow();
             dispose();
 
         });
 
         btnQLS.addActionListener(e -> {
-            BookManager qls = new BookManager("Quản lý sách");
-            qls.tentk = tentk;
+            BookManager qls = Application.SINGLETON.BOOK_MANAGER;
             qls.showWindow();
             dispose();
 
         });
         btnDoiMK.addActionListener(e -> {
             ChangePassword dmk = new ChangePassword("Đổi mật khẩu");
-            dmk.tentk = tentk;
-            dmk.HienThi();
             dmk.showWindow();
             dispose();
 
         });
         btnThongKe.addActionListener(e -> {
             // TODO Auto-generated method stub
-            StatisticAnalyzer tk = new StatisticAnalyzer("Thống kê");
-            tk.tenTk = tentk;
+            StatisticAnalyzer tk = Application.SINGLETON.STATISTIC_ANALYZER;
             tk.showWindow();
             dispose();
         });

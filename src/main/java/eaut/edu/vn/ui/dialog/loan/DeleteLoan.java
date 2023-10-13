@@ -24,7 +24,8 @@ import javax.swing.border.TitledBorder;
 
 import com.toedter.calendar.JDateChooser;
 
-import eaut.edu.vn.database.ConnectMySQL;
+
+import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -34,7 +35,6 @@ public class DeleteLoan extends Dialog {
     public String machon = "";
     JTextField txtMaPhieu, txtMaDG, txtTenDG, txtNgayMuon, txtNgayHenTra, txtSachMuon, txtThuThu;
     JButton btnXoa;
-    Connection conn = ConnectMySQL.connect;
     int soluongtruoc = 0;
     int soluongsau = 0;
     JDateChooser choosedate, choosedate1;
@@ -49,7 +49,7 @@ public class DeleteLoan extends Dialog {
     public void hienThi() {
         try {
             String sql = "select * from phieumuon where MaPM=?";
-            PreparedStatement pre = conn.prepareStatement(sql);
+            PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
             pre.setString(1, machon);
             ResultSet rs = pre.executeQuery();
             if (rs.next()) {
@@ -72,11 +72,11 @@ public class DeleteLoan extends Dialog {
             public void actionPerformed(ActionEvent e) {
                 try {
                     String sql = "Delete from phieumuon where mapm=?";
-                    PreparedStatement pre = conn.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, txtMaPhieu.getText());
                     try {
                         String sql1 = "Delete from ctpm where mapm=?";
-                        PreparedStatement pre1 = conn.prepareStatement(sql1);
+                        PreparedStatement pre1 = DbManager.getInstance().getConnection().prepareStatement(sql1);
                         pre1.setString(1, txtMaPhieu.getText());
                         int x1 = pre1.executeUpdate();
                         if (x1 > 0) {

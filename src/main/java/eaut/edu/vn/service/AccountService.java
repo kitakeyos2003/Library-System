@@ -1,57 +1,119 @@
 package eaut.edu.vn.service;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.sql.SQLException;
+import java.util.*;
 
-import eaut.edu.vn.database.ConnectMySQL;
+
+import eaut.edu.vn.database.DbManager;
+import eaut.edu.vn.interfaces.IService;
 import eaut.edu.vn.model.Account;
+import eaut.edu.vn.util.Log;
 
-public class AccountService extends ConnectMySQL {
-    public ArrayList<Account> layTaiKhoan() {
-        ArrayList<Account> ds = new ArrayList<Account>();
-        try {
-            String sql = "Select * from taikhoan";
-            PreparedStatement pre = connect.prepareStatement(sql);
-            ResultSet result = pre.executeQuery();
-            while (result.next()) {
-                Account tk = new Account();
-                tk.setUser(result.getString(1));
-                tk.setPass(result.getString(2));
-                tk.setPhanQuyen(result.getInt(3));
-                tk.setTenND(result.getString(4));
-                tk.setSoDienThoai(result.getString(5));
-                tk.setCMND(result.getString(6));
-                ds.add(tk);
+public class AccountService implements IService<Account> {
+    @Override
+    public List<Account> getAll() {
+        final List<Account> list = new ArrayList<>();
+        DbManager.getInstance().executeQuery("Select * from taikhoan", result -> {
+            try {
+                while (result.next()) {
+                    Account account = new Account();
+                    account.setUsername(result.getString(1));
+                    account.setPassword(result.getString(2));
+                    account.setRole(result.getInt(3));
+                    account.setName(result.getString(4));
+                    account.setPhoneNumber(result.getString(5));
+                    account.setIdentityNumber(result.getString(6));
+                    list.add(account);
+                }
+            } catch (SQLException e) {
+                Log.error("getAll account err, ", e);
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return ds;
+        });
+        return list;
     }
 
-    public ArrayList<Account> layTaiKhoanTheoUser(String User) {
-        ArrayList<Account> ds = new ArrayList<Account>();
-        try {
-            String sql = "Select * from taikhoan where user=?";
-            PreparedStatement pre = connect.prepareStatement(sql);
-            pre.setString(1, User);
-            ResultSet result = pre.executeQuery();
-            while (result.next()) {
-                Account tk = new Account();
-                tk.setUser(result.getString(1));
-                tk.setPass(result.getString(2));
-                tk.setPhanQuyen(result.getInt(3));
-                tk.setTenND(result.getString(4));
-                tk.setSoDienThoai(result.getString(5));
-                tk.setCMND(result.getString(6));
-                ds.add(tk);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+    @Override
+    public void add(Account account) {
 
-        return ds;
+    }
+
+    @Override
+    public void remove(Account account) {
+
+    }
+
+    @Override
+    public Account find(Object obj) {
+        final Account[] accounts = new Account[1];
+        DbManager.getInstance().executeQuery("SELECT * FROM `taikhoan` WHERE User =  ? LIMIT 1;", resultSet -> {
+            try {
+                if (resultSet.next()) {
+                    Account account = new Account();
+                    account.setUsername(resultSet.getString(1));
+                    account.setPassword(resultSet.getString(2));
+                    account.setRole(resultSet.getInt(3));
+                    account.setName(resultSet.getString(4));
+                    account.setPhoneNumber(resultSet.getString(5));
+                    account.setIdentityNumber(resultSet.getString(6));
+                    accounts[0] = account;
+                }
+            } catch (SQLException e) {
+                Log.error("authenticate err", e);
+            }
+        }, obj);
+        return accounts[0];
+    }
+
+    public List<Account> search(String user) {
+        final List<Account> list = new ArrayList<>();
+        DbManager.getInstance().executeQuery("Select * from taikhoan where user=?", result -> {
+            try {
+                while (result.next()) {
+                    Account account = new Account();
+                    account.setUsername(result.getString(1));
+                    account.setPassword(result.getString(2));
+                    account.setRole(result.getInt(3));
+                    account.setName(result.getString(4));
+                    account.setPhoneNumber(result.getString(5));
+                    account.setIdentityNumber(result.getString(6));
+                    list.add(account);
+                }
+            } catch (SQLException e) {
+                Log.error("search account err, ", e);
+            }
+        }, user);
+        return list;
+    }
+
+    public static AccountService getInstance() {
+        return AccountService.SINGLETON.INSTANCE;
+    }
+
+    public Account authenticate(String username, String password) {
+        final Account[] accounts = new Account[1];
+        DbManager.getInstance().executeQuery("SELECT * FROM `taikhoan` WHERE User =  ? AND Password = ? LIMIT 1;", resultSet -> {
+            try {
+                if (resultSet.next()) {
+                    Account account = new Account();
+                    account.setUsername(resultSet.getString(1));
+                    account.setPassword(resultSet.getString(2));
+                    account.setRole(resultSet.getInt(3));
+                    account.setName(resultSet.getString(4));
+                    account.setPhoneNumber(resultSet.getString(5));
+                    account.setIdentityNumber(resultSet.getString(6));
+                    accounts[0] = account;
+                }
+            } catch (SQLException e) {
+                Log.error("authenticate err", e);
+            }
+        }, username, password);
+        return accounts[0];
+    }
+
+    public static final class SINGLETON {
+
+        public static final AccountService INSTANCE = new AccountService();
+
     }
 }
 

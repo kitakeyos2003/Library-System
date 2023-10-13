@@ -5,9 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -20,7 +20,9 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import eaut.edu.vn.database.ConnectMySQL;
+
+import eaut.edu.vn.database.DbManager;
+import eaut.edu.vn.model.Account;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -32,7 +34,6 @@ public class DeleteAccount extends Dialog {
     JTextField txtTaiKhoan, txtHoTen, txtSDT, txtCMND, txtPhanQuyen;
     JPasswordField pwdMatKhau;
     JButton btnXoa;
-    Connection connect = ConnectMySQL.connect;
 
     public DeleteAccount(String title) {
         super(title);
@@ -44,19 +45,18 @@ public class DeleteAccount extends Dialog {
     }
 
     public void hienThi() {
-        AccountService tksv = new AccountService();
-        ArrayList<eaut.edu.vn.model.Account> dstk = tksv.layTaiKhoanTheoUser(machon);
-        for (eaut.edu.vn.model.Account tk : dstk) {
-            txtTaiKhoan.setText(tk.getUser());
-            txtCMND.setText(tk.getCMND());
-            txtHoTen.setText(tk.getTenND());
-            int phanquyen = tk.getPhanQuyen();
+        List<Account> dstk = AccountService.getInstance().search(machon);
+        for (Account tk : dstk) {
+            txtTaiKhoan.setText(tk.getUsername());
+            txtCMND.setText(tk.getIdentityNumber());
+            txtHoTen.setText(tk.getName());
+            int phanquyen = tk.getRole();
             if (phanquyen == 1) {
                 txtPhanQuyen.setText("Admin");
             } else
                 txtPhanQuyen.setText("Thủ thư");
-            txtSDT.setText(tk.getSoDienThoai());
-            pwdMatKhau.setText(tk.getPass());
+            txtSDT.setText(tk.getPhoneNumber());
+            pwdMatKhau.setText(tk.getPassword());
         }
 
     }
@@ -66,7 +66,7 @@ public class DeleteAccount extends Dialog {
         btnXoa.addActionListener(e -> {
             try {
                 String sql = "Delete from taikhoan where user=?";
-                PreparedStatement pre = connect.prepareStatement(sql);
+                PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                 pre.setString(1, txtTaiKhoan.getText());
                 int x = pre.executeUpdate();
                 if (x > 0) {

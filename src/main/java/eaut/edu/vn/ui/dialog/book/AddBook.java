@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -23,7 +24,7 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -35,7 +36,6 @@ public class AddBook extends Dialog {
     public String ma = "";
     JTextField txtMaSach, txtTenSach, txtTenTG, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
     JButton btnThem;
-    Connection conn = ConnectMySQL.connect;
 
     public AddBook(String title) {
         super(title);
@@ -44,12 +44,9 @@ public class AddBook extends Dialog {
     }
 
     public int DemSach() {
-        int SoLuongSach = 0;
         BookService sv = new BookService();
-        ArrayList<Book> ds = sv.layToanBoSach();
-        for (Book s : ds) {
-            SoLuongSach++;
-        }
+        List<Book> ds = sv.getAll();
+        int SoLuongSach = ds.size();
         return SoLuongSach;
     }
 
@@ -61,13 +58,15 @@ public class AddBook extends Dialog {
                 try {
 
                     String sql = "select * from sach where masach=?";
-                    PreparedStatement pre = conn.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, txtMaSach.getText());
                     ResultSet rs = pre.executeQuery();
 
                     if (rs.next()) {
                         flag = 0;
                     }
+                    rs.close();
+                    pre.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -85,7 +84,7 @@ public class AddBook extends Dialog {
                 try {
 
                     String sql = "insert into sach values (?,?,?,?,?,?,?)";
-                    PreparedStatement pre = conn.prepareStatement(sql);
+                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                     pre.setString(1, txtMaSach.getText());
                     pre.setString(2, txtTenSach.getText());
                     pre.setString(3, txtTenTG.getText());

@@ -5,17 +5,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
+import java.sql.*;
+import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -31,7 +27,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 
-import eaut.edu.vn.database.ConnectMySQL;
+import eaut.edu.vn.database.DbManager;
+import eaut.edu.vn.main.Application;
+import eaut.edu.vn.model.Book;
+import eaut.edu.vn.service.BookService;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Header;
@@ -39,18 +38,17 @@ import eaut.edu.vn.ui.dialog.book.EditBook;
 import eaut.edu.vn.ui.dialog.book.AddBook;
 import eaut.edu.vn.ui.dialog.book.SearchBook;
 import eaut.edu.vn.ui.dialog.book.DeleteBook;
-import eaut.edu.vn.model.LoanDetail;
+import eaut.edu.vn.util.Log;
 import eaut.edu.vn.util.Util;
 
 public class BookManager extends CustomFrame {
-    public String tentk = "";
+    
     public int thongke = 0;
     JTextField txtMaSach, txtTenSach, txtTacGia, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
     JButton btnThem, btnXoa, btnSua, btnQuayLai, btnTimKiem;
     DefaultTableModel dtmSach;
     JTable tblSach;
-    ArrayList<LoanDetail> dssach;
-    Connection conn = ConnectMySQL.connect;
+    List<Book> books;
     DefaultListModel defaultListTheLoai;
     JList listTheLoai;
 
@@ -59,37 +57,22 @@ public class BookManager extends CustomFrame {
         this.setSize(1130, 775);
         setHeader(new Header("QUẢN LÝ SÁCH"));
         setFooter(new Footer());
-        hienThiSach();
+        loadAllBook();
     }
 
-    private void hienThiSach() {
-        try {
-            String sql = "select * from sach";
-            PreparedStatement pre = conn.prepareStatement(sql);
-            ResultSet result = pre.executeQuery();
-            while (result.next()) {
-                String ma = result.getString(1);
-                String ten = result.getString(2);
-                String tg = result.getString(3);
-                String nxb = result.getString(4);
-                String tl = result.getString(5);
-                String sl = String.valueOf(result.getInt(6));
-                String gia = String.valueOf(result.getInt(7));
+    private void loadAllBook() {
+        books = BookService.getInstance().getAll();
+        for (Book book : books) {
+            Vector<Object> vec = new Vector<>();
+            vec.add(book.getId());
+            vec.add(book.getName());
+            vec.add(book.getAuthorName());
+            vec.add(book.getPublishingCompany());
+            vec.add(book.getCategory());
+            vec.add(book.getQuantity());
+            vec.add(book.getPrice());
 
-                Vector<Object> vec = new Vector<>();
-                vec.add(ma);
-                vec.add(ten);
-                vec.add(tg);
-                vec.add(nxb);
-                vec.add(tl);
-                vec.add(sl);
-                vec.add(gia);
-
-                dtmSach.addRow(vec);
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            dtmSach.addRow(vec);
         }
 
     }
@@ -98,36 +81,22 @@ public class BookManager extends CustomFrame {
     public void addEvents() {
         btnQuayLai.addActionListener(e -> {
             // TODO Auto-generated method stub
-            int phanquyen = 0;
             if (thongke == 1) {
-                StatisticAnalyzer ui = new StatisticAnalyzer("Thống kê");
-                ui.tenTk = tentk;
+                StatisticAnalyzer ui = Application.SINGLETON.STATISTIC_ANALYZER;
                 ui.showWindow();
                 dispose();
                 thongke = 0;
                 return;
             }
-            try {
 
-                String sql = "select PhanQuyen from taikhoan where User=?";
-                PreparedStatement pre = ConnectMySQL.connect.prepareStatement(sql);
-                pre.setString(1, tentk);
-                ResultSet rs = pre.executeQuery();
-                while (rs.next()) {
-                    phanquyen = rs.getInt(1);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            int phanquyen = Application.account.getRole();
             if (phanquyen == 1) {
-                AdminManager ql = new AdminManager("Trang Chủ Phần Mềm Quản Lý Thư Viện");
-                ql.tentk = tentk;
+                AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
                 ql.showWindow();
                 dispose();
             }
             if (phanquyen == 2) {
-                LibrarianManager ql = new LibrarianManager("Thủ thư: " + tentk);
-                ql.tentk = tentk;
+                LibrarianManager ql = Application.SINGLETON.LIBRARIAN_MANAGER;
                 ql.showWindow();
                 dispose();
             }
@@ -182,73 +151,49 @@ public class BookManager extends CustomFrame {
                     int index = list.locationToIndex(evt.getPoint());
                     dtmSach.setRowCount(0);
                     String theloai = (String) defaultListTheLoai.get(index);
-                    try {
-                        String sql = "select * from sach where theloai=?";
-                        PreparedStatement pre = conn.prepareStatement(sql);
-                        pre.setString(1, theloai);
-                        ResultSet rs = pre.executeQuery();
-                        while (rs.next()) {
-                            String ma = rs.getString(1);
-                            String ten = rs.getString(2);
-                            String tg = rs.getString(3);
-                            String nxb = rs.getString(4);
-                            String tl = rs.getString(5);
-                            String sl = String.valueOf(rs.getInt(6));
-                            String gia = String.valueOf(rs.getInt(7));
-
-                            Vector<String> vec = new Vector<String>();
-                            vec.add(ma);
-                            vec.add(ten);
-                            vec.add(tg);
-                            vec.add(nxb);
-                            vec.add(tl);
-                            vec.add(sl);
-                            vec.add(gia);
-                            dtmSach.addRow(vec);
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
+                    books.stream().filter(book -> book.getCategory().equals(theloai)).forEach(book -> {
+                        Vector<Object> vec = new Vector<>();
+                        vec.add(book.getId());
+                        vec.add(book.getName());
+                        vec.add(book.getAuthorName());
+                        vec.add(book.getPublishingCompany());
+                        vec.add(book.getCategory());
+                        vec.add(book.getQuantity());
+                        vec.add(book.getPrice());
+                        dtmSach.addRow(vec);
+                    });
                 } else if (evt.getClickCount() == 3) {
                     int index = list.locationToIndex(evt.getPoint());
                 }
             }
         });
-        btnThem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                AddBook themsach = new AddBook("Thêm sách");
-                themsach.showWindow();
-                dtmSach.setRowCount(0);
-                hienThiSach();
-            }
+        btnThem.addActionListener(e -> {
+            AddBook themsach = new AddBook("Thêm sách");
+            themsach.showWindow();
+            dtmSach.setRowCount(0);
+            loadAllBook();
         });
-        btnTimKiem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                SearchBook timsach = new SearchBook("Tìm kiếm thông tin sách");
-                timsach.showWindow();
-                dtmSach.setRowCount(0);
-                hienThiSach();
-            }
+        btnTimKiem.addActionListener(e -> {
+            SearchBook timsach = new SearchBook("Tìm kiếm thông tin sách");
+            timsach.showWindow();
+            dtmSach.setRowCount(0);
+            loadAllBook();
         });
-        btnSua.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                EditBook suasach = new EditBook("Sửa thông tin sách");
-                suasach.ma = txtMaSach.getText();
-                suasach.hienThi();
-                suasach.showWindow();
-                dtmSach.setRowCount(0);
-                hienThiSach();
-            }
+        btnSua.addActionListener(e -> {
+            EditBook suasach = new EditBook("Sửa thông tin sách");
+            suasach.ma = txtMaSach.getText();
+            suasach.hienThi();
+            suasach.showWindow();
+            dtmSach.setRowCount(0);
+            loadAllBook();
         });
-        btnXoa.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                DeleteBook xoasach = new DeleteBook("Xóa thông tin sách");
-                xoasach.ma = txtMaSach.getText();
-                xoasach.hienThi();
-                xoasach.showWindow();
-                dtmSach.setRowCount(0);
-                hienThiSach();
-            }
+        btnXoa.addActionListener(e -> {
+            DeleteBook xoasach = new DeleteBook("Xóa thông tin sách");
+            xoasach.ma = txtMaSach.getText();
+            xoasach.hienThi();
+            xoasach.showWindow();
+            dtmSach.setRowCount(0);
+            loadAllBook();
         });
     }
 
@@ -275,19 +220,16 @@ public class BookManager extends CustomFrame {
         lblTieuDeTheLoai.setFont(font2);
         pnTieuDeTheLoai.setBackground(new Color(2, 115, 83));
         lblTieuDeTheLoai.setForeground(Color.WHITE);
-
-        Connection conn = ConnectMySQL.connect;
         defaultListTheLoai = new DefaultListModel();
-        try {
-            String sql = "select theloai from sach group by theloai";
-            Statement stat = conn.createStatement();
-            ResultSet rs = stat.executeQuery(sql);
-            while (rs.next()) {
-                defaultListTheLoai.addElement(rs.getString(1));
+        DbManager.getInstance().executeQuery("select theloai from sach group by theloai", rs -> {
+            try {
+                while (rs.next()) {
+                    defaultListTheLoai.addElement(rs.getString(1));
+                }
+            } catch (SQLException e) {
+                Log.error("load category err", e);
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        });
 
 
         listTheLoai = new JList(defaultListTheLoai);

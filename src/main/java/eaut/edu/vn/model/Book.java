@@ -1,68 +1,68 @@
 package eaut.edu.vn.model;
 
 public class Book {
-    private String MaSach;
-    private String TenSach;
-    private String TenTG;
-    private String NhaXB;
-    private String TheLoai;
-    private int SoLuong;
-    private double GiaTien;
+    private String id;
+    private String name;
+    private String authorName;
+    private String publishingCompany;
+    private String category;
+    private int quantity;
+    private double price;
 
-    public String getMaSach() {
-        return MaSach;
+    public String getId() {
+        return id;
     }
 
-    public void setMaSach(String maSach) {
-        MaSach = maSach;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getTenSach() {
-        return TenSach;
+    public String getName() {
+        return name;
     }
 
-    public void setTenSach(String tenSach) {
-        TenSach = tenSach;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getTenTG() {
-        return TenTG;
+    public String getAuthorName() {
+        return authorName;
     }
 
-    public void setTenTG(String tenTG) {
-        TenTG = tenTG;
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 
-    public String getNhaXB() {
-        return NhaXB;
+    public String getPublishingCompany() {
+        return publishingCompany;
     }
 
-    public void setNhaXB(String nhaXB) {
-        NhaXB = nhaXB;
+    public void setPublishingCompany(String publishingCompany) {
+        this.publishingCompany = publishingCompany;
     }
 
-    public String getTheLoai() {
-        return TheLoai;
+    public String getCategory() {
+        return category;
     }
 
-    public void setTheLoai(String theLoai) {
-        TheLoai = theLoai;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public int getSoLuong() {
-        return SoLuong;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setSoLuong(int soLuong) {
-        SoLuong = soLuong;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
-    public double getGiaTien() {
-        return GiaTien;
+    public double getPrice() {
+        return price;
     }
 
-    public void setGiaTien(double giaTien) {
-        GiaTien = giaTien;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
 

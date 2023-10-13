@@ -2,7 +2,6 @@ package eaut.edu.vn.ui.dialog.returnreceipt;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -12,7 +11,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -29,23 +27,23 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.controls.PlaceholderTextField;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.service.LoanDetailService;
-import eaut.edu.vn.database.ConnectMySQL;
+
 import eaut.edu.vn.model.LoanDetail;
 import eaut.edu.vn.util.Util;
 
 public class Search extends Dialog {
-    public String tentk = "";
+    
     JButton btnTimKiem, btnTraSach;
     PlaceholderTextField txtTimKiem;
     JTextField txtMaPhieu, txtMaDG, txtMaSach, txtNgayHenTra, txtNgayTra, txtTTSachMuon, txtTTSachTra, txtThuThu, txtGhiChu;
     DefaultTableModel dtmPhieuMuon;
     JTable tblPhieuMuon;
-    Connection conn = ConnectMySQL.connect;
     ArrayList<LoanDetail> dsctpm;
     DefaultTableModel dtmPhieuTra, dtmPhieuChuaTra;
     JTable tblPhieuTra, tblPhieuChuaTra;
@@ -58,14 +56,14 @@ public class Search extends Dialog {
 
     private void hienThiPhieuMuonDaTra() {
         LoanDetailService ctpmsv = new LoanDetailService();
-        dsctpm = ctpmsv.layChiTietPhieuMuon();
+        dsctpm = ctpmsv.getAll();
         dtmPhieuTra.setRowCount(0);
         for (LoanDetail ctpm : dsctpm) {
-            if (ctpm.getNgayTra() != null) {
+            if (ctpm.getReturnDate() != null) {
                 Vector<Object> vec = new Vector<Object>();
-                vec.add(ctpm.getMaPM());
-                vec.add(ctpm.getMaSach());
-                vec.add(ctpm.getGhiChu());
+                vec.add(ctpm.getLoanId());
+                vec.add(ctpm.getBookId());
+                vec.add(ctpm.getNote());
 				
 				/*vec.add(ctpm.getNgayTra());
 				vec.add(ctpm.getTinhtrangsach());
@@ -81,18 +79,18 @@ public class Search extends Dialog {
 
     private void hienThiPhieuMuonChuaTra() {
         LoanDetailService ctpmsv = new LoanDetailService();
-        dsctpm = ctpmsv.layChiTietPhieuMuon();
+        dsctpm = ctpmsv.getAll();
         dtmPhieuChuaTra.setRowCount(0);
         for (LoanDetail ctpm : dsctpm) {
-            if (ctpm.getNgayTra() == null) {
+            if (ctpm.getReturnDate() == null) {
                 Vector<Object> vec = new Vector<Object>();
-                vec.add(ctpm.getMaPM());
-                vec.add(ctpm.getMaSach());
+                vec.add(ctpm.getLoanId());
+                vec.add(ctpm.getBookId());
                 vec.add(null);
-                vec.add(ctpm.getTinhTrangSach());
+                vec.add(ctpm.getBorrowedStatus());
                 vec.add(null);
                 vec.add(null);
-                vec.add(ctpm.getGhiChu());
+                vec.add(ctpm.getNote());
                 dtmPhieuChuaTra.addRow(vec);
             }
         }
@@ -107,7 +105,7 @@ public class Search extends Dialog {
             String phieutra = txtTimKiem.getText();
             try {
                 String sql = "Select c.MaPM,a.MaDG,c.MaSach,c.NgayTra,a.NgayHenTra,c.TinhTrangSach,c.TinhTrangTra,c.GhiChu,b.TenND FROM ctpm c,phieumuon a,taikhoan b  where a.MaPM=c.MaPM and b.User=c.User HAVING c.MaPM like ?";
-                PreparedStatement pre = conn.prepareStatement(sql);
+                PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                 pre.setString(1, '%' + txtTimKiem.getText() + '%');
                 ResultSet rs = pre.executeQuery();
                 while (rs.next()) {
@@ -209,7 +207,7 @@ public class Search extends Dialog {
                     String tensach = txtTimKiem.getText();
                     try {
                         String sql = "Select c.MaPM,a.MaDG,c.MaSach,c.NgayTra,a.NgayHenTra,c.TinhTrangSach,c.TinhTrangTra,c.GhiChu,b.TenND FROM ctpm c,phieumuon a,taikhoan b  where a.MaPM=c.MaPM and b.User=c.User HAVING c.MaPM like ?";
-                        PreparedStatement pre = conn.prepareStatement(sql);
+                        PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
                         pre.setString(1, '%' + txtTimKiem.getText() + '%');
                         ResultSet rs = pre.executeQuery();
                         while (rs.next()) {
@@ -283,7 +281,6 @@ public class Search extends Dialog {
                     return;
                 }
                 ReturnReceipt ts = new ReturnReceipt("Trả sách");
-                ts.tentk = tentk;
                 ts.MaDG = txtMaDG.getText();
                 ts.MaPM = txtMaPhieu.getText();
                 ts.MaSach = txtMaSach.getText();
