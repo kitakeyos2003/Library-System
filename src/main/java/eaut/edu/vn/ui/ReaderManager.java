@@ -7,9 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -22,10 +20,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-
-
-import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.main.Application;
+import eaut.edu.vn.model.Loan;
+import eaut.edu.vn.model.Reader;
+import eaut.edu.vn.service.LoanService;
+import eaut.edu.vn.service.ReaderService;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Header;
@@ -43,13 +42,14 @@ public class ReaderManager extends CustomFrame {
     JButton btnThem, btnXoa, btnSua, btnQuayLai, btnThongTin;
     DefaultTableModel dtmPhieuMuon, dtmDocGia;
     JTable tblDocGia, tblPhieuMuon;
+    private List<Reader> readers;
 
     public ReaderManager(String tieude) {
         super(tieude);
         this.setSize(1130, 780);
         setHeader(new Header("QUẢN LÝ ĐỘC GIẢ"));
         setFooter(new Footer());
-        lietKeDocGia();
+        loadAllReader();
     }
 
     public void addEvents() {
@@ -73,7 +73,7 @@ public class ReaderManager extends CustomFrame {
             AddReader themdg = new AddReader("Thêm độc giả");
             themdg.showWindow();
             dtmDocGia.setRowCount(0);
-            lietKeDocGia();
+            loadAllReader();
         });
         btnXoa.addActionListener(e -> {
             // TODO Auto-generated method stub
@@ -82,7 +82,7 @@ public class ReaderManager extends CustomFrame {
             xoadg.hienThi();
             xoadg.showWindow();
             dtmDocGia.setRowCount(0);
-            lietKeDocGia();
+            loadAllReader();
         });
         btnSua.addActionListener(e -> {
             EditReader suadg = new EditReader("Sửa độc giả");
@@ -90,7 +90,7 @@ public class ReaderManager extends CustomFrame {
             suadg.hienThi();
             suadg.showWindow();
             dtmDocGia.setRowCount(0);
-            lietKeDocGia();
+            loadAllReader();
         });
 
         tblDocGia.addMouseListener(new MouseListener() {
@@ -100,7 +100,7 @@ public class ReaderManager extends CustomFrame {
                 int numcols = dtmDocGia.getColumnCount();
 
                 for (int i = 0; i < numcols; i++) {
-                    String str = (String) dtmDocGia.getValueAt(row, i);
+                    String str =  dtmDocGia.getValueAt(row, i).toString();
                     if (i == 0)
                         txtMaDocGia.setText(str);
                     if (i == 1)
@@ -116,7 +116,7 @@ public class ReaderManager extends CustomFrame {
                 }
                 String ma = txtMaDocGia.getText();
                 dtmPhieuMuon.setRowCount(0);
-                lietKePhieuMuonTheoDocGia(ma);
+                fillLoanByReaderId(ma);
             }
 
             @Override
@@ -152,56 +152,28 @@ public class ReaderManager extends CustomFrame {
 
     }
 
-    private void lietKeDocGia() {
-        try {
-            String sql = "select * from docgia";
-            PreparedStatement stat = DbManager.getInstance().getConnection().prepareStatement(sql);
-            ResultSet result = stat.executeQuery(sql);
-            while (result.next()) {
-                String ma = result.getString(1);
-                String ten = result.getString(2);
-                String sdt = result.getString(3);
-                String diachi = result.getString(4);
-                String gioitinh = result.getString(5);
-                String matsach = String.valueOf(result.getInt(6));
-
-                Vector<Object> vec = new Vector<>();
-                vec.add(ma);
-                vec.add(ten);
-                vec.add(sdt);
-                vec.add(diachi);
-                vec.add(gioitinh);
-                vec.add(matsach);
-                dtmDocGia.addRow(vec);
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    private void loadAllReader() {
+        readers = ReaderService.getInstance().getAll();
+        for (Reader reader : readers) {
+            Vector<Object> vec = new Vector<>();
+            vec.add(reader.getId());
+            vec.add(reader.getName());
+            vec.add(reader.getPhoneNumber());
+            vec.add(reader.getAddress());
+            vec.add(reader.getSex());
+            vec.add(reader.getLostBooks());
+            dtmDocGia.addRow(vec);
         }
-
-
     }
 
-    void lietKePhieuMuonTheoDocGia(String ma) {
-        try {
-            String sql = "select * from phieumuon where madg=?";
-            PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
-            pre.setString(1, ma);
-            ResultSet result = pre.executeQuery();
-            while (result.next()) {
-                String maphieu = result.getString("mapm");
-                String soluongmuon = String.valueOf(result.getInt("soluongmuon"));
+    void fillLoanByReaderId(String ma) {
+        List<Loan> loans = LoanService.getInstance().search(ma);
+        for (Loan loan : loans) {
+            Vector<Object> vec = new Vector<>();
+            vec.add(loan.getId());
+            vec.add(loan.getQuantity());
 
-                Vector<String> vec = new Vector<String>();
-                vec.add(maphieu);
-                vec.add(soluongmuon);
-
-                dtmPhieuMuon.addRow(vec);
-            }
-            result.close();
-            pre.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+            dtmPhieuMuon.addRow(vec);
         }
     }
 

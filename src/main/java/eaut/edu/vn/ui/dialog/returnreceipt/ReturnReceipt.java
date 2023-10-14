@@ -8,6 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DateFormat;
@@ -69,7 +70,9 @@ public class ReturnReceipt extends Dialog {
 
                 try {
                     String sql = "Update ctpm set NgayTra=?, TinhTrangTra=?, GhiChu=?,User=? where MaPM=? and MaSach=?";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+
+                    Connection connection = DbManager.getInstance().getConnection();
+                    PreparedStatement pre = connection.prepareStatement(sql);
                     pre.setString(1, datetra);
                     pre.setString(2, txtTTSachTra.getText());
                     pre.setString(3, txtGhiChu.getText());
@@ -78,6 +81,8 @@ public class ReturnReceipt extends Dialog {
                     pre.setString(6, txtMaSach.getText());
 
                     int x = pre.executeUpdate();
+                    pre.close();
+                    connection.close();
                     if (x > 0) {
 
 
@@ -87,38 +92,32 @@ public class ReturnReceipt extends Dialog {
                         int hieu = muon - tra;
 
                         double SoTien = 0;
-                        int soluong = 0;
                         if (tra == 0) {
                             try {
-                                String sqldocgia1 = "Select MatSach from docgia where MaDG=?";
-                                PreparedStatement prex = DbManager.getInstance().getConnection().prepareStatement(sqldocgia1);
-                                prex.setString(1, MaDG);
-                                ResultSet b = prex.executeQuery();
-                                while (b.next()) {
-                                    soluong = b.getInt(1);
-                                }
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
-                            try {
                                 String sqlsach = "Select GiaTien from sach where MaSach=?";
-                                PreparedStatement presach = DbManager.getInstance().getConnection().prepareStatement(sqlsach);
+                                connection = DbManager.getInstance().getConnection();
+                                PreparedStatement presach = connection.prepareStatement(sqlsach);
                                 presach.setString(1, txtMaSach.getText());
                                 ResultSet rs1 = presach.executeQuery();
-                                while (rs1.next()) {
+                                if (rs1.next()) {
                                     SoTien = rs1.getDouble(1);
                                 }
+                                rs1.close();
+                                presach.close();
+                                connection.close();
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
                             JOptionPane.showMessageDialog(null, "Bạn làm mất sách.Tiền Sách: " + SoTien);
-                            soluong++;
                             try {
-                                String sqldocgia = "update docgia set MatSach=? where MaDG=?";
-                                PreparedStatement pre1 = DbManager.getInstance().getConnection().prepareStatement(sqldocgia);
-                                pre1.setInt(1, soluong);
+                                String sqldocgia = "update docgia set MatSach = MatSach + ? where MaDG=?";
+                                connection = DbManager.getInstance().getConnection();
+                                PreparedStatement pre1 = connection.prepareStatement(sqldocgia);
+                                pre1.setInt(1, 1);
                                 pre1.setString(2, MaDG);
                                 int a = pre1.executeUpdate();
+                                pre1.close();
+                                connection.close();
                                 if (a > 0) {
                                     JOptionPane.showMessageDialog(null, "Đã cập nhật số lần mất sách của độc giả");
                                     dispose();
@@ -132,26 +131,15 @@ public class ReturnReceipt extends Dialog {
 
                         JOptionPane.showMessageDialog(null, "Trả sách thành công");
 
-                        //cap nhat so luong sach
-                        int soluongsach = 0;
                         try {
-                            String sqlss = "Select SoLuong from sach where MaSach=?";
-                            PreparedStatement presach = DbManager.getInstance().getConnection().prepareStatement(sqlss);
-                            presach.setString(1, MaSach);
-                            ResultSet rssach = presach.executeQuery();
-                            while (rssach.next()) {
-                                soluongsach = rssach.getInt(1);
-                            }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                        soluongsach++;
-                        try {
-                            String sqlss1 = "update sach set SoLuong=? where MaSach=?";
-                            PreparedStatement presach1 = DbManager.getInstance().getConnection().prepareStatement(sqlss1);
-                            presach1.setInt(1, soluongsach);
+                            String sqlss1 = "update sach set SoLuong = SoLuong + ? where MaSach=?";
+                            connection = DbManager.getInstance().getConnection();
+                            PreparedStatement presach1 = connection.prepareStatement(sqlss1);
+                            presach1.setInt(1, 1);
                             presach1.setString(2, MaSach);
                             int c = presach1.executeUpdate();
+                            presach1.close();
+                            connection.close();
                             if (c > 0) {
                                 JOptionPane.showMessageDialog(null, "Cập nhật số lượng sách thành công");
                             }

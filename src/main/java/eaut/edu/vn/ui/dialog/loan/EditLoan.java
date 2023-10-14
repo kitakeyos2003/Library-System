@@ -53,7 +53,8 @@ public class EditLoan extends Dialog {
     public void hienThi() {
         try {
             String sql = "select * from phieumuon where MaPM=?";
-            PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+            Connection connection = DbManager.getInstance().getConnection();
+            PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, maPM);
             ResultSet rs = pre.executeQuery();
             if (rs.next()) {
@@ -65,6 +66,9 @@ public class EditLoan extends Dialog {
                 soluongtruoc = rs.getInt(5);
                 txtThuThu.setText(rs.getString(6));
             }
+            rs.close();
+            pre.close();
+            connection.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -82,7 +86,8 @@ public class EditLoan extends Dialog {
                 String datehantra = df.format(choosedate1.getDate());
                 try {
                     String sql = "update phieumuon set MaDg=?,NgayMuon=?,NgayHenTra=?,SoLuongMuon=?,User=? where MaPM=?";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+                    Connection connection = DbManager.getInstance().getConnection();
+                    PreparedStatement pre = connection.prepareStatement(sql);
                     pre.setString(1, txtMaDG.getText());
                     pre.setString(2, datemuon);
                     pre.setString(3, datehantra);
@@ -91,6 +96,8 @@ public class EditLoan extends Dialog {
                     pre.setString(5, txtThuThu.getText());
                     pre.setString(6, txtMaPhieu.getText());
                     int x = pre.executeUpdate();
+                    pre.close();
+                    connection.close();
                     if (x > 0) {
                         JOptionPane.showMessageDialog(null, "Sửa thành công");
                         dispose();

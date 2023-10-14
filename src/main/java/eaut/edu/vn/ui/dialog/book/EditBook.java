@@ -44,7 +44,8 @@ public class EditBook extends Dialog {
     public void hienThi() {
         try {
             String sql = "select * from sach where masach=?";
-            PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+            Connection connection = DbManager.getInstance().getConnection();
+            PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, ma);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
@@ -64,6 +65,9 @@ public class EditBook extends Dialog {
                 txtSoLuong.setText(sl);
                 txtGia.setText(gia);
             }
+            rs.close();
+            pre.close();
+            connection.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -77,7 +81,8 @@ public class EditBook extends Dialog {
                 try {
 
                     String sql = "update sach set masach=?, tensach=?, tentg=?, nhaxb=?, theloai=?, soluong=?, giatien=? where masach=?";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+                    Connection connection = DbManager.getInstance().getConnection();
+                    PreparedStatement pre = connection.prepareStatement(sql);
                     pre.setString(1, txtMaSach.getText());
                     pre.setString(2, txtTenSach.getText());
                     pre.setString(3, txtTenTG.getText());
@@ -87,7 +92,8 @@ public class EditBook extends Dialog {
                     pre.setInt(7, Integer.parseInt(txtGia.getText()));
                     pre.setString(8, txtMaSach.getText());
                     int x = pre.executeUpdate();
-
+                    pre.close();
+                    connection.close();
                     if (x > 0) {
                         JOptionPane.showMessageDialog(null, "Sửa thành công");
                         dispose();

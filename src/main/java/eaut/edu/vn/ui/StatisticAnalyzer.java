@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -60,46 +59,23 @@ public class StatisticAnalyzer extends CustomFrame {
     }
 
     public int DemSach() {
-        int SoLuongSach = 0;
-        BookService sv = new BookService();
-        List<Book> ds = sv.getAll();
-        for (Book s : ds) {
-            SoLuongSach++;
-        }
-        return SoLuongSach;
+        List<Book> ds = BookService.getInstance().getAll();
+        return ds.size();
     }
 
     public int DemPhieuMuon() {
-        int SoLuongPM = 0;
-        LoanService pmsv = new LoanService();
-        ArrayList<Loan> ds = pmsv.getAll();
-        for (Loan pm : ds) {
-            SoLuongPM++;
-        }
-        return SoLuongPM;
+        List<Loan> ds = LoanService.getInstance().getAll();
+        return ds.size();
     }
 
     public int DemPhieuPhieuTra() {
-        int SoLuongPT = 0;
-        LoanDetailService ctsv = new LoanDetailService();
-        ArrayList<LoanDetail> ds = ctsv.getAll();
-        for (LoanDetail ctpm : ds) {
-            if (ctpm.getReturnDate() != null) {
-                SoLuongPT++;
-            }
-        }
-
-        return SoLuongPT;
+        List<LoanDetail> ds = LoanDetailService.getInstance().getAll();
+        return ds.size();
     }
 
     public int DemDocGia() {
-        int SoLuongDG = 0;
-        ReaderService dgsv = new ReaderService();
-        ArrayList<Reader> ds = dgsv.getAll();
-        for (Reader dg : ds) {
-            SoLuongDG++;
-        }
-        return SoLuongDG;
+        List<Reader> ds = ReaderService.getInstance().getAll();
+        return ds.size();
     }
 
     public void initComponents() {

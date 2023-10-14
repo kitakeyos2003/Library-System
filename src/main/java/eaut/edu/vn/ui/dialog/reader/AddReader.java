@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -47,66 +48,65 @@ public class AddReader extends Dialog {
     }
 
     public int DemDocGia() {
-        int SoLuongDG = 0;
-        ReaderService dgsv = new ReaderService();
-        ArrayList<Reader> ds = dgsv.getAll();
-        for (Reader dg : ds) {
-            SoLuongDG++;
-        }
-        return SoLuongDG;
+        List<Reader> ds = ReaderService.getInstance().getAll();
+        return ds.size();
     }
 
     @Override
     public void addEvents() {
-        btnThem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int flag = 1;
-                try {
+        btnThem.addActionListener(e -> {
+            int flag = 1;
+            try {
 
-                    String sql = "select * from docgia where madg=?";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
-                    pre.setString(1, txtMaDocGia.getText());
-                    ResultSet rs = pre.executeQuery();
+                String sql = "select * from docgia where madg=?";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setString(1, txtMaDocGia.getText());
+                ResultSet rs = pre.executeQuery();
 
-                    if (rs.next()) {
-                        flag = 0;
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                if (rs.next()) {
+                    flag = 0;
                 }
+                rs.close();
+                pre.close();
+                connection.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
-                if (flag == 0) {
-                    JOptionPane.showMessageDialog(null, "Mã đọc giả trùng");
+            if (flag == 0) {
+                JOptionPane.showMessageDialog(null, "Mã đọc giả trùng");
+                //dispose();
+                return;
+            }
+
+            if (txtMaDocGia.getText().length() == 0) {
+                JOptionPane.showMessageDialog(null, "Mã đọc giả không được để trống");
+                //dispose();
+                return;
+            }
+
+            try {
+
+                String sql = "insert into docgia values (?,?,?,?,?,0)";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setString(1, txtMaDocGia.getText());
+                pre.setString(2, txtHoTen.getText());
+                pre.setString(3, txtSDT.getText());
+                pre.setString(4, txtDiaChi.getText());
+                pre.setString(5, (String) cb.getSelectedItem());
+                int x = pre.executeUpdate();
+                pre.close();
+                connection.close();
+                if (x > 0) {
+                    JOptionPane.showMessageDialog(null, "Thêm thành công");
                     //dispose();
-                    return;
                 }
 
-                if (txtMaDocGia.getText().length() == 0) {
-                    JOptionPane.showMessageDialog(null, "Mã đọc giả không được để trống");
-                    //dispose();
-                    return;
-                }
 
-                try {
-
-                    String sql = "insert into docgia values (?,?,?,?,?,0)";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
-                    pre.setString(1, txtMaDocGia.getText());
-                    pre.setString(2, txtHoTen.getText());
-                    pre.setString(3, txtSDT.getText());
-                    pre.setString(4, txtDiaChi.getText());
-                    pre.setString(5, (String) cb.getSelectedItem());
-                    int x = pre.executeUpdate();
-
-                    if (x > 0) {
-                        JOptionPane.showMessageDialog(null, "Thêm thành công");
-                        //dispose();
-                    }
-
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         });
 

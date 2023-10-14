@@ -51,21 +51,23 @@ public class AddAccount extends Dialog {
             if (radThuThu.isSelected()) {
                 n = 2;
             }
+            if (txtTaiKhoan.getText().length() == 0 || txtCMND.getText().length() == 0 || txtHoTen.getText().length() == 0 || txtSDT.getText().length() == 0 || pwdMatKhau.getText().length() == 0 || n == 0) {
+                JOptionPane.showMessageDialog(null, "Không được để trống");
+                return;
+            }
             try {
                 String sql = "insert into taikhoan values (?,?,?,?,?,?)";
-                PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
                 pre.setString(1, txtTaiKhoan.getText());
                 pre.setString(2, pwdMatKhau.getText());
                 pre.setInt(3, n);
                 pre.setString(4, txtHoTen.getText());
                 pre.setString(5, txtSDT.getText());
                 pre.setString(6, txtCMND.getText());
-                if (txtTaiKhoan.getText().length() == 0 || txtCMND.getText().length() == 0 || txtHoTen.getText().length() == 0 || txtSDT.getText().length() == 0 || pwdMatKhau.getText().length() == 0 || n == 0) {
-                    JOptionPane.showMessageDialog(null, "Không được để trống");
-                    return;
-                }
                 int x = pre.executeUpdate();
                 pre.close();
+                connection.close();
                 if (x > 0) {
                     JOptionPane.showMessageDialog(null, "Thêm thành công");
                     txtHoTen.setText(null);

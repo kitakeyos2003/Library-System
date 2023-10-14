@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ import javax.swing.border.TitledBorder;
 
 import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.model.Account;
+import eaut.edu.vn.model.Loan;
+import eaut.edu.vn.service.LoanService;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -64,11 +67,19 @@ public class DeleteAccount extends Dialog {
     @Override
     public void addEvents() {
         btnXoa.addActionListener(e -> {
+            List<Loan> loans = LoanService.getInstance().searchByUser(txtTaiKhoan.getText());
+            if (!loans.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Người này chưa thu hồi hết sách đã cho mượn.");
+                return;
+            }
             try {
                 String sql = "Delete from taikhoan where user=?";
-                PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
                 pre.setString(1, txtTaiKhoan.getText());
                 int x = pre.executeUpdate();
+                pre.close();
+                connection.close();
                 if (x > 0) {
                     JOptionPane.showMessageDialog(null, "Xóa thành công");
                     dispose();

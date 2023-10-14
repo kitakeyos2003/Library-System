@@ -52,7 +52,8 @@ public class SearchBook extends Dialog {
             String tensach = txtTimKiem.getText();
             try {
                 String sql = "select * from sach where tensach like ?";
-                PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
                 pre.setString(1, '%' + tensach + '%');
                 ResultSet rs = pre.executeQuery();
                 while (rs.next()) {
@@ -75,6 +76,9 @@ public class SearchBook extends Dialog {
 
                     dtmSach.addRow(vec);
                 }
+                rs.close();
+                pre.close();
+                connection.close();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -144,7 +148,8 @@ public class SearchBook extends Dialog {
                     String tensach = txtTimKiem.getText();
                     try {
                         String sql = "select * from sach where tensach like ?";
-                        PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+                        Connection connection = DbManager.getInstance().getConnection();
+                        PreparedStatement pre = connection.prepareStatement(sql);
                         pre.setString(1, '%' + tensach + '%');
                         ResultSet rs = pre.executeQuery();
                         while (rs.next()) {
@@ -167,6 +172,9 @@ public class SearchBook extends Dialog {
 
                             dtmSach.addRow(vec);
                         }
+                        rs.close();
+                        pre.close();
+                        connection.close();
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }

@@ -49,7 +49,8 @@ public class UpdateBorrowedBookStatus extends Dialog {
     public void hienThi() {
         try {
             String sql0 = "Select MaSach from ctpm where MaPM=?";
-            PreparedStatement pre0 = DbManager.getInstance().getConnection().prepareStatement(sql0);
+            Connection connection = DbManager.getInstance().getConnection();
+            PreparedStatement pre0 = connection.prepareStatement(sql0);
             pre0.setString(1, MaPM);
             ResultSet rs0 = pre0.executeQuery();
             while (rs0.next()) {
@@ -58,6 +59,9 @@ public class UpdateBorrowedBookStatus extends Dialog {
                 cbMaSach.addItem(rs0.getObject(1));
 
             }
+            rs0.close();
+            pre0.close();
+            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -124,52 +128,41 @@ public class UpdateBorrowedBookStatus extends Dialog {
 
     @Override
     public void addEvents() {
-        btnXoa.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        btnXoa.addActionListener(e -> {
 
-                try {
-                    String sql = "delete from ctpm where MaPM=? and MaSach=?";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
-                    pre.setString(1, txtMaPM.getText());
-                    pre.setString(2, String.valueOf(cbMaSach.getSelectedItem()));
-                    int soluongsach = 0;
+            try {
+                String sql = "delete from ctpm where MaPM=? and MaSach=?";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setString(1, txtMaPM.getText());
+                pre.setString(2, String.valueOf(cbMaSach.getSelectedItem()));
+                int x = pre.executeUpdate();
+                pre.close();
+                connection.close();
+                if (x > 0) {
                     try {
-                        String sqlss = "Select SoLuong from sach where MaSach=?";
-                        PreparedStatement presach = DbManager.getInstance().getConnection().prepareStatement(sqlss);
-                        presach.setString(1, String.valueOf(cbMaSach.getSelectedItem()));
-                        ResultSet rssach = presach.executeQuery();
-                        while (rssach.next()) {
-                            soluongsach = rssach.getInt(1);
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                    soluongsach++;
-
-                    try {
-                        String sqlss1 = "update sach set SoLuong=? where MaSach=?";
-                        PreparedStatement presach1 = DbManager.getInstance().getConnection().prepareStatement(sqlss1);
-                        presach1.setInt(1, soluongsach);
+                        String sqlss1 = "UPDATE sach SET SoLuong = SoLuong + ? WHERE MaSach=?";
+                        connection = DbManager.getInstance().getConnection();
+                        PreparedStatement presach1 = connection.prepareStatement(sqlss1);
+                        presach1.setInt(1, 1);
                         presach1.setString(2, String.valueOf(cbMaSach.getSelectedItem()));
                         int c = presach1.executeUpdate();
+                        presach1.close();
+                        connection.close();
                         if (c > 0) {
                             JOptionPane.showMessageDialog(null, "Cập nhật số lượng sách thành công");
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
-
-                    int x = pre.executeUpdate();
-                    if (x > 0) {
-                        JOptionPane.showMessageDialog(null, "Xóa sách thành công");
-                        dispose();
-                    }
-
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                    JOptionPane.showMessageDialog(null, "Xóa sách thành công");
+                    dispose();
                 }
+
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, ex.getMessage());
             }
         });
     }

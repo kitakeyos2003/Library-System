@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
@@ -56,8 +57,7 @@ public class ReturnManager extends CustomFrame {
     }
 
     private void hienThiPhieuMuonDaTra() {
-        LoanDetailService ctpmsv = new LoanDetailService();
-        dsctpm = ctpmsv.getAll();
+        dsctpm = LoanDetailService.getInstance().getAll();
         dtmPhieuTra.setRowCount(0);
         for (LoanDetail ctpm : dsctpm) {
             if (ctpm.getReturnDate() != null) {
@@ -76,8 +76,7 @@ public class ReturnManager extends CustomFrame {
     }
 
     private void hienThiPhieuMuonChuaTra() {
-        LoanDetailService ctpmsv = new LoanDetailService();
-        dsctpm = ctpmsv.getAll();
+        dsctpm = LoanDetailService.getInstance().getAll();
         dtmPhieuChuaTra.setRowCount(0);
         for (LoanDetail ctpm : dsctpm) {
             if (ctpm.getReturnDate() == null) {
@@ -145,10 +144,11 @@ public class ReturnManager extends CustomFrame {
                 int n = tblPhieuChuaTra.getSelectedRow();
                 try {
                     String sql = "Select c.MaPM,a.MaDG,c.MaSach,c.NgayTra,a.NgayHenTra,c.TinhTrangSach,c.TinhTrangTra,c.GhiChu,b.TenND FROM ctpm c,phieumuon a,taikhoan b  where a.MaPM=c.MaPM and b.User=a.User HAVING c.MaSach=? and c.MaPM=?";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
-                    pre.setString(1, String.valueOf(dtmPhieuChuaTra.getValueAt(n, 1)));
-                    pre.setString(2, String.valueOf(dtmPhieuChuaTra.getValueAt(n, 0)));
-                    ResultSet rs = pre.executeQuery();
+                    Connection connection = DbManager.getInstance().getConnection();
+                    PreparedStatement ps = connection.prepareStatement(sql);
+                    ps.setString(1, String.valueOf(dtmPhieuChuaTra.getValueAt(n, 1)));
+                    ps.setString(2, String.valueOf(dtmPhieuChuaTra.getValueAt(n, 0)));
+                    ResultSet rs = ps.executeQuery();
                     while (rs.next()) {
                         txtMaPhieu.setText(rs.getString(1));
                         txtMaDG.setText(rs.getString(2));
@@ -161,7 +161,8 @@ public class ReturnManager extends CustomFrame {
                         txtThuThuNhanSach.setText(null);
                     }
                     rs.close();
-                    pre.close();
+                    ps.close();
+                    connection.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -202,7 +203,8 @@ public class ReturnManager extends CustomFrame {
 
                 try {
                     String sql = "Select c.MaPM,a.MaDG,c.MaSach,c.NgayTra,a.NgayHenTra,c.TinhTrangSach,c.TinhTrangTra,c.GhiChu,b.TenND FROM ctpm c,phieumuon a,taikhoan b  where a.MaPM=c.MaPM and b.User=c.User HAVING c.MaSach=? and c.MaPM=?";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+                    Connection connection = DbManager.getInstance().getConnection();
+                    PreparedStatement pre = connection.prepareStatement(sql);
                     pre.setString(1, String.valueOf(dtmPhieuTra.getValueAt(n, 1)));
                     pre.setString(2, String.valueOf(dtmPhieuTra.getValueAt(n, 0)));
                     ResultSet rs = pre.executeQuery();
@@ -219,41 +221,38 @@ public class ReturnManager extends CustomFrame {
                     }
                     rs.close();
                     pre.close();
+                    connection.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
                 tblPhieuChuaTra.setSelectionMode(0);
             }
         });
-        btnTraSach.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                if (txtNgayTra.getText().length() != 0) {
-                    JOptionPane.showMessageDialog(null, "Phiếu mượn đã trả sách rồi");
-                    return;
-                }
-                ReturnReceipt ts = new ReturnReceipt("Trả sách");
-                ts.tentk = Application.account.getUsername();
-                ts.MaDG = txtMaDG.getText();
-                ts.MaPM = txtMaPhieu.getText();
-                ts.MaSach = txtMaSach.getText();
-                ts.NgayHenTra = txtNgayHenTra.getText();
-                ts.TinhTrangSach = txtTTSachMuon.getText();
-                ts.hienThi();
-                ts.showWindow();
-                hienThiPhieuMuonChuaTra();
-                hienThiPhieuMuonDaTra();
+        btnTraSach.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            if (txtNgayTra.getText().length() != 0) {
+                JOptionPane.showMessageDialog(null, "Phiếu mượn đã trả sách rồi");
+                return;
             }
+            ReturnReceipt ts = new ReturnReceipt("Trả sách");
+            ts.tentk = Application.account.getUsername();
+            ts.MaDG = txtMaDG.getText();
+            ts.MaPM = txtMaPhieu.getText();
+            ts.MaSach = txtMaSach.getText();
+            ts.NgayHenTra = txtNgayHenTra.getText();
+            ts.TinhTrangSach = txtTTSachMuon.getText();
+            ts.hienThi();
+            ts.showWindow();
+            hienThiPhieuMuonChuaTra();
+            hienThiPhieuMuonDaTra();
         });
-        btnTimKiem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Search timphieu = new Search("Tìm kiếm thông tin sách");
-                timphieu.showWindow();
-                dtmPhieuChuaTra.setRowCount(0);
-                dtmPhieuTra.setRowCount(0);
-                hienThiPhieuMuonDaTra();
-                hienThiPhieuMuonChuaTra();
-            }
+        btnTimKiem.addActionListener(e -> {
+            Search timphieu = new Search("Tìm kiếm thông tin sách");
+            timphieu.showWindow();
+            dtmPhieuChuaTra.setRowCount(0);
+            dtmPhieuTra.setRowCount(0);
+            hienThiPhieuMuonDaTra();
+            hienThiPhieuMuonChuaTra();
         });
 
     }

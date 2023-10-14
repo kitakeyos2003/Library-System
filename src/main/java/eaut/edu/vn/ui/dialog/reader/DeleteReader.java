@@ -44,7 +44,8 @@ public class DeleteReader extends Dialog {
     public void hienThi() {
         try {
             String sql = "select * from docgia where madg=?";
-            PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+            Connection connection = DbManager.getInstance().getConnection();
+            PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, machon);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
@@ -54,6 +55,9 @@ public class DeleteReader extends Dialog {
                 txtDiaChi.setText(rs.getString(4));
                 txtGioiTinh.setText(rs.getString(5));
             }
+            rs.close();
+            pre.close();
+            connection.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -68,13 +72,17 @@ public class DeleteReader extends Dialog {
                 try {
 
                     String sql = "select * from phieumuon where madg=?";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+                    Connection connection = DbManager.getInstance().getConnection();
+                    PreparedStatement pre = connection.prepareStatement(sql);
                     pre.setString(1, ma);
                     ResultSet rs = pre.executeQuery();
 
                     if (rs.next()) {
                         flag = 0;
                     }
+                    rs.close();
+                    pre.close();
+                    connection.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -85,9 +93,12 @@ public class DeleteReader extends Dialog {
                 try {
 
                     String sql = "delete from docgia where madg=?";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+                    Connection connection = DbManager.getInstance().getConnection();
+                    PreparedStatement pre = connection.prepareStatement(sql);
                     pre.setString(1, ma);
                     int x = pre.executeUpdate();
+                    pre.close();
+                    connection.close();
                     if (x > 0) {
                         JOptionPane.showMessageDialog(null, "Xóa thành công");
                         dispose();

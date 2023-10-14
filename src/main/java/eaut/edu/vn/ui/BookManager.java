@@ -109,7 +109,7 @@ public class BookManager extends CustomFrame {
                 int numcols = tblSach.getColumnCount();
 
                 for (int i = 0; i < numcols; i++) {
-                    String str = (String) dtmSach.getValueAt(row, i);
+                    String str = dtmSach.getValueAt(row, i).toString();
                     if (i == 0)
                         txtMaSach.setText(str);
                     if (i == 1)

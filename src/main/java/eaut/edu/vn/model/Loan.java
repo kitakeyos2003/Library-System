@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class Loan {
     private String id;
-    private String readerName;
+    private String readerId;
     private Date borrowedDate;
     private Date returnDate;
     private int quantity;
@@ -18,12 +18,12 @@ public class Loan {
         this.id = id;
     }
 
-    public String getReaderName() {
-        return readerName;
+    public String getReaderId() {
+        return readerId;
     }
 
-    public void setReaderName(String readerName) {
-        this.readerName = readerName;
+    public void setReaderId(String readerId) {
+        this.readerId = readerId;
     }
 
     public Date getBorrowedDate() {

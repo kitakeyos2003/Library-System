@@ -7,11 +7,13 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -54,94 +56,97 @@ public class AddLoan extends Dialog {
 
     @Override
     public void addEvents() {
-        btnThem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        btnThem.addActionListener(e -> {
+            try {
+
+                String sql = "select * from phieumuon where mapm=?";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setString(1, txtMaPhieu.getText());
+                ResultSet rs = pre.executeQuery();
                 try {
-
-                    String sql = "select * from phieumuon where mapm=?";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
-                    pre.setString(1, txtMaPhieu.getText());
-                    ResultSet rs = pre.executeQuery();
-
                     if (rs.next()) {
                         JOptionPane.showMessageDialog(null, "Mã phiếu mượn đã tồn tại!");
                         return;
                     }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                } finally {
+                    rs.close();
+                    pre.close();
+                    connection.close();
                 }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
-                int soluong2 = 0;
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                if (choosedate.getDate() == null || choosedate1.getDate() == null) {
-                    JOptionPane.showMessageDialog(null, "Không được để trống");
-                    return;
+            int soluong2 = 0;
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            if (choosedate.getDate() == null || choosedate1.getDate() == null) {
+                JOptionPane.showMessageDialog(null, "Không được để trống");
+                return;
+            }
+            String datemuon = df.format(choosedate.getDate());
+            String datehentra = df.format(choosedate1.getDate());
+            if (txtMaPhieu.getText().length() == 0 || txtMaDG.getText().length() == 0 || txtSachMuon.getText().length() == 0) {
+                JOptionPane.showMessageDialog(null, "Không được để trống");
+                return;
+            }
+            try {
+
+                Connection connection = DbManager.getInstance().getConnection();
+                String sqldocgia1 = "Select MatSach from docgia where MaDG=?";
+                PreparedStatement prex = connection.prepareStatement(sqldocgia1);
+                prex.setString(1, txtMaDG.getText());
+                ResultSet b = prex.executeQuery();
+                if (b.next()) {
+                    soluong2 = b.getInt(1);
                 }
-                String datemuon = df.format(choosedate.getDate());
-                String datehentra = df.format(choosedate1.getDate());
-
-                int flag = 1;
-                try {
-                    String sql = "insert into phieumuon values(?,?,?,?,?,?)";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
-                    pre.setString(1, txtMaPhieu.getText());
-                    pre.setString(2, txtMaDG.getText());
-                    pre.setString(3, datemuon);
-                    pre.setString(4, datehentra);
-                    pre.setString(5, txtSachMuon.getText());
-                    pre.setString(6, txtThuThu.getText());
-                    if (txtMaPhieu.getText().length() == 0 || txtMaDG.getText().length() == 0 || txtSachMuon.getText().length() == 0) {
-                        JOptionPane.showMessageDialog(null, "Không được để trống");
-                        return;
+                b.close();
+                prex.close();
+                connection.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            if (soluong2 == 3) {
+                JOptionPane.showMessageDialog(null, "Bạn đã làm mất sách 3 lần. Bạn không được mượn sách nữa.Thanks!");
+                dispose();
+                return;
+            }
+            try {
+                String sql = "insert into phieumuon values(?,?,?,?,?,?)";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setString(1, txtMaPhieu.getText());
+                pre.setString(2, txtMaDG.getText());
+                pre.setString(3, datemuon);
+                pre.setString(4, datehentra);
+                pre.setString(5, txtSachMuon.getText());
+                pre.setString(6, txtThuThu.getText());
+                int x = pre.executeUpdate();
+                pre.close();
+                connection.close();
+                if (x > 0) {
+                    JOptionPane.showMessageDialog(null, "Thêm phiếu mượn thành công");
+                    dispose();
+                    String soluong = txtSachMuon.getText();
+                    int soluong1 = Integer.parseInt(soluong);
+                    for (int i = 0; i < soluong1; i++) {
+                        BookBorrowStatus qlts = new BookBorrowStatus("Thêm Sách");
+                        qlts.MaPM = txtMaPhieu.getText();
+                        qlts.user = Application.account.getUsername();
+                        qlts.hienThi();
+                        qlts.showWindow();
                     }
-
-
-                    try {
-                        String sqldocgia1 = "Select MatSach from docgia where MaDG=?";
-                        PreparedStatement prex = DbManager.getInstance().getConnection().prepareStatement(sqldocgia1);
-                        prex.setString(1, txtMaDG.getText());
-                        ResultSet b = prex.executeQuery();
-                        while (b.next()) {
-                            soluong2 = b.getInt(1);
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                    if (soluong2 == 3) {
-                        JOptionPane.showMessageDialog(null, "Bạn đã làm mất sách 3 lần. Bạn không được mượn sách nữa.Thanks!");
-                        dispose();
-                        return;
-                    }
-                    int x = pre.executeUpdate();
-                    if (x > 0) {
-                        JOptionPane.showMessageDialog(null, "Thêm phiếu mượn thành công");
-                        dispose();
-                        String soluong = txtSachMuon.getText();
-                        int soluong1 = Integer.parseInt(soluong);
-                        for (int i = 0; i < soluong1; i++) {
-                            BookBorrowStatus qlts = new BookBorrowStatus("Thêm Sách");
-                            qlts.MaPM = txtMaPhieu.getText();
-                            qlts.user = Application.account.getUsername();
-                            qlts.hienThi();
-                            qlts.showWindow();
-                        }
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
                 }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, ex.getMessage());
             }
         });
     }
 
     public int DemPhieuMuon() {
-        int SoLuongPM = 0;
-        LoanService pmsv = new LoanService();
-        ArrayList<Loan> ds = pmsv.getAll();
-        for (Loan pm : ds) {
-            SoLuongPM++;
-        }
-        return SoLuongPM;
+        List<Loan> ds = LoanService.getInstance().getAll();
+        return ds.size();
     }
 
     @Override

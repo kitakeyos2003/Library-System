@@ -38,7 +38,8 @@ public class ReaderDetail extends Dialog {
     public void hienThi() {
         try {
             String sql = "select * from ctpm where mapm=?";
-            PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+            Connection connection = DbManager.getInstance().getConnection();
+            PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, ma);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
@@ -59,6 +60,9 @@ public class ReaderDetail extends Dialog {
 
                 dtmCTPM.addRow(vec);
             }
+            rs.close();
+            pre.close();
+            connection.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

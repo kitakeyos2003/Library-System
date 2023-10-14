@@ -114,64 +114,73 @@ public class BookBorrowStatus extends Dialog {
 
     @Override
     public void addEvents() {
-        btnThem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        btnThem.addActionListener(e -> {
+            try {
+                if (txtMaSach.getText().length() == 0 || txtTinhTrangSach.getText().length() == 0) {
+                    JOptionPane.showMessageDialog(null, "Không được để trống");
+                    return;
+                }
+                int soluongsach = 0;
+
                 try {
-                    String sql = "insert into ctpm values(?,?,?,?,?,?,?)";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
-                    pre.setString(1, txtMaPM.getText());
-                    pre.setString(2, txtMaSach.getText());
-                    pre.setDate(3, null);
-                    pre.setString(4, txtTinhTrangSach.getText());
-                    pre.setString(5, null);
-                    pre.setString(6, null);
-                    pre.setString(7, null);
-                    int soluongsach = 0;
-                    if (txtMaSach.getText().length() == 0 || txtTinhTrangSach.getText().length() == 0) {
-                        JOptionPane.showMessageDialog(null, "Không được để trống");
-                        return;
-                    }
-                    try {
-                        String sqlss = "Select SoLuong from sach where MaSach=?";
-                        PreparedStatement presach = DbManager.getInstance().getConnection().prepareStatement(sqlss);
-                        presach.setString(1, txtMaSach.getText());
-                        ResultSet rssach = presach.executeQuery();
-                        while (rssach.next()) {
-                            soluongsach = rssach.getInt(1);
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                    if (soluongsach == 0) {
-                        JOptionPane.showMessageDialog(null, "Sách hết.Xin vui lòng chọn cuốn khác !");
-                        dispose();
-                        return;
-                    }
-                    soluongsach--;
 
-                    try {
-                        String sqlss1 = "update sach set SoLuong=? where MaSach=?";
-                        PreparedStatement presach1 = DbManager.getInstance().getConnection().prepareStatement(sqlss1);
-                        presach1.setInt(1, soluongsach);
-                        presach1.setString(2, txtMaSach.getText());
-                        int c = presach1.executeUpdate();
-                        if (c > 0) {
-                            JOptionPane.showMessageDialog(null, "Cập nhật số lượng sách thành công");
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                    Connection connection = DbManager.getInstance().getConnection();
+                    String sqlss = "Select SoLuong from sach where MaSach=?";
+                    PreparedStatement presach = connection.prepareStatement(sqlss);
+                    presach.setString(1, txtMaSach.getText());
+                    ResultSet rssach = presach.executeQuery();
+                    while (rssach.next()) {
+                        soluongsach = rssach.getInt(1);
                     }
-
-                    int x = pre.executeUpdate();
-                    if (x > 0) {
-                        JOptionPane.showMessageDialog(null, "Thêm sách thành công");
-                        dispose();
-                    }
-
+                    rssach.close();
+                    presach.close();
+                    connection.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
                 }
+                if (soluongsach == 0) {
+                    JOptionPane.showMessageDialog(null, "Sách hết.Xin vui lòng chọn cuốn khác !");
+                    dispose();
+                    return;
+                }
+                soluongsach--;
+
+                try {
+                    Connection connection = DbManager.getInstance().getConnection();
+                    String sqlss1 = "update sach set SoLuong=? where MaSach=?";
+                    PreparedStatement presach1 = connection.prepareStatement(sqlss1);
+                    presach1.setInt(1, soluongsach);
+                    presach1.setString(2, txtMaSach.getText());
+                    int c = presach1.executeUpdate();
+                    presach1.close();
+                    connection.close();
+                    if (c > 0) {
+                        JOptionPane.showMessageDialog(null, "Cập nhật số lượng sách thành công");
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                String sql = "insert into ctpm values(?,?,?,?,?,?,?)";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setString(1, txtMaPM.getText());
+                pre.setString(2, txtMaSach.getText());
+                pre.setDate(3, null);
+                pre.setString(4, txtTinhTrangSach.getText());
+                pre.setString(5, null);
+                pre.setString(6, null);
+                pre.setString(7, null);
+                int x = pre.executeUpdate();
+                pre.close();
+                connection.close();
+                if (x > 0) {
+                    JOptionPane.showMessageDialog(null, "Thêm sách thành công");
+                    dispose();
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, ex.getMessage());
             }
         });
     }

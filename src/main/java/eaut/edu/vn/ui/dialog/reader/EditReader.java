@@ -181,7 +181,8 @@ public class EditReader extends Dialog {
             try {
 
                 String sql = "update docgia set  tendg=?, sdt=?, diachi=?, gioitinh=? where madg=?";
-                PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
                 pre.setString(1, txtHoTen.getText());
                 pre.setString(2, txtSDT.getText());
                 pre.setString(3, txtDiaChi.getText());
@@ -189,7 +190,8 @@ public class EditReader extends Dialog {
                 pre.setString(5, txtMaDocGia.getText());
 
                 int x = pre.executeUpdate();
-
+                pre.close();
+                connection.close();
                 if (x > 0) {
                     JOptionPane.showMessageDialog(null, "Sửa thành công");
                     dispose();
@@ -205,7 +207,8 @@ public class EditReader extends Dialog {
     public void hienThi() {
         try {
             String sql = "select * from docgia where madg=?";
-            PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+            Connection connection = DbManager.getInstance().getConnection();
+            PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, ma);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
@@ -217,6 +220,9 @@ public class EditReader extends Dialog {
                     cb.setSelectedIndex(1);
                 }
             }
+            rs.close();
+            pre.close();
+            connection.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

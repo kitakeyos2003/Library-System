@@ -6,7 +6,7 @@ public class Reader {
     private String phoneNumber;
     private String address;
     private String sex;
-    private int bookId;
+    private int lostBooks;
 
     public String getId() {
         return id;
@@ -48,12 +48,12 @@ public class Reader {
         this.sex = sex;
     }
 
-    public int getBookId() {
-        return bookId;
+    public int getLostBooks() {
+        return lostBooks;
     }
 
-    public void setBookId(int bookId) {
-        this.bookId = bookId;
+    public void setLostBooks(int lostBooks) {
+        this.lostBooks = lostBooks;
     }
 
 

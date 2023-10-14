@@ -44,62 +44,64 @@ public class AddBook extends Dialog {
     }
 
     public int DemSach() {
-        BookService sv = new BookService();
-        List<Book> ds = sv.getAll();
+        List<Book> ds = BookService.getInstance().getAll();
         int SoLuongSach = ds.size();
         return SoLuongSach;
     }
 
     @Override
     public void addEvents() {
-        btnThem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int flag = 1;
-                try {
+        btnThem.addActionListener(e -> {
+            int flag = 1;
+            try {
 
-                    String sql = "select * from sach where masach=?";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
-                    pre.setString(1, txtMaSach.getText());
-                    ResultSet rs = pre.executeQuery();
+                String sql = "select * from sach where masach=?";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setString(1, txtMaSach.getText());
+                ResultSet rs = pre.executeQuery();
 
-                    if (rs.next()) {
-                        flag = 0;
-                    }
-                    rs.close();
-                    pre.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                if (rs.next()) {
+                    flag = 0;
+                }
+                rs.close();
+                pre.close();
+                connection.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            if (flag == 0) {
+                JOptionPane.showMessageDialog(null, "Mã sách đã tồn tại!");
+                return;
+            }
+
+            if (txtMaSach.getText().length() == 0) {
+                JOptionPane.showMessageDialog(null, "Mã sách không được để trống");
+                return;
+            }
+
+            try {
+
+                String sql = "insert into sach values (?,?,?,?,?,?,?)";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setString(1, txtMaSach.getText());
+                pre.setString(2, txtTenSach.getText());
+                pre.setString(3, txtTenTG.getText());
+                pre.setString(4, txtNhaXB.getText());
+                pre.setString(5, txtTheLoai.getText());
+                pre.setInt(6, Integer.parseInt(txtSoLuong.getText()));
+                pre.setInt(7, Integer.parseInt(txtGia.getText()));
+                int x = pre.executeUpdate();
+                pre.close();
+                connection.close();
+                if (x > 0) {
+                    JOptionPane.showMessageDialog(null, "Thêm thành công");
                 }
 
-                if (flag == 0) {
-                    JOptionPane.showMessageDialog(null, "Mã sách đã tồn tại!");
-                    return;
-                }
-
-                if (txtMaSach.getText().length() == 0) {
-                    JOptionPane.showMessageDialog(null, "Mã sách không được để trống");
-                    return;
-                }
-
-                try {
-
-                    String sql = "insert into sach values (?,?,?,?,?,?,?)";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
-                    pre.setString(1, txtMaSach.getText());
-                    pre.setString(2, txtTenSach.getText());
-                    pre.setString(3, txtTenTG.getText());
-                    pre.setString(4, txtNhaXB.getText());
-                    pre.setString(5, txtTheLoai.getText());
-                    pre.setInt(6, Integer.parseInt(txtSoLuong.getText()));
-                    pre.setInt(7, Integer.parseInt(txtGia.getText()));
-                    int x = pre.executeUpdate();
-                    if (x > 0) {
-                        JOptionPane.showMessageDialog(null, "Thêm thành công");
-                    }
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         });
 

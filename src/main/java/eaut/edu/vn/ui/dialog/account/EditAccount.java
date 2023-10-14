@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,8 @@ public class EditAccount extends Dialog {
         btnSua.addActionListener(e -> {
             try {
                 String sql = "Update taikhoan set Password=?,PhanQuyen=?,TenND=?,SDT=?,CMND=? where User=?";
-                PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
                 pre.setString(1, pwdMatKhau.getText());
                 if (txtPhanQuyen.getText().equals("Admin")) {
                     pre.setInt(2, 1);
@@ -60,6 +62,8 @@ public class EditAccount extends Dialog {
                 pre.setString(5, txtCMND.getText());
                 pre.setString(6, txtTaiKhoan.getText());
                 int x = pre.executeUpdate();
+                pre.close();
+                connection.close();
                 if (x > 0) {
                     JOptionPane.showMessageDialog(null, "Sửa thành công");
                     dispose();

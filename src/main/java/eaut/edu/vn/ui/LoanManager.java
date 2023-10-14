@@ -155,7 +155,7 @@ public class LoanManager extends CustomFrame {
                 }
                 String readerId = String.valueOf(dtmPhieuMuon.getValueAt(n, 1));
                 String username = String.valueOf(dtmPhieuMuon.getValueAt(n, 5));
-                Loan l = loans.stream().filter(loan -> loan.getReaderName().equals(readerId) && loan.getUserName().equals(username))
+                Loan l = loans.stream().filter(loan -> loan.getReaderId().equals(readerId) && loan.getUserName().equals(username))
                         .findFirst().orElse(null);
                 if (l != null) {
                     txtMaPhieu.setText(mapm);
@@ -390,7 +390,7 @@ public class LoanManager extends CustomFrame {
         for (Loan pm : loans) {
             Vector<Object> vec = new Vector<>();
             vec.add(pm.getId());
-            vec.add(pm.getReaderName());
+            vec.add(pm.getReaderId());
             vec.add(pm.getBorrowedDate());
             vec.add(pm.getReturnDate());
             vec.add(pm.getQuantity());

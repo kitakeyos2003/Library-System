@@ -1,8 +1,10 @@
 package eaut.edu.vn.service;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 
 import eaut.edu.vn.database.DbManager;
@@ -13,11 +15,12 @@ import eaut.edu.vn.model.LoanDetail;
 public class LoanDetailService implements IService<LoanDetail> {
 
     @Override
-    public ArrayList<LoanDetail> getAll() {
-        ArrayList<LoanDetail> dspm = new ArrayList<LoanDetail>();
+    public List<LoanDetail> getAll() {
+        List<LoanDetail> dspm = new ArrayList<LoanDetail>();
         try {
             String sql = "Select * from ctpm";
-            PreparedStatement loanDetail = DbManager.getInstance().getConnection().prepareStatement(sql);
+            Connection connection = DbManager.getInstance().getConnection();
+            PreparedStatement loanDetail = connection.prepareStatement(sql);
             ResultSet result = loanDetail.executeQuery();
             while (result.next()) {
                 LoanDetail ctpm = new LoanDetail();
@@ -32,6 +35,7 @@ public class LoanDetailService implements IService<LoanDetail> {
             }
             result.close();
             loanDetail.close();
+            connection.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

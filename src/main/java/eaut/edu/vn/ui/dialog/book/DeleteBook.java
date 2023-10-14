@@ -44,7 +44,8 @@ public class DeleteBook extends Dialog {
     public void hienThi() {
         try {
             String sql = "select * from sach where masach=?";
-            PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+            Connection connection = DbManager.getInstance().getConnection();
+            PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, ma);
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
@@ -66,6 +67,7 @@ public class DeleteBook extends Dialog {
             }
             rs.close();
             pre.close();
+            connection.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -84,7 +86,8 @@ public class DeleteBook extends Dialog {
                 try {
 
                     String sql = "select * from ctpm where masach=?";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+                    Connection connection = DbManager.getInstance().getConnection();
+                    PreparedStatement pre = connection.prepareStatement(sql);
                     pre.setString(1, ma);
                     ResultSet rs = pre.executeQuery();
 
@@ -93,6 +96,7 @@ public class DeleteBook extends Dialog {
                     }
                     rs.close();
                     pre.close();
+                    connection.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -103,13 +107,16 @@ public class DeleteBook extends Dialog {
                 try {
 
                     String sql = "delete from sach where masach=?";
-                    PreparedStatement pre = DbManager.getInstance().getConnection().prepareStatement(sql);
+                    Connection connection = DbManager.getInstance().getConnection();
+                    PreparedStatement pre = connection.prepareStatement(sql);
                     pre.setString(1, ma);
 
                     int x = pre.executeUpdate();
-
+                    pre.close();
+                    connection.close();
                     if (x > 0) {
                         JOptionPane.showMessageDialog(null, "Xóa thành công");
+                        dispose();
                     }
 
                 } catch (Exception ex) {
