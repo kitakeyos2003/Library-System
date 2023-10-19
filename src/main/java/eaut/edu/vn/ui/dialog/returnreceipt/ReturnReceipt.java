@@ -60,125 +60,121 @@ public class ReturnReceipt extends Dialog {
 
     @Override
     public void addEvents() {
-        btnTraSach.addActionListener(new ActionListener() {
+        btnTraSach.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String datetra = df.format(choosedate.getDate());
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                String datetra = df.format(choosedate.getDate());
+            try {
+                String sql = "Update ctpm set NgayTra=?, TinhTrangTra=?, GhiChu=?,User=? where MaPM=? and MaSach=?";
 
-                try {
-                    String sql = "Update ctpm set NgayTra=?, TinhTrangTra=?, GhiChu=?,User=? where MaPM=? and MaSach=?";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setString(1, datetra);
+                pre.setString(2, txtTTSachTra.getText());
+                pre.setString(3, txtGhiChu.getText());
+                pre.setString(4, tentk);
+                pre.setString(5, txtMaPhieu.getText());
+                pre.setString(6, txtMaSach.getText());
 
-                    Connection connection = DbManager.getInstance().getConnection();
-                    PreparedStatement pre = connection.prepareStatement(sql);
-                    pre.setString(1, datetra);
-                    pre.setString(2, txtTTSachTra.getText());
-                    pre.setString(3, txtGhiChu.getText());
-                    pre.setString(4, tentk);
-                    pre.setString(5, txtMaPhieu.getText());
-                    pre.setString(6, txtMaSach.getText());
-
-                    int x = pre.executeUpdate();
-                    pre.close();
-                    connection.close();
-                    if (x > 0) {
+                int x = pre.executeUpdate();
+                pre.close();
+                connection.close();
+                if (x > 0) {
 
 
-                        // tinh phan tram hư sách
-                        int muon = Integer.parseInt(txtTTSachMuon.getText());
-                        int tra = Integer.parseInt(txtTTSachTra.getText());
-                        int hieu = muon - tra;
+                    // tinh phan tram hư sách
+                    int muon = Integer.parseInt(txtTTSachMuon.getText());
+                    int tra = Integer.parseInt(txtTTSachTra.getText());
+                    int hieu = muon - tra;
 
-                        double SoTien = 0;
-                        if (tra == 0) {
-                            try {
-                                String sqlsach = "Select GiaTien from sach where MaSach=?";
-                                connection = DbManager.getInstance().getConnection();
-                                PreparedStatement presach = connection.prepareStatement(sqlsach);
-                                presach.setString(1, txtMaSach.getText());
-                                ResultSet rs1 = presach.executeQuery();
-                                if (rs1.next()) {
-                                    SoTien = rs1.getDouble(1);
-                                }
-                                rs1.close();
-                                presach.close();
-                                connection.close();
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
-                            JOptionPane.showMessageDialog(null, "Bạn làm mất sách.Tiền Sách: " + SoTien);
-                            try {
-                                String sqldocgia = "update docgia set MatSach = MatSach + ? where MaDG=?";
-                                connection = DbManager.getInstance().getConnection();
-                                PreparedStatement pre1 = connection.prepareStatement(sqldocgia);
-                                pre1.setInt(1, 1);
-                                pre1.setString(2, MaDG);
-                                int a = pre1.executeUpdate();
-                                pre1.close();
-                                connection.close();
-                                if (a > 0) {
-                                    JOptionPane.showMessageDialog(null, "Đã cập nhật số lần mất sách của độc giả");
-                                    dispose();
-                                    return;
-                                }
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-
-
-                        JOptionPane.showMessageDialog(null, "Trả sách thành công");
-
+                    double SoTien = 0;
+                    if (tra == 0) {
                         try {
-                            String sqlss1 = "update sach set SoLuong = SoLuong + ? where MaSach=?";
+                            String sqlsach = "Select GiaTien from sach where MaSach=?";
                             connection = DbManager.getInstance().getConnection();
-                            PreparedStatement presach1 = connection.prepareStatement(sqlss1);
-                            presach1.setInt(1, 1);
-                            presach1.setString(2, MaSach);
-                            int c = presach1.executeUpdate();
-                            presach1.close();
+                            PreparedStatement presach = connection.prepareStatement(sqlsach);
+                            presach.setString(1, txtMaSach.getText());
+                            ResultSet rs1 = presach.executeQuery();
+                            if (rs1.next()) {
+                                SoTien = rs1.getDouble(1);
+                            }
+                            rs1.close();
+                            presach.close();
                             connection.close();
-                            if (c > 0) {
-                                JOptionPane.showMessageDialog(null, "Cập nhật số lượng sách thành công");
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                        JOptionPane.showMessageDialog(null, "Bạn làm mất sách.Tiền Sách: " + SoTien);
+                        try {
+                            String sqldocgia = "update docgia set MatSach = MatSach + ? where MaDG=?";
+                            connection = DbManager.getInstance().getConnection();
+                            PreparedStatement pre1 = connection.prepareStatement(sqldocgia);
+                            pre1.setInt(1, 1);
+                            pre1.setString(2, MaDG);
+                            int a = pre1.executeUpdate();
+                            pre1.close();
+                            connection.close();
+                            if (a > 0) {
+                                JOptionPane.showMessageDialog(null, "Đã cập nhật số lần mất sách của độc giả");
+                                dispose();
+                                return;
                             }
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
-                        // tru date
-                        String date1 = NgayHenTra;
-                        String date2 = datetra;
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                        Date d1 = null;
-                        Date d2 = null;
-                        long diffDays = 0;
-                        try {
-                            d1 = format.parse(date1);
-                            d2 = format.parse(date2);
-                            //in milliseconds
-                            long diff = d2.getTime() - d1.getTime();
-                            diffDays = diff / (24 * 60 * 60 * 1000);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                        //
-                        if (hieu > 0 && diffDays <= 0) {
-                            JOptionPane.showMessageDialog(null, "Bạn làm hao tổn sách: " + hieu + "%. Bạn bị phạt: " + hieu * 1000 + " VND");
-                        }
-                        if (hieu > 0 && diffDays > 0) {
-                            JOptionPane.showMessageDialog(null, "Bạn làm hao tổn sách: " + hieu + "%. Và bạn trễ hạn: " + diffDays + " ngày. Bạn bị phạt: " + (hieu * 1000L + diffDays * 10000));
-                        }
-                        if (hieu == 0 && diffDays > 0) {
-                            JOptionPane.showMessageDialog(null, "Bạn trễ hạn " + diffDays + " ngày. Bạn bị phạt: " + diffDays * 10000);
-                        }
-
-                        dispose();
                     }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
+
+
+                    JOptionPane.showMessageDialog(null, "Trả sách thành công");
+
+                    try {
+                        String sqlss1 = "update sach set SoLuong = SoLuong + ? where MaSach=?";
+                        connection = DbManager.getInstance().getConnection();
+                        PreparedStatement presach1 = connection.prepareStatement(sqlss1);
+                        presach1.setInt(1, 1);
+                        presach1.setString(2, MaSach);
+                        int c = presach1.executeUpdate();
+                        presach1.close();
+                        connection.close();
+                        if (c > 0) {
+                            JOptionPane.showMessageDialog(null, "Cập nhật số lượng sách thành công");
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    // tru date
+                    String date1 = NgayHenTra;
+                    String date2 = datetra;
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    Date d1 = null;
+                    Date d2 = null;
+                    long diffDays = 0;
+                    try {
+                        d1 = format.parse(date1);
+                        d2 = format.parse(date2);
+                        //in milliseconds
+                        long diff = d2.getTime() - d1.getTime();
+                        diffDays = diff / (24 * 60 * 60 * 1000);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    //
+                    if (hieu > 0 && diffDays <= 0) {
+                        JOptionPane.showMessageDialog(null, "Bạn làm hao tổn sách: " + hieu + "%. Bạn bị phạt: " + hieu * 1000 + " VND");
+                    }
+                    if (hieu > 0 && diffDays > 0) {
+                        JOptionPane.showMessageDialog(null, "Bạn làm hao tổn sách: " + hieu + "%. Và bạn trễ hạn: " + diffDays + " ngày. Bạn bị phạt: " + (hieu * 1000L + diffDays * 10000));
+                    }
+                    if (hieu == 0 && diffDays > 0) {
+                        JOptionPane.showMessageDialog(null, "Bạn trễ hạn " + diffDays + " ngày. Bạn bị phạt: " + diffDays * 10000);
+                    }
+
+                    dispose();
                 }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, ex.getMessage());
             }
         });
 

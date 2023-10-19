@@ -13,4 +13,9 @@ public class Book {
     private String category;
     private int quantity;
     private double price;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

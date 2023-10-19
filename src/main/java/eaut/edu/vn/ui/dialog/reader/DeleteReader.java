@@ -65,48 +65,46 @@ public class DeleteReader extends Dialog {
 
     @Override
     public void addEvents() {
-        btnXoa.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String ma = txtMaDocGia.getText();
-                int flag = 1;
-                try {
+        btnXoa.addActionListener(e -> {
+            String ma = txtMaDocGia.getText();
+            int flag = 1;
+            try {
 
-                    String sql = "select * from phieumuon where madg=?";
-                    Connection connection = DbManager.getInstance().getConnection();
-                    PreparedStatement pre = connection.prepareStatement(sql);
-                    pre.setString(1, ma);
-                    ResultSet rs = pre.executeQuery();
+                String sql = "select * from phieumuon where madg=?";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setString(1, ma);
+                ResultSet rs = pre.executeQuery();
 
-                    if (rs.next()) {
-                        flag = 0;
-                    }
-                    rs.close();
-                    pre.close();
-                    connection.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                if (rs.next()) {
+                    flag = 0;
                 }
-                if (flag == 0) {
-                    JOptionPane.showMessageDialog(null, "Đọc giả còn tồn tại phiếu mượn");
-                    return;
-                }
-                try {
+                rs.close();
+                pre.close();
+                connection.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            if (flag == 0) {
+                JOptionPane.showMessageDialog(null, "Đọc giả còn tồn tại phiếu mượn");
+                return;
+            }
+            try {
 
-                    String sql = "delete from docgia where madg=?";
-                    Connection connection = DbManager.getInstance().getConnection();
-                    PreparedStatement pre = connection.prepareStatement(sql);
-                    pre.setString(1, ma);
-                    int x = pre.executeUpdate();
-                    pre.close();
-                    connection.close();
-                    if (x > 0) {
-                        JOptionPane.showMessageDialog(null, "Xóa thành công");
-                        dispose();
-                    }
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                String sql = "delete from docgia where madg=?";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setString(1, ma);
+                int x = pre.executeUpdate();
+                pre.close();
+                connection.close();
+                if (x > 0) {
+                    JOptionPane.showMessageDialog(null, "Xóa thành công");
+                    dispose();
                 }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         });
     }

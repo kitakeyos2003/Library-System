@@ -75,33 +75,31 @@ public class EditBook extends Dialog {
 
     @Override
     public void addEvents() {
-        btnSua.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String ma = txtMaSach.getText();
-                try {
+        btnSua.addActionListener(e -> {
+            String ma = txtMaSach.getText();
+            try {
 
-                    String sql = "update sach set masach=?, tensach=?, tentg=?, nhaxb=?, theloai=?, soluong=?, giatien=? where masach=?";
-                    Connection connection = DbManager.getInstance().getConnection();
-                    PreparedStatement pre = connection.prepareStatement(sql);
-                    pre.setString(1, txtMaSach.getText());
-                    pre.setString(2, txtTenSach.getText());
-                    pre.setString(3, txtTenTG.getText());
-                    pre.setString(4, txtNhaXB.getText());
-                    pre.setString(5, txtTheLoai.getText());
-                    pre.setInt(6, Integer.parseInt(txtSoLuong.getText()));
-                    pre.setInt(7, Integer.parseInt(txtGia.getText()));
-                    pre.setString(8, txtMaSach.getText());
-                    int x = pre.executeUpdate();
-                    pre.close();
-                    connection.close();
-                    if (x > 0) {
-                        JOptionPane.showMessageDialog(null, "Sửa thành công");
-                        dispose();
-                    }
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                String sql = "update sach set masach=?, tensach=?, tentg=?, nhaxb=?, theloai=?, soluong=?, giatien=? where masach=?";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setString(1, txtMaSach.getText());
+                pre.setString(2, txtTenSach.getText());
+                pre.setString(3, txtTenTG.getText());
+                pre.setString(4, txtNhaXB.getText());
+                pre.setString(5, txtTheLoai.getText());
+                pre.setInt(6, Integer.parseInt(txtSoLuong.getText()));
+                pre.setInt(7, Integer.parseInt(txtGia.getText()));
+                pre.setString(8, txtMaSach.getText());
+                int x = pre.executeUpdate();
+                pre.close();
+                connection.close();
+                if (x > 0) {
+                    JOptionPane.showMessageDialog(null, "Sửa thành công");
+                    dispose();
                 }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         });
 

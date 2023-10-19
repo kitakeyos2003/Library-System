@@ -73,43 +73,41 @@ public class DeleteLoan extends Dialog {
 
     @Override
     public void addEvents() {
-        btnXoa.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    String sql1 = "Delete from ctpm where mapm=?";
-                    Connection connection = DbManager.getInstance().getConnection();
-                    PreparedStatement pre1 = connection.prepareStatement(sql1);
-                    pre1.setString(1, txtMaPhieu.getText());
-                    int x1 = pre1.executeUpdate();
-                    pre1.close();
-                    connection.close();
-                    if (x1 > 0) {
-                        JOptionPane.showMessageDialog(null, "Xóa phiếu trả thành công");
-                        dispose();
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
+        btnXoa.addActionListener(e -> {
+            try {
+                String sql1 = "Delete from ctpm where mapm=?";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre1 = connection.prepareStatement(sql1);
+                pre1.setString(1, txtMaPhieu.getText());
+                int x1 = pre1.executeUpdate();
+                pre1.close();
+                connection.close();
+                if (x1 > 0) {
+                    JOptionPane.showMessageDialog(null, "Xóa phiếu trả thành công");
+                    dispose();
                 }
-                try {
-                    String sql = "Delete from phieumuon where mapm=?";
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+            try {
+                String sql = "Delete from phieumuon where mapm=?";
 
-                    Connection connection = DbManager.getInstance().getConnection();
-                    PreparedStatement pre = connection.prepareStatement(sql);
-                    pre.setString(1, txtMaPhieu.getText());
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setString(1, txtMaPhieu.getText());
 
-                    int x = pre.executeUpdate();
-                    pre.close();
-                    connection.close();
-                    if (x > 0) {
-                        JOptionPane.showMessageDialog(null, "Xóa phiếu mượn thành công");
-                        dispose();
-                    }
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                int x = pre.executeUpdate();
+                pre.close();
+                connection.close();
+                if (x > 0) {
+                    JOptionPane.showMessageDialog(null, "Xóa phiếu mượn thành công");
+                    dispose();
                 }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, ex.getMessage());
             }
         });
     }

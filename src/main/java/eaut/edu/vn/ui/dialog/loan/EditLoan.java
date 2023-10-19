@@ -2,7 +2,6 @@ package eaut.edu.vn.ui.dialog.loan;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -77,60 +76,56 @@ public class EditLoan extends Dialog {
 
     @Override
     public void addEvents() {
-        btnSua.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                String datemuon = df.format(choosedate.getDate());
-                String datehantra = df.format(choosedate1.getDate());
-                try {
-                    String sql = "update phieumuon set MaDg=?,NgayMuon=?,NgayHenTra=?,SoLuongMuon=?,User=? where MaPM=?";
-                    Connection connection = DbManager.getInstance().getConnection();
-                    PreparedStatement pre = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                    pre.setString(1, txtMaDG.getText());
-                    pre.setString(2, datemuon);
-                    pre.setString(3, datehantra);
-                    pre.setString(4, txtSachMuon.getText());
-                    soluongsau = Integer.parseInt(txtSachMuon.getText());
-                    pre.setString(5, txtThuThu.getText());
-                    pre.setString(6, txtMaPhieu.getText());
-                    int x = pre.executeUpdate();
-                    pre.close();
-                    connection.close();
-                    int genId = -1;
-                    if (x > 0) {
-                        ResultSet generatedKeys = pre.getGeneratedKeys();
-                        if (generatedKeys.next()) {
-                            genId = generatedKeys.getInt(1);
-                        }
-                        generatedKeys.close();
-                        JOptionPane.showMessageDialog(null, "Sửa thành công");
-                        dispose();
+        btnSua.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String datemuon = df.format(choosedate.getDate());
+            String datehantra = df.format(choosedate1.getDate());
+            try {
+                String sql = "update phieumuon set MaDg=?,NgayMuon=?,NgayHenTra=?,SoLuongMuon=?,User=? where MaPM=?";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                pre.setString(1, txtMaDG.getText());
+                pre.setString(2, datemuon);
+                pre.setString(3, datehantra);
+                pre.setString(4, txtSachMuon.getText());
+                soluongsau = Integer.parseInt(txtSachMuon.getText());
+                pre.setString(5, txtThuThu.getText());
+                pre.setString(6, txtMaPhieu.getText());
+                int x = pre.executeUpdate();
+                pre.close();
+                connection.close();
+                int genId = -1;
+                if (x > 0) {
+                    ResultSet generatedKeys = pre.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        genId = generatedKeys.getInt(1);
                     }
-                    if (soluongtruoc < soluongsau) {
-                        for (int i = 0; i < (soluongsau - soluongtruoc); i++) {
-                            BookBorrowStatus themsach = new BookBorrowStatus("Mượn tiếp sách");
-                            themsach.MaPM = genId;
-                            themsach.hienThi();
-                            themsach.showWindow();
-                        }
-
-                    }
-                    if (soluongtruoc > soluongsau) {
-                        for (int i = 0; i < (soluongtruoc - soluongsau); i++) {
-                            UpdateBorrowedBookStatus xoa = new UpdateBorrowedBookStatus("Xóa bớt sách");
-                            xoa.MaPM = maPM;
-                            xoa.hienThi();
-                            xoa.showWindow();
-                        }
-
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                    generatedKeys.close();
+                    JOptionPane.showMessageDialog(null, "Sửa thành công");
+                    dispose();
                 }
+                if (soluongtruoc < soluongsau) {
+                    for (int i = 0; i < (soluongsau - soluongtruoc); i++) {
+                        BookBorrowStatus themsach = new BookBorrowStatus("Mượn tiếp sách");
+                        themsach.MaPM = genId;
+                        themsach.fill();
+                        themsach.showWindow();
+                    }
+
+                }
+                if (soluongtruoc > soluongsau) {
+                    for (int i = 0; i < (soluongtruoc - soluongsau); i++) {
+                        UpdateBorrowedBookStatus xoa = new UpdateBorrowedBookStatus("Xóa bớt sách");
+                        xoa.MaPM = maPM;
+                        xoa.hienThi();
+                        xoa.showWindow();
+                    }
+
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, ex.getMessage());
             }
         });
     }

@@ -5,41 +5,33 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import com.toedter.calendar.JDateChooser;
 import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.main.Application;
+import eaut.edu.vn.model.Reader;
+import eaut.edu.vn.service.ReaderService;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
-import eaut.edu.vn.service.LoanService;
-import eaut.edu.vn.model.Loan;
 import eaut.edu.vn.util.Util;
 
 
 public class AddLoan extends Dialog {
 
-    JTextField txtMaDG, txtTenDG, txtNgayMuon, txtNgayHenTra, txtSachMuon, txtThuThu;
+    JTextField txtTenDG, txtSachMuon, txtThuThu;
+    JComboBox<Reader> cbDocGia;
     JButton btnThem;
     JDateChooser choosedate, choosedate1;
 
@@ -47,10 +39,14 @@ public class AddLoan extends Dialog {
         super(title);
         setHeader(new Header("QUẢN LÝ PHIẾU MƯỢN"));
         setFooter(new Footer());
-        hienThi();
+        fill();
     }
 
-    public void hienThi() {
+    public void fill() {
+        List<Reader> readers = ReaderService.getInstance().getAll();
+        for (Reader reader : readers) {
+            cbDocGia.addItem(reader);
+        }
         txtThuThu.setText(Application.account.getUsername());
     }
 
@@ -65,7 +61,12 @@ public class AddLoan extends Dialog {
             }
             String datemuon = df.format(choosedate.getDate());
             String datehentra = df.format(choosedate1.getDate());
-            if (txtMaDG.getText().length() == 0 || txtSachMuon.getText().length() == 0) {
+            Reader reader = (Reader) cbDocGia.getSelectedItem();
+            if (reader == null) {
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn độc giả");
+                return;
+            }
+            if (txtSachMuon.getText().length() == 0) {
                 JOptionPane.showMessageDialog(null, "Không được để trống");
                 return;
             }
@@ -75,7 +76,7 @@ public class AddLoan extends Dialog {
                 Connection connection = DbManager.getInstance().getConnection();
                 String sqldocgia1 = "Select MatSach from docgia where MaDG=?";
                 PreparedStatement prex = connection.prepareStatement(sqldocgia1);
-                prex.setString(1, txtMaDG.getText());
+                prex.setInt(1, reader.getId());
                 ResultSet b = prex.executeQuery();
                 if (b.next()) {
                     soluong2 = b.getInt(1);
@@ -95,7 +96,7 @@ public class AddLoan extends Dialog {
                 String sql = "INSERT INTO `phieumuon`(`MaDG`, `NgayMuon`, `NgayHenTra`, `SoLuongMuon`, `User`) VALUES (?,?,?,?,?)";
                 Connection connection = DbManager.getInstance().getConnection();
                 PreparedStatement pre = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                pre.setString(1, txtMaDG.getText());
+                pre.setInt(1, reader.getId());
                 pre.setString(2, datemuon);
                 pre.setString(3, datehentra);
                 pre.setString(4, txtSachMuon.getText());
@@ -112,7 +113,7 @@ public class AddLoan extends Dialog {
                             BookBorrowStatus qlts = new BookBorrowStatus("Thêm Sách");
                             qlts.MaPM = id;
                             qlts.user = Application.account.getUsername();
-                            qlts.hienThi();
+                            qlts.fill();
                             qlts.showWindow();
                         }
                     }
@@ -154,10 +155,10 @@ public class AddLoan extends Dialog {
         JPanel pnMaDG = new JPanel();
         pnMaDG.setLayout(new FlowLayout());
         JLabel lblMaDG = new JLabel("Mã độc giả: ");
-        txtMaDG = new JTextField();
-        txtMaDG.setPreferredSize(new Dimension(340, 30));
+        cbDocGia = new JComboBox<>();
+        cbDocGia.setPreferredSize(new Dimension(340, 30));
         pnMaDG.add(lblMaDG);
-        pnMaDG.add(txtMaDG);
+        pnMaDG.add(cbDocGia);
 
         JPanel pnTenDG = new JPanel();
         pnTenDG.setLayout(new FlowLayout());
@@ -224,7 +225,7 @@ public class AddLoan extends Dialog {
         lblSoSachCM.setFont(font4);
         lblThuThu.setFont(font4);
 
-        txtMaDG.setFont(font4);
+        cbDocGia.setFont(font4);
         txtTenDG.setFont(font4);
         choosedate.setFont(font4);
         choosedate1.setFont(font4);

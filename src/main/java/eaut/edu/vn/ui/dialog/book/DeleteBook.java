@@ -76,52 +76,48 @@ public class DeleteBook extends Dialog {
     @Override
     public void addEvents() {
         // TODO Auto-generated method stub
-        btnXoa.addActionListener(new ActionListener() {
+        btnXoa.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            String ma = txtMaSach.getText();
+            int flag = 1;
+            try {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                String ma = txtMaSach.getText();
-                int flag = 1;
-                try {
+                String sql = "select * from ctpm where masach=?";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setString(1, ma);
+                ResultSet rs = pre.executeQuery();
 
-                    String sql = "select * from ctpm where masach=?";
-                    Connection connection = DbManager.getInstance().getConnection();
-                    PreparedStatement pre = connection.prepareStatement(sql);
-                    pre.setString(1, ma);
-                    ResultSet rs = pre.executeQuery();
-
-                    if (rs.next()) {
-                        flag = 0;
-                    }
-                    rs.close();
-                    pre.close();
-                    connection.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                if (rs.next()) {
+                    flag = 0;
                 }
-                if (flag == 0) {
-                    JOptionPane.showMessageDialog(null, "Sách còn tồn tại trong phiếu mượn");
-                    return;
+                rs.close();
+                pre.close();
+                connection.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            if (flag == 0) {
+                JOptionPane.showMessageDialog(null, "Sách còn tồn tại trong phiếu mượn");
+                return;
+            }
+            try {
+
+                String sql = "delete from sach where masach=?";
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setString(1, ma);
+
+                int x = pre.executeUpdate();
+                pre.close();
+                connection.close();
+                if (x > 0) {
+                    JOptionPane.showMessageDialog(null, "Xóa thành công");
+                    dispose();
                 }
-                try {
 
-                    String sql = "delete from sach where masach=?";
-                    Connection connection = DbManager.getInstance().getConnection();
-                    PreparedStatement pre = connection.prepareStatement(sql);
-                    pre.setString(1, ma);
-
-                    int x = pre.executeUpdate();
-                    pre.close();
-                    connection.close();
-                    if (x > 0) {
-                        JOptionPane.showMessageDialog(null, "Xóa thành công");
-                        dispose();
-                    }
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         });
     }

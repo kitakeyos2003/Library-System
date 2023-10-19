@@ -13,5 +13,9 @@ public class Reader {
     private String sex;
     private int lostBooks;
 
+    @Override
+    public String toString() {
+        return name;
+    }
 
 }

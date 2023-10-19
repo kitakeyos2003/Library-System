@@ -284,22 +284,20 @@ public class Search extends Dialog {
 
             }
         });
-        btnTraSach.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                if (txtNgayTra.getText().length() != 0) {
-                    JOptionPane.showMessageDialog(null, "Phiếu mượn đã trả sách rồi");
-                    return;
-                }
-                ReturnReceipt ts = new ReturnReceipt("Trả sách");
-                ts.MaDG = txtMaDG.getText();
-                ts.MaPM = txtMaPhieu.getText();
-                ts.MaSach = txtMaSach.getText();
-                ts.NgayHenTra = txtNgayHenTra.getText();
-                ts.TinhTrangSach = txtTTSachMuon.getText();
-                ts.hienThi();
-                ts.showWindow();
+        btnTraSach.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            if (txtNgayTra.getText().length() != 0) {
+                JOptionPane.showMessageDialog(null, "Phiếu mượn đã trả sách rồi");
+                return;
             }
+            ReturnReceipt ts = new ReturnReceipt("Trả sách");
+            ts.MaDG = txtMaDG.getText();
+            ts.MaPM = txtMaPhieu.getText();
+            ts.MaSach = txtMaSach.getText();
+            ts.NgayHenTra = txtNgayHenTra.getText();
+            ts.TinhTrangSach = txtTTSachMuon.getText();
+            ts.hienThi();
+            ts.showWindow();
         });
     }
 

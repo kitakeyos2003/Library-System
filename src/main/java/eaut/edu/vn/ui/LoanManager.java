@@ -56,62 +56,51 @@ public class LoanManager extends CustomFrame {
     }
 
     public void addEvents() {
-        btnQuayLai.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                if (thongke == 1) {
-                    StatisticAnalyzer ui = Application.SINGLETON.STATISTIC_ANALYZER;
-                    ui.showWindow();
-                    dispose();
-                    thongke = 0;
-                    return;
-                }
-                int phanquyen = Application.account.getRole();
-                if (phanquyen == 1) {
-                    AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
-                    ql.showWindow();
-                    dispose();
-                }
-                if (phanquyen == 2) {
-                    LibrarianManager ql = Application.SINGLETON.LIBRARIAN_MANAGER;
-                    ql.showWindow();
-                    dispose();
-                }
+        btnQuayLai.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            if (thongke == 1) {
+                StatisticAnalyzer ui = Application.SINGLETON.STATISTIC_ANALYZER;
+                ui.showWindow();
+                dispose();
+                thongke = 0;
+                return;
+            }
+            int phanquyen = Application.account.getRole();
+            if (phanquyen == 1) {
+                AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
+                ql.showWindow();
+                dispose();
+            }
+            if (phanquyen == 2) {
+                LibrarianManager ql = Application.SINGLETON.LIBRARIAN_MANAGER;
+                ql.showWindow();
+                dispose();
             }
         });
-        btnThem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                AddLoan tpm = new AddLoan("Thêm phiếu mượn");
-                tpm.hienThi();
-                tpm.showWindow();
-                fillTable();
-            }
+        btnThem.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            AddLoan tpm = new AddLoan("Thêm phiếu mượn");
+            tpm.fill();
+            tpm.showWindow();
+            fillTable();
         });
-        btnSua.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                EditLoan suapm = new EditLoan("Sửa phiếu mượn");
-                suapm.maPM = txtMaPhieu.getText();
-                suapm.hienThi();
-                suapm.showWindow();
-                fillTable();
-                dtmSachMuon.setRowCount(0);
-            }
+        btnSua.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            EditLoan suapm = new EditLoan("Sửa phiếu mượn");
+            suapm.maPM = txtMaPhieu.getText();
+            suapm.hienThi();
+            suapm.showWindow();
+            fillTable();
+            dtmSachMuon.setRowCount(0);
         });
-        btnXoa.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                DeleteLoan xoapm = new DeleteLoan("Xóa phiếu mượn");
-                xoapm.machon = txtMaPhieu.getText();
-                xoapm.hienThi();
-                xoapm.showWindow();
-                dtmPhieuMuon.setRowCount(0);
-                fillTable();
-            }
+        btnXoa.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            DeleteLoan xoapm = new DeleteLoan("Xóa phiếu mượn");
+            xoapm.machon = txtMaPhieu.getText();
+            xoapm.hienThi();
+            xoapm.showWindow();
+            dtmPhieuMuon.setRowCount(0);
+            fillTable();
         });
         tblPhieuMuon.addMouseListener(new MouseListener() {
 

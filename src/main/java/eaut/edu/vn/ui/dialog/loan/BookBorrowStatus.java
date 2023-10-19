@@ -1,21 +1,16 @@
 package eaut.edu.vn.ui.dialog.loan;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import eaut.edu.vn.database.DbManager;
+import eaut.edu.vn.model.Book;
+import eaut.edu.vn.service.BookService;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -27,17 +22,22 @@ import eaut.edu.vn.util.Util;
 public class BookBorrowStatus extends Dialog {
     public int MaPM;
     public String user = "";
-    JTextField txtMaPM, txtTinhTrangSach, txtMaSach;
+    JTextField txtMaPM, txtTinhTrangSach;
+    JComboBox<Book> cbBook;
     JButton btnThem;
 
     public BookBorrowStatus(String title) {
         super(title);
         setHeader(new Header("THÊM THÔNG TIN SÁCH"));
         setFooter(new Footer());
-            hienThi();
+        fill();
     }
 
-    public void hienThi() {
+    public void fill() {
+        List<Book> books = BookService.getInstance().getAll();
+        for (Book book : books) {
+            cbBook.addItem(book);
+        }
         txtMaPM.setText(String.valueOf(MaPM));
     }
 
@@ -57,10 +57,10 @@ public class BookBorrowStatus extends Dialog {
         JPanel pnMaSach = new JPanel();
         pnMaSach.setLayout(new FlowLayout());
         JLabel lblMaSach = new JLabel("Mã sách: ");
-        txtMaSach = new JTextField();
-        txtMaSach.setPreferredSize(new Dimension(340, 30));
+        cbBook = new JComboBox<>();
+        cbBook.setPreferredSize(new Dimension(340, 30));
         pnMaSach.add(lblMaSach);
-        pnMaSach.add(txtMaSach);
+        pnMaSach.add(cbBook);
 
         JPanel pnTinhTrang = new JPanel();
         pnTinhTrang.setLayout(new FlowLayout());
@@ -96,7 +96,7 @@ public class BookBorrowStatus extends Dialog {
         lblTinhTrang.setFont(font4);
 
         txtMaPM.setFont(font4);
-        txtMaSach.setFont(font4);
+        cbBook.setFont(font4);
         txtTinhTrangSach.setFont(font4);
 
         pnMaPM.setBackground(new Color(241, 242, 246));
@@ -113,7 +113,12 @@ public class BookBorrowStatus extends Dialog {
     public void addEvents() {
         btnThem.addActionListener(e -> {
             try {
-                if (txtMaSach.getText().length() == 0 || txtTinhTrangSach.getText().length() == 0) {
+                Book book = (Book) cbBook.getSelectedItem();
+                if (book == null) {
+                    JOptionPane.showMessageDialog(null, "Vui lòng chọn sách");
+                    return;
+                }
+                if (txtTinhTrangSach.getText().length() == 0) {
                     JOptionPane.showMessageDialog(null, "Không được để trống");
                     return;
                 }
@@ -124,7 +129,7 @@ public class BookBorrowStatus extends Dialog {
                     Connection connection = DbManager.getInstance().getConnection();
                     String sqlss = "Select SoLuong from sach where MaSach=?";
                     PreparedStatement presach = connection.prepareStatement(sqlss);
-                    presach.setString(1, txtMaSach.getText());
+                    presach.setInt(1,book.getId());
                     ResultSet rssach = presach.executeQuery();
                     while (rssach.next()) {
                         soluongsach = rssach.getInt(1);
@@ -147,7 +152,7 @@ public class BookBorrowStatus extends Dialog {
                     String sqlss1 = "update sach set SoLuong=? where MaSach=?";
                     PreparedStatement presach1 = connection.prepareStatement(sqlss1);
                     presach1.setInt(1, soluongsach);
-                    presach1.setString(2, txtMaSach.getText());
+                    presach1.setInt(2, book.getId());
                     int c = presach1.executeUpdate();
                     presach1.close();
                     connection.close();
@@ -161,7 +166,7 @@ public class BookBorrowStatus extends Dialog {
                 Connection connection = DbManager.getInstance().getConnection();
                 PreparedStatement pre = connection.prepareStatement(sql);
                 pre.setString(1, txtMaPM.getText());
-                pre.setString(2, txtMaSach.getText());
+                pre.setInt(2, book.getId());
                 pre.setDate(3, null);
                 pre.setString(4, txtTinhTrangSach.getText());
                 pre.setString(5, null);
