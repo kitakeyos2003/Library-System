@@ -23,6 +23,7 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import eaut.edu.vn.interfaces.ITable;
 import eaut.edu.vn.main.Application;
 import eaut.edu.vn.model.Account;
 import eaut.edu.vn.service.AccountService;
@@ -34,7 +35,7 @@ import eaut.edu.vn.ui.dialog.account.AddAccount;
 import eaut.edu.vn.ui.dialog.account.DeleteAccount;
 import eaut.edu.vn.util.Util;
 
-public class AccountManager extends CustomFrame {
+public class AccountManager extends CustomFrame implements ITable {
     
     public int ThongKe = 0;
     JButton btnThem, btnXoa, btnSua, btnQuayLai, btnIcon;
@@ -50,10 +51,11 @@ public class AccountManager extends CustomFrame {
         this.setSize(865, 780);
         setHeader(new Header("QUẢN LÝ NGƯỜI DÙNG"));
         setFooter(new Footer());
-        loadAllAccount();
+        fillTable();
     }
 
-    public void loadAllAccount() {
+    @Override
+    public void fillTable() {
         accounts = AccountService.getInstance().getAll();
         dtmNguoiDung.setRowCount(0);
         for (Account tk : accounts) {
@@ -339,14 +341,14 @@ public class AccountManager extends CustomFrame {
             // TODO Auto-generated method stub
             AddAccount themqlnd = new AddAccount("Thêm người dùng");
             themqlnd.showWindow();
-            loadAllAccount();
+            fillTable();
         });
         btnXoa.addActionListener(e -> {
             DeleteAccount xoand = new DeleteAccount("Xóa người dùng");
             xoand.machon = txtTaiKhoạn.getText();
             xoand.hienThi();
             xoand.showWindow();
-            loadAllAccount();
+            fillTable();
             txtCMND.setText(null);
             txtSoDienThoai.setText(null);
             txtHoVaTen.setText(null);
@@ -359,7 +361,7 @@ public class AccountManager extends CustomFrame {
             suand.machon = txtTaiKhoạn.getText();
             suand.hienThi();
             suand.showWindow();
-            loadAllAccount();
+            fillTable();
             txtCMND.setText(null);
             txtSoDienThoai.setText(null);
             txtHoVaTen.setText(null);

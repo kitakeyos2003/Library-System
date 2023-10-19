@@ -34,7 +34,7 @@ import eaut.edu.vn.util.Util;
 
 public class AddBook extends Dialog {
     public String ma = "";
-    JTextField txtMaSach, txtTenSach, txtTenTG, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
+    JTextField txtTenSach, txtTenTG, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
     JButton btnThem;
 
     public AddBook(String title) {
@@ -43,56 +43,21 @@ public class AddBook extends Dialog {
         setFooter(new Footer());
     }
 
-    public int DemSach() {
-        List<Book> ds = BookService.getInstance().getAll();
-        int SoLuongSach = ds.size();
-        return SoLuongSach;
-    }
-
     @Override
     public void addEvents() {
         btnThem.addActionListener(e -> {
-            int flag = 1;
-            try {
-
-                String sql = "select * from sach where masach=?";
-                Connection connection = DbManager.getInstance().getConnection();
-                PreparedStatement pre = connection.prepareStatement(sql);
-                pre.setString(1, txtMaSach.getText());
-                ResultSet rs = pre.executeQuery();
-
-                if (rs.next()) {
-                    flag = 0;
-                }
-                rs.close();
-                pre.close();
-                connection.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-            if (flag == 0) {
-                JOptionPane.showMessageDialog(null, "Mã sách đã tồn tại!");
-                return;
-            }
-
-            if (txtMaSach.getText().length() == 0) {
-                JOptionPane.showMessageDialog(null, "Mã sách không được để trống");
-                return;
-            }
 
             try {
 
-                String sql = "insert into sach values (?,?,?,?,?,?,?)";
+                String sql = "INSERT INTO `sach`(`TenSach`, `TenTG`, `NhaXB`, `TheLoai`, `SoLuong`, `GiaTien`) VALUES (?,?,?,?,?,?)";
                 Connection connection = DbManager.getInstance().getConnection();
                 PreparedStatement pre = connection.prepareStatement(sql);
-                pre.setString(1, txtMaSach.getText());
-                pre.setString(2, txtTenSach.getText());
-                pre.setString(3, txtTenTG.getText());
-                pre.setString(4, txtNhaXB.getText());
-                pre.setString(5, txtTheLoai.getText());
-                pre.setInt(6, Integer.parseInt(txtSoLuong.getText()));
-                pre.setInt(7, Integer.parseInt(txtGia.getText()));
+                pre.setString(1, txtTenSach.getText());
+                pre.setString(2, txtTenTG.getText());
+                pre.setString(3, txtNhaXB.getText());
+                pre.setString(4, txtTheLoai.getText());
+                pre.setInt(5, Integer.parseInt(txtSoLuong.getText()));
+                pre.setInt(6, Integer.parseInt(txtGia.getText()));
                 int x = pre.executeUpdate();
                 pre.close();
                 connection.close();
@@ -109,7 +74,6 @@ public class AddBook extends Dialog {
 
     @Override
     public void initComponents() {
-        int kqs = DemSach() + 1;
         JPanel pnHienThiThemSach = new JPanel();
         pnHienThiThemSach.setLayout(new BorderLayout());
         mainPanel.add(pnHienThiThemSach, BorderLayout.CENTER);
@@ -131,14 +95,7 @@ public class AddBook extends Dialog {
         JLabel lblThemSach = new JLabel("THÊM SÁCH");
         pnTitle.add(lblThemSach);
 
-        JPanel pnMaSach = new JPanel();
-        pnMaSach.setLayout(new FlowLayout());
-        JLabel lblMaSach = new JLabel("Mã sách: ");
-        txtMaSach = new JTextField("MS" + kqs);
-        txtMaSach.setPreferredSize(new Dimension(340, 30));
-        pnMaSach.add(lblMaSach);
-        pnMaSach.add(txtMaSach);
-        txtMaSach.setEditable(false);
+
 
         JPanel pnTenSach = new JPanel();
         pnTenSach.setLayout(new FlowLayout());
@@ -190,7 +147,6 @@ public class AddBook extends Dialog {
 
 
         pnHienThiChiTiet.add(pnTitle);
-        pnHienThiChiTiet.add(pnMaSach);
         pnHienThiChiTiet.add(pnTenSach);
         pnHienThiChiTiet.add(pnTenTG);
         pnHienThiChiTiet.add(pnNhaXB);
@@ -205,14 +161,12 @@ public class AddBook extends Dialog {
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
         lblThemSach.setFont(font2);
         lblGia.setFont(font4);
-        lblMaSach.setFont(font4);
         lblTenSach.setFont(font4);
         lblTenTG.setFont(font4);
         lblNhaXB.setFont(font4);
         lblSoLuong.setFont(font4);
         lblTheLoai.setFont(font4);
 
-        txtMaSach.setFont(font4);
         txtTenSach.setFont(font4);
         txtTenTG.setFont(font4);
         txtNhaXB.setFont(font4);
@@ -222,7 +176,6 @@ public class AddBook extends Dialog {
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblThemSach.setForeground(new Color(48, 51, 107));
-        pnMaSach.setBackground(new Color(241, 242, 246));
         pnTenSach.setBackground(new Color(241, 242, 246));
         pnTenTG.setBackground(new Color(241, 242, 246));
         pnNhaXB.setBackground(new Color(241, 242, 246));
@@ -252,7 +205,6 @@ public class AddBook extends Dialog {
         titleLogin.setTitleColor(Color.BLUE);
         pnHienThiThemSach.setBorder(titleLogin);
 
-        lblMaSach.setPreferredSize(lblNhaXB.getPreferredSize());
         lblTenSach.setPreferredSize(lblNhaXB.getPreferredSize());
         lblTenTG.setPreferredSize(lblNhaXB.getPreferredSize());
         lblSoLuong.setPreferredSize(lblNhaXB.getPreferredSize());

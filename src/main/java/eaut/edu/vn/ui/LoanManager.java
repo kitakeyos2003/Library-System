@@ -52,7 +52,7 @@ public class LoanManager extends CustomFrame {
         this.setSize(1130, 775);
         setHeader(new Header("QUẢN LÝ PHIẾU MƯỢN"));
         setFooter(new Footer());
-        loadAllLoan();
+        fillTable();
     }
 
     public void addEvents() {
@@ -88,7 +88,7 @@ public class LoanManager extends CustomFrame {
                 AddLoan tpm = new AddLoan("Thêm phiếu mượn");
                 tpm.hienThi();
                 tpm.showWindow();
-                loadAllLoan();
+                fillTable();
             }
         });
         btnSua.addActionListener(new ActionListener() {
@@ -98,7 +98,7 @@ public class LoanManager extends CustomFrame {
                 suapm.maPM = txtMaPhieu.getText();
                 suapm.hienThi();
                 suapm.showWindow();
-                loadAllLoan();
+                fillTable();
                 dtmSachMuon.setRowCount(0);
             }
         });
@@ -110,7 +110,7 @@ public class LoanManager extends CustomFrame {
                 xoapm.hienThi();
                 xoapm.showWindow();
                 dtmPhieuMuon.setRowCount(0);
-                loadAllLoan();
+                fillTable();
             }
         });
         tblPhieuMuon.addMouseListener(new MouseListener() {
@@ -153,9 +153,9 @@ public class LoanManager extends CustomFrame {
                     vec.add(s.getCategory());
                     dtmSachMuon.addRow(vec);
                 }
-                String readerId = String.valueOf(dtmPhieuMuon.getValueAt(n, 1));
+                int readerId = Integer.parseInt(String.valueOf(dtmPhieuMuon.getValueAt(n, 1)));
                 String username = String.valueOf(dtmPhieuMuon.getValueAt(n, 5));
-                Loan l = loans.stream().filter(loan -> loan.getReaderId().equals(readerId) && loan.getUserName().equals(username))
+                Loan l = loans.stream().filter(loan -> loan.getReaderId() == readerId && loan.getUserId().equals(username))
                         .findFirst().orElse(null);
                 if (l != null) {
                     txtMaPhieu.setText(mapm);
@@ -163,7 +163,7 @@ public class LoanManager extends CustomFrame {
                     txtNgayMuon.setText(String.valueOf(dtmPhieuMuon.getValueAt(n, 2)));
                     txtNgayHenTra.setText(String.valueOf(dtmPhieuMuon.getValueAt(n, 3)));
                     txtSoSachMuon.setText(String.valueOf(dtmPhieuMuon.getValueAt(n, 4)));
-                    txtThuThu.setText(l.getUserName());
+                    txtThuThu.setText(l.getUserId());
                 }
             }
         });
@@ -384,7 +384,7 @@ public class LoanManager extends CustomFrame {
         txtThuThu.setEditable(false);
     }
 
-    private void loadAllLoan() {
+    private void fillTable() {
         loans = LoanService.getInstance().getAll();
         dtmPhieuMuon.setRowCount(0);
         for (Loan pm : loans) {
@@ -394,7 +394,7 @@ public class LoanManager extends CustomFrame {
             vec.add(pm.getBorrowedDate());
             vec.add(pm.getReturnDate());
             vec.add(pm.getQuantity());
-            vec.add(pm.getUserName());
+            vec.add(pm.getUserId());
             dtmPhieuMuon.addRow(vec);
         }
     }

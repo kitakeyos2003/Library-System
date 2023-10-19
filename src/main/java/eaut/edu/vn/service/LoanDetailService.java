@@ -24,8 +24,8 @@ public class LoanDetailService implements IService<LoanDetail> {
             ResultSet result = loanDetail.executeQuery();
             while (result.next()) {
                 LoanDetail ctpm = new LoanDetail();
-                ctpm.setLoanId(result.getString(1));
-                ctpm.setBookId(result.getString(2));
+                ctpm.setLoanId(result.getInt(1));
+                ctpm.setBookId(result.getInt(2));
                 ctpm.setReturnDate(result.getDate(3));
                 ctpm.setBorrowedStatus(result.getInt(4));
                 ctpm.setReturnStatus(result.getInt(5));

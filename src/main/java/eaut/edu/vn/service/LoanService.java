@@ -24,8 +24,8 @@ public class LoanService implements IService<Loan> {
             ResultSet result = ps.executeQuery();
             while (result.next()) {
                 Loan loan = new Loan();
-                loan.setId(result.getString(1));
-                loan.setReaderId(result.getString(2));
+                loan.setId(result.getInt(1));
+                loan.setReaderId(result.getInt(2));
                 loan.setBorrowedDate(result.getDate(3));
                 loan.setReturnDate(result.getDate(4));
                 loan.setQuantity(result.getInt(5));
@@ -62,8 +62,8 @@ public class LoanService implements IService<Loan> {
             try {
                 if (result.next()) {
                     Loan loan = new Loan();
-                    loan.setId(result.getString(1));
-                    loan.setReaderId(result.getString(2));
+                    loan.setId(result.getInt(1));
+                    loan.setReaderId(result.getInt(2));
                     loan.setBorrowedDate(result.getDate(3));
                     loan.setReturnDate(result.getDate(4));
                     loan.setQuantity(result.getInt(5));
@@ -84,8 +84,8 @@ public class LoanService implements IService<Loan> {
             try {
                 if (result.next()) {
                     Loan loan = new Loan();
-                    loan.setId(result.getString(1));
-                    loan.setReaderId(result.getString(2));
+                    loan.setId(result.getInt(1));
+                    loan.setReaderId(result.getInt(2));
                     loan.setBorrowedDate(result.getDate(3));
                     loan.setReturnDate(result.getDate(4));
                     loan.setQuantity(result.getInt(5));

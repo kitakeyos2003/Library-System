@@ -11,7 +11,6 @@ import java.awt.event.MouseListener;
 import java.sql.*;
 import java.util.List;
 import java.util.Vector;
-import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -28,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
 
 
 import eaut.edu.vn.database.DbManager;
+import eaut.edu.vn.interfaces.ITable;
 import eaut.edu.vn.main.Application;
 import eaut.edu.vn.model.Book;
 import eaut.edu.vn.service.BookService;
@@ -41,7 +41,7 @@ import eaut.edu.vn.ui.dialog.book.DeleteBook;
 import eaut.edu.vn.util.Log;
 import eaut.edu.vn.util.Util;
 
-public class BookManager extends CustomFrame {
+public class BookManager extends CustomFrame implements ITable {
     
     public int thongke = 0;
     JTextField txtMaSach, txtTenSach, txtTacGia, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
@@ -57,10 +57,11 @@ public class BookManager extends CustomFrame {
         this.setSize(1130, 775);
         setHeader(new Header("QUẢN LÝ SÁCH"));
         setFooter(new Footer());
-        loadAllBook();
+        fillTable();
     }
 
-    private void loadAllBook() {
+    @Override
+    public void fillTable() {
         books = BookService.getInstance().getAll();
         for (Book book : books) {
             Vector<Object> vec = new Vector<>();
@@ -171,13 +172,13 @@ public class BookManager extends CustomFrame {
             AddBook themsach = new AddBook("Thêm sách");
             themsach.showWindow();
             dtmSach.setRowCount(0);
-            loadAllBook();
+            fillTable();
         });
         btnTimKiem.addActionListener(e -> {
             SearchBook timsach = new SearchBook("Tìm kiếm thông tin sách");
             timsach.showWindow();
             dtmSach.setRowCount(0);
-            loadAllBook();
+            fillTable();
         });
         btnSua.addActionListener(e -> {
             EditBook suasach = new EditBook("Sửa thông tin sách");
@@ -185,7 +186,7 @@ public class BookManager extends CustomFrame {
             suasach.hienThi();
             suasach.showWindow();
             dtmSach.setRowCount(0);
-            loadAllBook();
+            fillTable();
         });
         btnXoa.addActionListener(e -> {
             DeleteBook xoasach = new DeleteBook("Xóa thông tin sách");
@@ -193,7 +194,7 @@ public class BookManager extends CustomFrame {
             xoasach.hienThi();
             xoasach.showWindow();
             dtmSach.setRowCount(0);
-            loadAllBook();
+            fillTable();
         });
     }
 

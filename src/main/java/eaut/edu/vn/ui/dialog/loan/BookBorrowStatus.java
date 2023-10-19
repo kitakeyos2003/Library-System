@@ -25,7 +25,7 @@ import eaut.edu.vn.util.Util;
 
 
 public class BookBorrowStatus extends Dialog {
-    public String MaPM = "";
+    public int MaPM;
     public String user = "";
     JTextField txtMaPM, txtTinhTrangSach, txtMaSach;
     JButton btnThem;
@@ -34,14 +34,11 @@ public class BookBorrowStatus extends Dialog {
         super(title);
         setHeader(new Header("THÊM THÔNG TIN SÁCH"));
         setFooter(new Footer());
-        if (MaPM.length() != 0) {
             hienThi();
-
-        }
     }
 
     public void hienThi() {
-        txtMaPM.setText(MaPM);
+        txtMaPM.setText(String.valueOf(MaPM));
     }
 
     @Override
@@ -60,7 +57,7 @@ public class BookBorrowStatus extends Dialog {
         JPanel pnMaSach = new JPanel();
         pnMaSach.setLayout(new FlowLayout());
         JLabel lblMaSach = new JLabel("Mã sách: ");
-        txtMaSach = new JTextField("MS");
+        txtMaSach = new JTextField();
         txtMaSach.setPreferredSize(new Dimension(340, 30));
         pnMaSach.add(lblMaSach);
         pnMaSach.add(txtMaSach);

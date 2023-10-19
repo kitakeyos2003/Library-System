@@ -36,7 +36,7 @@ import eaut.edu.vn.util.Util;
 
 public class AddReader extends Dialog {
     
-    JTextField txtMaDocGia, txtHoTen, txtSDT, txtDiaChi, txtGioiTinh;
+    JTextField txtHoTen, txtSDT, txtDiaChi, txtGioiTinh;
     JRadioButton radNam, radNu;
     JButton btnThem;
     JComboBox cb;
@@ -47,55 +47,18 @@ public class AddReader extends Dialog {
         setFooter(new Footer());
     }
 
-    public int DemDocGia() {
-        List<Reader> ds = ReaderService.getInstance().getAll();
-        return ds.size();
-    }
-
     @Override
     public void addEvents() {
         btnThem.addActionListener(e -> {
-            int flag = 1;
             try {
 
-                String sql = "select * from docgia where madg=?";
+                String sql = "INSERT INTO `docgia`(`TenDG`, `SDT`, `DiaChi`, `GioiTinh`, `MatSach`) VALUES (?,?,?,?,0)";
                 Connection connection = DbManager.getInstance().getConnection();
                 PreparedStatement pre = connection.prepareStatement(sql);
-                pre.setString(1, txtMaDocGia.getText());
-                ResultSet rs = pre.executeQuery();
-
-                if (rs.next()) {
-                    flag = 0;
-                }
-                rs.close();
-                pre.close();
-                connection.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-            if (flag == 0) {
-                JOptionPane.showMessageDialog(null, "Mã đọc giả trùng");
-                //dispose();
-                return;
-            }
-
-            if (txtMaDocGia.getText().length() == 0) {
-                JOptionPane.showMessageDialog(null, "Mã đọc giả không được để trống");
-                //dispose();
-                return;
-            }
-
-            try {
-
-                String sql = "insert into docgia values (?,?,?,?,?,0)";
-                Connection connection = DbManager.getInstance().getConnection();
-                PreparedStatement pre = connection.prepareStatement(sql);
-                pre.setString(1, txtMaDocGia.getText());
-                pre.setString(2, txtHoTen.getText());
-                pre.setString(3, txtSDT.getText());
-                pre.setString(4, txtDiaChi.getText());
-                pre.setString(5, (String) cb.getSelectedItem());
+                pre.setString(1, txtHoTen.getText());
+                pre.setString(2, txtSDT.getText());
+                pre.setString(3, txtDiaChi.getText());
+                pre.setString(4, (String) cb.getSelectedItem());
                 int x = pre.executeUpdate();
                 pre.close();
                 connection.close();
@@ -114,7 +77,6 @@ public class AddReader extends Dialog {
 
     @Override
     public void initComponents() {
-        int kqdg = DemDocGia() + 1;
         JPanel pnHienThiThemDocGia = new JPanel();
         pnHienThiThemDocGia.setLayout(new BorderLayout());
         mainPanel.add(pnHienThiThemDocGia, BorderLayout.CENTER);
@@ -136,15 +98,6 @@ public class AddReader extends Dialog {
         pnTitle.setLayout(new FlowLayout());
         JLabel lblThemDocGia = new JLabel("THÊM ĐỘC GIẢ");
         pnTitle.add(lblThemDocGia);
-
-        JPanel pnMaDG = new JPanel();
-        pnMaDG.setLayout(new FlowLayout());
-        JLabel lblMaDG = new JLabel("Mã độc giả: ");
-        txtMaDocGia = new JTextField("DG" + kqdg);
-        txtMaDocGia.setPreferredSize(new Dimension(340, 30));
-        pnMaDG.add(lblMaDG);
-        pnMaDG.add(txtMaDocGia);
-        txtMaDocGia.setEditable(false);
 
         JPanel pnHoTen = new JPanel();
         pnHoTen.setLayout(new FlowLayout());
@@ -183,7 +136,6 @@ public class AddReader extends Dialog {
 
 
         pnHienThiChiTiet.add(pnTitle);
-        pnHienThiChiTiet.add(pnMaDG);
         pnHienThiChiTiet.add(pnHoTen);
         pnHienThiChiTiet.add(pnSoDienThoai);
         pnHienThiChiTiet.add(pnDiaChi);
@@ -196,12 +148,10 @@ public class AddReader extends Dialog {
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
         lblThemDocGia.setFont(font2);
-        lblMaDG.setFont(font4);
         lblSoDienThoai.setFont(font4);
         lblDiaChi.setFont(font4);
         lblHoTen.setFont(font4);
         lblGioiTinh.setFont(font4);
-        txtMaDocGia.setFont(font4);
         txtDiaChi.setFont(font4);
         txtHoTen.setFont(font4);
         txtSDT.setFont(font4);
@@ -210,7 +160,6 @@ public class AddReader extends Dialog {
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblThemDocGia.setForeground(new Color(48, 51, 107));
-        pnMaDG.setBackground(new Color(241, 242, 246));
         pnDiaChi.setBackground(new Color(241, 242, 246));
         pnGioiTinh.setBackground(new Color(241, 242, 246));
         pnSoDienThoai.setBackground(new Color(241, 242, 246));
@@ -242,7 +191,6 @@ public class AddReader extends Dialog {
         titleLogin.setTitleColor(Color.BLUE);
         pnHienThiThemDocGia.setBorder(titleLogin);
 
-        lblMaDG.setPreferredSize(lblSoDienThoai.getPreferredSize());
         lblGioiTinh.setPreferredSize(lblSoDienThoai.getPreferredSize());
         lblHoTen.setPreferredSize(lblSoDienThoai.getPreferredSize());
         lblDiaChi.setPreferredSize(lblSoDienThoai.getPreferredSize());

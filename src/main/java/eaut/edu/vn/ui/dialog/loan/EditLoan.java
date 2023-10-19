@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -87,7 +88,7 @@ public class EditLoan extends Dialog {
                 try {
                     String sql = "update phieumuon set MaDg=?,NgayMuon=?,NgayHenTra=?,SoLuongMuon=?,User=? where MaPM=?";
                     Connection connection = DbManager.getInstance().getConnection();
-                    PreparedStatement pre = connection.prepareStatement(sql);
+                    PreparedStatement pre = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                     pre.setString(1, txtMaDG.getText());
                     pre.setString(2, datemuon);
                     pre.setString(3, datehantra);
@@ -98,14 +99,20 @@ public class EditLoan extends Dialog {
                     int x = pre.executeUpdate();
                     pre.close();
                     connection.close();
+                    int genId = -1;
                     if (x > 0) {
+                        ResultSet generatedKeys = pre.getGeneratedKeys();
+                        if (generatedKeys.next()) {
+                            genId = generatedKeys.getInt(1);
+                        }
+                        generatedKeys.close();
                         JOptionPane.showMessageDialog(null, "Sửa thành công");
                         dispose();
                     }
                     if (soluongtruoc < soluongsau) {
                         for (int i = 0; i < (soluongsau - soluongtruoc); i++) {
                             BookBorrowStatus themsach = new BookBorrowStatus("Mượn tiếp sách");
-                            themsach.MaPM = maPM;
+                            themsach.MaPM = genId;
                             themsach.hienThi();
                             themsach.showWindow();
                         }

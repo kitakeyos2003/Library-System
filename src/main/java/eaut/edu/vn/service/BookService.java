@@ -22,7 +22,7 @@ public class BookService implements IService<Book> {
             try {
                 while (result.next()) {
                     Book sh = new Book();
-                    sh.setId(result.getString(1));
+                    sh.setId(result.getInt(1));
                     sh.setName(result.getString(2));
                     sh.setAuthorName(result.getString(3));
                     sh.setPublishingCompany(result.getString(4));
@@ -45,7 +45,7 @@ public class BookService implements IService<Book> {
             try {
                 while (result.next()) {
                     Book sh = new Book();
-                    sh.setId(result.getString(1));
+                    sh.setId(result.getInt(1));
                     sh.setName(result.getString(2));
                     sh.setAuthorName(result.getString(3));
                     sh.setPublishingCompany(result.getString(4));
@@ -82,7 +82,7 @@ public class BookService implements IService<Book> {
             try {
                 while (result.next()) {
                     Book sh = new Book();
-                    sh.setId(result.getString(1));
+                    sh.setId(result.getInt(1));
                     sh.setName(result.getString(2));
                     sh.setAuthorName(result.getString(3));
                     sh.setPublishingCompany(result.getString(4));

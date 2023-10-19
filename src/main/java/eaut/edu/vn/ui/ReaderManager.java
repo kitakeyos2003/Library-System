@@ -20,6 +20,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+
+import eaut.edu.vn.interfaces.ITable;
 import eaut.edu.vn.main.Application;
 import eaut.edu.vn.model.Loan;
 import eaut.edu.vn.model.Reader;
@@ -35,7 +37,7 @@ import eaut.edu.vn.ui.dialog.reader.DeleteReader;
 import eaut.edu.vn.util.Util;
 
 
-public class ReaderManager extends CustomFrame {
+public class ReaderManager extends CustomFrame implements ITable {
     
     public int thongke = 0;
     JTextField txtMaDocGia, txtTenDocGia, txtSDT, txtDiaChi, txtGioiTinh, txtLanMatSach;
@@ -49,7 +51,7 @@ public class ReaderManager extends CustomFrame {
         this.setSize(1130, 780);
         setHeader(new Header("QUẢN LÝ ĐỘC GIẢ"));
         setFooter(new Footer());
-        loadAllReader();
+        fillTable();
     }
 
     public void addEvents() {
@@ -73,7 +75,7 @@ public class ReaderManager extends CustomFrame {
             AddReader themdg = new AddReader("Thêm độc giả");
             themdg.showWindow();
             dtmDocGia.setRowCount(0);
-            loadAllReader();
+            fillTable();
         });
         btnXoa.addActionListener(e -> {
             // TODO Auto-generated method stub
@@ -82,7 +84,7 @@ public class ReaderManager extends CustomFrame {
             xoadg.hienThi();
             xoadg.showWindow();
             dtmDocGia.setRowCount(0);
-            loadAllReader();
+            fillTable();
         });
         btnSua.addActionListener(e -> {
             EditReader suadg = new EditReader("Sửa độc giả");
@@ -90,7 +92,7 @@ public class ReaderManager extends CustomFrame {
             suadg.hienThi();
             suadg.showWindow();
             dtmDocGia.setRowCount(0);
-            loadAllReader();
+            fillTable();
         });
 
         tblDocGia.addMouseListener(new MouseListener() {
@@ -152,7 +154,8 @@ public class ReaderManager extends CustomFrame {
 
     }
 
-    private void loadAllReader() {
+    @Override
+    public void fillTable() {
         readers = ReaderService.getInstance().getAll();
         for (Reader reader : readers) {
             Vector<Object> vec = new Vector<>();

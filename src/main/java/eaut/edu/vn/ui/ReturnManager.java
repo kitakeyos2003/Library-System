@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.Connection;
@@ -27,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import eaut.edu.vn.database.DbManager;
+import eaut.edu.vn.interfaces.ITable;
 import eaut.edu.vn.main.Application;
 import eaut.edu.vn.service.LoanDetailService;
 
@@ -38,7 +37,7 @@ import eaut.edu.vn.ui.dialog.returnreceipt.ReturnReceipt;
 import eaut.edu.vn.model.LoanDetail;
 import eaut.edu.vn.util.Util;
 
-public class ReturnManager extends CustomFrame {
+public class ReturnManager extends CustomFrame implements ITable {
     
     public int thongke = 0;
     JTextField txtMaPhieu, txtMaDG, txtMaSach, txtNgayHenTra, txtNgayTra, txtTTSachMuon, txtTTSachTra, txtThuThuNhanSach, txtGhiChu;
@@ -52,11 +51,11 @@ public class ReturnManager extends CustomFrame {
         this.setSize(1130, 775);
         setHeader(new Header("QUẢN LÝ PHIẾU TRẢ"));
         setFooter(new Footer());
-        hienThiPhieuMuonChuaTra();
-        hienThiPhieuMuonDaTra();
+        fillTable();
     }
 
-    private void hienThiPhieuMuonDaTra() {
+    @Override
+    public void fillTable() {
         dsctpm = LoanDetailService.getInstance().getAll();
         dtmPhieuTra.setRowCount(0);
         for (LoanDetail ctpm : dsctpm) {
@@ -72,11 +71,6 @@ public class ReturnManager extends CustomFrame {
                 dtmPhieuTra.addRow(vec);
             }
         }
-
-    }
-
-    private void hienThiPhieuMuonChuaTra() {
-        dsctpm = LoanDetailService.getInstance().getAll();
         dtmPhieuChuaTra.setRowCount(0);
         for (LoanDetail ctpm : dsctpm) {
             if (ctpm.getReturnDate() == null) {
@@ -87,7 +81,6 @@ public class ReturnManager extends CustomFrame {
                 dtmPhieuChuaTra.addRow(vec);
             }
         }
-
     }
 
     public void addEvents() {
@@ -243,16 +236,14 @@ public class ReturnManager extends CustomFrame {
             ts.TinhTrangSach = txtTTSachMuon.getText();
             ts.hienThi();
             ts.showWindow();
-            hienThiPhieuMuonChuaTra();
-            hienThiPhieuMuonDaTra();
+            fillTable();
         });
         btnTimKiem.addActionListener(e -> {
             Search timphieu = new Search("Tìm kiếm thông tin sách");
             timphieu.showWindow();
             dtmPhieuChuaTra.setRowCount(0);
             dtmPhieuTra.setRowCount(0);
-            hienThiPhieuMuonDaTra();
-            hienThiPhieuMuonChuaTra();
+            fillTable();
         });
 
     }

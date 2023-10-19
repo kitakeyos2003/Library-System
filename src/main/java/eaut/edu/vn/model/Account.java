@@ -7,6 +7,7 @@ public class Account {
     private String name;
     private String phoneNumber;
     private String identityNumber;
+    private int id;
 
     public String getUsername() {
         return username;

@@ -21,7 +21,7 @@ public class ReaderService implements IService<Reader> {
             ResultSet result = pre.executeQuery();
             while (result.next()) {
                 Reader reader = new Reader();
-                reader.setId(result.getString(1));
+                reader.setId(result.getInt(1));
                 reader.setName(result.getString(2));
                 reader.setPhoneNumber(result.getString(3));
                 reader.setAddress(result.getString(4));

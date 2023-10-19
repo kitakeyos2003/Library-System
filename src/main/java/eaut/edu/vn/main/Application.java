@@ -4,6 +4,7 @@ import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.model.Account;
 import eaut.edu.vn.service.ReaderService;
 import eaut.edu.vn.ui.*;
+import eaut.edu.vn.ui.controls.CustomFrame;
 
 public class Application {
 

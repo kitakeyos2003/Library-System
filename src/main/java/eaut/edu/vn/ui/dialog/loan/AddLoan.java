@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,9 +38,8 @@ import eaut.edu.vn.util.Util;
 
 
 public class AddLoan extends Dialog {
-    public String ma = "";
 
-    JTextField txtMaPhieu, txtMaDG, txtTenDG, txtNgayMuon, txtNgayHenTra, txtSachMuon, txtThuThu;
+    JTextField txtMaDG, txtTenDG, txtNgayMuon, txtNgayHenTra, txtSachMuon, txtThuThu;
     JButton btnThem;
     JDateChooser choosedate, choosedate1;
 
@@ -57,28 +57,7 @@ public class AddLoan extends Dialog {
     @Override
     public void addEvents() {
         btnThem.addActionListener(e -> {
-            try {
 
-                String sql = "select * from phieumuon where mapm=?";
-                Connection connection = DbManager.getInstance().getConnection();
-                PreparedStatement pre = connection.prepareStatement(sql);
-                pre.setString(1, txtMaPhieu.getText());
-                ResultSet rs = pre.executeQuery();
-                try {
-                    if (rs.next()) {
-                        JOptionPane.showMessageDialog(null, "Mã phiếu mượn đã tồn tại!");
-                        return;
-                    }
-                } finally {
-                    rs.close();
-                    pre.close();
-                    connection.close();
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-            int soluong2 = 0;
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             if (choosedate.getDate() == null || choosedate1.getDate() == null) {
                 JOptionPane.showMessageDialog(null, "Không được để trống");
@@ -86,10 +65,11 @@ public class AddLoan extends Dialog {
             }
             String datemuon = df.format(choosedate.getDate());
             String datehentra = df.format(choosedate1.getDate());
-            if (txtMaPhieu.getText().length() == 0 || txtMaDG.getText().length() == 0 || txtSachMuon.getText().length() == 0) {
+            if (txtMaDG.getText().length() == 0 || txtSachMuon.getText().length() == 0) {
                 JOptionPane.showMessageDialog(null, "Không được để trống");
                 return;
             }
+            int soluong2 = 0;
             try {
 
                 Connection connection = DbManager.getInstance().getConnection();
@@ -112,31 +92,34 @@ public class AddLoan extends Dialog {
                 return;
             }
             try {
-                String sql = "insert into phieumuon values(?,?,?,?,?,?)";
+                String sql = "INSERT INTO `phieumuon`(`MaDG`, `NgayMuon`, `NgayHenTra`, `SoLuongMuon`, `User`) VALUES (?,?,?,?,?)";
                 Connection connection = DbManager.getInstance().getConnection();
-                PreparedStatement pre = connection.prepareStatement(sql);
-                pre.setString(1, txtMaPhieu.getText());
-                pre.setString(2, txtMaDG.getText());
-                pre.setString(3, datemuon);
-                pre.setString(4, datehentra);
-                pre.setString(5, txtSachMuon.getText());
-                pre.setString(6, txtThuThu.getText());
-                int x = pre.executeUpdate();
+                PreparedStatement pre = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                pre.setString(1, txtMaDG.getText());
+                pre.setString(2, datemuon);
+                pre.setString(3, datehentra);
+                pre.setString(4, txtSachMuon.getText());
+                pre.setString(5, txtThuThu.getText());
+                int affectedRows = pre.executeUpdate();
+                if (affectedRows > 0) {
+                    ResultSet generatedKeys = pre.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        int id = generatedKeys.getInt(1);
+                        JOptionPane.showMessageDialog(null, "Thêm phiếu mượn thành công");
+                        dispose();
+                        int soluong1 = Integer.parseInt(txtSachMuon.getText());
+                        for (int i = 0; i < soluong1; i++) {
+                            BookBorrowStatus qlts = new BookBorrowStatus("Thêm Sách");
+                            qlts.MaPM = id;
+                            qlts.user = Application.account.getUsername();
+                            qlts.hienThi();
+                            qlts.showWindow();
+                        }
+                    }
+                    generatedKeys.close();
+                }
                 pre.close();
                 connection.close();
-                if (x > 0) {
-                    JOptionPane.showMessageDialog(null, "Thêm phiếu mượn thành công");
-                    dispose();
-                    String soluong = txtSachMuon.getText();
-                    int soluong1 = Integer.parseInt(soluong);
-                    for (int i = 0; i < soluong1; i++) {
-                        BookBorrowStatus qlts = new BookBorrowStatus("Thêm Sách");
-                        qlts.MaPM = txtMaPhieu.getText();
-                        qlts.user = Application.account.getUsername();
-                        qlts.hienThi();
-                        qlts.showWindow();
-                    }
-                }
             } catch (Exception ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -144,14 +127,9 @@ public class AddLoan extends Dialog {
         });
     }
 
-    public int DemPhieuMuon() {
-        List<Loan> ds = LoanService.getInstance().getAll();
-        return ds.size();
-    }
 
     @Override
     public void initComponents() {
-        int kqpm = DemPhieuMuon() + 1;
         JPanel pnHienThiThemPM = new JPanel();
         pnHienThiThemPM.setLayout(new BorderLayout());
         mainPanel.add(pnHienThiThemPM, BorderLayout.CENTER);
@@ -173,18 +151,10 @@ public class AddLoan extends Dialog {
         JLabel lblThemPM = new JLabel("THÊM PHIẾU MƯỢN");
         pnTitle.add(lblThemPM);
 
-        JPanel pnMaPM = new JPanel();
-        pnMaPM.setLayout(new FlowLayout());
-        JLabel lblMaPM = new JLabel("Mã phiếu: ");
-        txtMaPhieu = new JTextField("PM" + kqpm);
-        txtMaPhieu.setPreferredSize(new Dimension(340, 30));
-        pnMaPM.add(lblMaPM);
-        pnMaPM.add(txtMaPhieu);
-
         JPanel pnMaDG = new JPanel();
         pnMaDG.setLayout(new FlowLayout());
         JLabel lblMaDG = new JLabel("Mã độc giả: ");
-        txtMaDG = new JTextField("DG");
+        txtMaDG = new JTextField();
         txtMaDG.setPreferredSize(new Dimension(340, 30));
         pnMaDG.add(lblMaDG);
         pnMaDG.add(txtMaDG);
@@ -233,7 +203,6 @@ public class AddLoan extends Dialog {
 
 
         pnHienThiChiTiet.add(pnTitle);
-        pnHienThiChiTiet.add(pnMaPM);
         pnHienThiChiTiet.add(pnMaDG);
         //pnHienThiChiTiet.add(pnTenDG);
         pnHienThiChiTiet.add(pnNgayMuon);
@@ -248,7 +217,6 @@ public class AddLoan extends Dialog {
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
 
         lblThemPM.setFont(font2);
-        lblMaPM.setFont(font4);
         lblMaDG.setFont(font4);
         lblTenDG.setFont(font4);
         lblNgayMuon.setFont(font4);
@@ -257,18 +225,15 @@ public class AddLoan extends Dialog {
         lblThuThu.setFont(font4);
 
         txtMaDG.setFont(font4);
-        txtMaPhieu.setFont(font4);
         txtTenDG.setFont(font4);
         choosedate.setFont(font4);
         choosedate1.setFont(font4);
         txtSachMuon.setFont(font4);
         txtThuThu.setFont(font4);
         txtThuThu.setEditable(false);
-        txtMaPhieu.setEditable(false);
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblThemPM.setForeground(new Color(48, 51, 107));
-        pnMaPM.setBackground(new Color(241, 242, 246));
         pnMaDG.setBackground(new Color(241, 242, 246));
         pnTenDG.setBackground(new Color(241, 242, 246));
         pnNgayMuon.setBackground(new Color(241, 242, 246));
@@ -298,7 +263,6 @@ public class AddLoan extends Dialog {
         pnHienThiThemPM.setBorder(titleLogin);
 
         lblMaDG.setPreferredSize(lblSoSachCM.getPreferredSize());
-        lblMaPM.setPreferredSize(lblSoSachCM.getPreferredSize());
         lblTenDG.setPreferredSize(lblSoSachCM.getPreferredSize());
         lblNgayHenTra.setPreferredSize(lblSoSachCM.getPreferredSize());
         lblNgayMuon.setPreferredSize(lblSoSachCM.getPreferredSize());
