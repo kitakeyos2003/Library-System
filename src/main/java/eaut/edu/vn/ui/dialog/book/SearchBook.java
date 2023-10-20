@@ -4,6 +4,7 @@ package eaut.edu.vn.ui.dialog.book;
 import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
+import eaut.edu.vn.ui.controls.PlaceholderTextField;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
@@ -34,7 +35,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class SearchBook extends Dialog {
     JButton btnTimKiem;
-    JTextField txtTimKiem, txtMaSach, txtTenSach, txtTacGia, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
+    PlaceholderTextField txtTimKiem;
+    JTextField txtMaSach, txtTenSach, txtTacGia, txtNhaXB, txtTheLoai, txtSoLuong, txtGia;
     DefaultTableModel dtmSach;
     JTable tblSach;
 
@@ -169,7 +171,6 @@ public class SearchBook extends Dialog {
                             vec.add(tl);
                             vec.add(sl);
                             vec.add(gia);
-
                             dtmSach.addRow(vec);
                         }
                         rs.close();
@@ -240,7 +241,8 @@ public class SearchBook extends Dialog {
 
         JPanel pnTextTimKiem = new JPanel();
         pnTextTimKiem.setLayout(new BorderLayout());
-        txtTimKiem = new JTextField("Nhập tên sách...");
+        txtTimKiem = new PlaceholderTextField();
+        txtTimKiem.setPlaceholder("Nhập tên sách...");
         pnTextTimKiem.add(txtTimKiem);
         pnThanhTimKiem.add(pnTextTimKiem, BorderLayout.CENTER);
         txtTimKiem.setPreferredSize(new Dimension(100, 20));

@@ -33,12 +33,13 @@ import eaut.edu.vn.model.Account;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Header;
+import eaut.edu.vn.ui.controls.PlaceholderPasswordField;
 import eaut.edu.vn.util.Util;
 
 public class ChangePassword extends CustomFrame {
 
     JButton btnLuu, btnQuayLai, btnLamLai;
-    JPasswordField pwdMatKhauCu, pwdMatKhauMoi, pwdNhapLaiMKM;
+    PlaceholderPasswordField pwdMatKhauCu, pwdMatKhauMoi, pwdNhapLaiMKM;
 
 
     public ChangePassword(String tieude) {
@@ -226,21 +227,24 @@ public class ChangePassword extends CustomFrame {
 
         JPanel pnMatKhauCu = new JPanel();
         pnMatKhauCu.setLayout(new FlowLayout());
-        pwdMatKhauCu = new JPasswordField("Mật khẩu cũ");
+        pwdMatKhauCu = new PlaceholderPasswordField();
+        pwdMatKhauCu.setPlaceholder("Mật khẩu cũ");
         pwdMatKhauCu.setEchoChar((char) 0);
         pwdMatKhauCu.setPreferredSize(new Dimension(340, 30));
         pnMatKhauCu.add(pwdMatKhauCu);
 
         JPanel pnMatKhauMoi = new JPanel();
         pnMatKhauMoi.setLayout(new FlowLayout());
-        pwdMatKhauMoi = new JPasswordField("Mật khẩu mới");
+        pwdMatKhauMoi = new PlaceholderPasswordField();
+        pwdMatKhauMoi.setPlaceholder("Mật khẩu mới");
         pwdMatKhauMoi.setEchoChar((char) 0);
         pwdMatKhauMoi.setPreferredSize(new Dimension(340, 30));
         pnMatKhauMoi.add(pwdMatKhauMoi);
 
         JPanel pnNhapLaiMKM = new JPanel();
         pnNhapLaiMKM.setLayout(new FlowLayout());
-        pwdNhapLaiMKM = new JPasswordField("Nhập lại mật khẩu mới");
+        pwdNhapLaiMKM = new PlaceholderPasswordField();
+        pwdNhapLaiMKM.setPlaceholder("Nhập lại mật khẩu mới");
         pwdNhapLaiMKM.setEchoChar((char) 0);
         pwdNhapLaiMKM.setPreferredSize(new Dimension(340, 30));
         pnNhapLaiMKM.add(pwdNhapLaiMKM);

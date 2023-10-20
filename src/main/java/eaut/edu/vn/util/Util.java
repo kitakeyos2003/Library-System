@@ -17,10 +17,10 @@ public class Util {
             if (imageURL != null) {
                 icon = new ImageIcon(imageURL);
             } else {
-                System.err.println("Image not found: " + imagePath);
+                Log.error("Image not found: " + imagePath);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(), e);
         }
         return icon;
     }
@@ -33,10 +33,10 @@ public class Util {
                 Font baseFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
                 font = baseFont.deriveFont(fontStyle, fontSize);
             } else {
-                System.err.println("Font file not found: " + fontPath);
+                Log.error("Font file not found: " + fontPath);
             }
         } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
+            Log.error(e.getMessage(), e);
         }
 
         return font;
@@ -49,7 +49,8 @@ public class Util {
             Image resizedImage = originalImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
             return new ImageIcon(resizedImage);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Log.error("resize image", e);
         }
+        return null;
     }
 }

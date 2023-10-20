@@ -50,30 +50,24 @@ public class StatisticAnalyzer extends CustomFrame {
         this.setSize(1025, 580);
         setHeader(new Header("THỐNG KÊ"));
         setFooter(new Footer());
-        hienThi();
     }
 
-    public void hienThi() {
-        // TODO Auto-generated method stubad
-
-    }
-
-    public int DemSach() {
+    public int countBook() {
         List<Book> ds = BookService.getInstance().getAll();
         return ds.size();
     }
 
-    public int DemPhieuMuon() {
+    public int countLoan() {
         List<Loan> ds = LoanService.getInstance().getAll();
         return ds.size();
     }
 
-    public int DemPhieuPhieuTra() {
+    public int countReturnreceipt() {
         List<LoanDetail> ds = LoanDetailService.getInstance().getAll();
         return ds.size();
     }
 
-    public int DemDocGia() {
+    public int countReader() {
         List<Reader> ds = ReaderService.getInstance().getAll();
         return ds.size();
     }
@@ -86,10 +80,10 @@ public class StatisticAnalyzer extends CustomFrame {
         pnHang1.setLayout(new FlowLayout());
         pnHang1.setBackground(Color.WHITE);
 
-        int kqs = DemSach();
-        int kqpm = DemPhieuMuon();
-        int kqpt = DemPhieuPhieuTra();
-        int kqdg = DemDocGia();
+        int kqs = countBook();
+        int kqpm = countLoan();
+        int kqpt = countReturnreceipt();
+        int kqdg = countReader();
 
         JPanel pnChiTietSach = new JPanel();
         pnChiTietSach.setLayout(new BorderLayout());
