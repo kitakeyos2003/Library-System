@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -14,7 +12,6 @@ import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -51,9 +48,7 @@ public class Search extends Dialog {
     JTable tblPhieuTra, tblPhieuChuaTra;
 
     public Search(String title) {
-        super(title);
-        setHeader(new Header("QUẢN LÝ PHIẾU TRẢ"));
-        setFooter(new Footer());
+        super(title, "QUẢN LÝ PHIẾU TRẢ");
     }
 
     private void hienThiPhieuMuonDaTra() {
@@ -296,7 +291,7 @@ public class Search extends Dialog {
             ts.MaSach = txtMaSach.getText();
             ts.NgayHenTra = txtNgayHenTra.getText();
             ts.TinhTrangSach = txtTTSachMuon.getText();
-            ts.hienThi();
+            ts.loadInfo();
             ts.showWindow();
         });
     }

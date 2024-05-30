@@ -1,5 +1,7 @@
 package eaut.edu.vn.service;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -8,6 +10,8 @@ import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.interfaces.IService;
 import eaut.edu.vn.model.Account;
 import eaut.edu.vn.util.Log;
+
+import javax.swing.*;
 
 public class AccountService implements IService<Account> {
     @Override
@@ -34,12 +38,37 @@ public class AccountService implements IService<Account> {
 
     @Override
     public void add(Account account) {
-
+        try {
+            String sql = "insert into taikhoan values (?,?,?,?,?,?)";
+            Connection connection = DbManager.getInstance().getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, account.getUsername());
+            stmt.setString(2, account.getPassword());
+            stmt.setInt(3, account.getRole());
+            stmt.setString(4, account.getName());
+            stmt.setString(5, account.getPhoneNumber());
+            stmt.setString(6, account.getIdentityNumber());
+            stmt.executeUpdate();
+            stmt.close();
+            connection.close();
+        } catch (SQLException ex) {
+            Log.error("Insert account failed!", ex);
+        }
     }
 
     @Override
     public void remove(Account account) {
-
+        try {
+            String sql = "Delete from taikhoan where user=?";
+            Connection connection = DbManager.getInstance().getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, account.getUsername());
+            stmt.executeUpdate();
+            stmt.close();
+            connection.close();
+        } catch (SQLException ex) {
+            Log.error("Delete account failed!", ex);
+        }
     }
 
     @Override
@@ -85,10 +114,6 @@ public class AccountService implements IService<Account> {
         return list;
     }
 
-    public static AccountService getInstance() {
-        return AccountService.SINGLETON.INSTANCE;
-    }
-
     public Account authenticate(String username, String password) {
         final Account[] accounts = new Account[1];
         DbManager.getInstance().executeQuery("SELECT * FROM `taikhoan` WHERE User =  ? AND Password = ? LIMIT 1;", resultSet -> {
@@ -108,6 +133,29 @@ public class AccountService implements IService<Account> {
             }
         }, username, password);
         return accounts[0];
+    }
+
+    public void update(Account account) {
+        try {
+            String sql = "Update taikhoan set Password=?,PhanQuyen=?,TenND=?,SDT=?,CMND=? where User=?";
+            Connection connection = DbManager.getInstance().getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, account.getPassword());
+            stmt.setInt(2, account.getRole());
+            stmt.setString(3, account.getName());
+            stmt.setString(4, account.getPhoneNumber());
+            stmt.setString(5, account.getIdentityNumber());
+            stmt.setString(6, account.getUsername());
+            int x = stmt.executeUpdate();
+            stmt.close();
+            connection.close();
+        } catch (SQLException ex) {
+            Log.error("Update account failed!", ex);
+        }
+    }
+
+    public static AccountService getInstance() {
+        return AccountService.SINGLETON.INSTANCE;
     }
 
     public static final class SINGLETON {

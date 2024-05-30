@@ -339,15 +339,19 @@ public class AccountManager extends CustomFrame implements ITable {
         });
         btnThem.addActionListener(e -> {
             // TODO Auto-generated method stub
-            AddAccount themqlnd = new AddAccount("Thêm người dùng");
-            themqlnd.showWindow();
+            AddAccount addAccount = new AddAccount("Thêm người dùng");
+            addAccount.showWindow();
             fillTable();
         });
         btnXoa.addActionListener(e -> {
-            DeleteAccount xoand = new DeleteAccount("Xóa người dùng");
-            xoand.machon = txtTaiKhoạn.getText();
-            xoand.hienThi();
-            xoand.showWindow();
+            String username = txtTaiKhoạn.getText();
+            if (username.isEmpty()) {
+                return;
+            }
+            DeleteAccount deleteAccount = new DeleteAccount("Xóa người dùng");
+            deleteAccount.machon = username;
+            deleteAccount.loadInfo();
+            deleteAccount.showWindow();
             fillTable();
             txtCMND.setText(null);
             txtSoDienThoai.setText(null);
@@ -357,10 +361,10 @@ public class AccountManager extends CustomFrame implements ITable {
             pwdPass.setText(null);
         });
         btnSua.addActionListener(e -> {
-            EditAccount suand = new EditAccount("Sửa người dùng");
-            suand.machon = txtTaiKhoạn.getText();
-            suand.hienThi();
-            suand.showWindow();
+            EditAccount editAccount = new EditAccount("Sửa người dùng");
+            editAccount.machon = txtTaiKhoạn.getText();
+            editAccount.fillInfo();
+            editAccount.showWindow();
             fillTable();
             txtCMND.setText(null);
             txtSoDienThoai.setText(null);

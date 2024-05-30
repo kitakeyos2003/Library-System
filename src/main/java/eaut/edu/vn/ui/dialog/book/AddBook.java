@@ -38,9 +38,7 @@ public class AddBook extends Dialog {
     JButton btnThem;
 
     public AddBook(String title) {
-        super(title);
-        setHeader(new Header("QUẢN LÝ SÁCH"));
-        setFooter(new Footer());
+        super(title, "QUẢN LÝ SÁCH");
     }
 
     @Override

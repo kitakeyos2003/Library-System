@@ -81,7 +81,7 @@ public class ReaderManager extends CustomFrame implements ITable {
             // TODO Auto-generated method stub
             DeleteReader xoadg = new DeleteReader("Xóa độc giả");
             xoadg.machon = txtMaDocGia.getText();
-            xoadg.hienThi();
+            xoadg.loadInfo();
             xoadg.showWindow();
             dtmDocGia.setRowCount(0);
             fillTable();
@@ -89,7 +89,7 @@ public class ReaderManager extends CustomFrame implements ITable {
         btnSua.addActionListener(e -> {
             EditReader suadg = new EditReader("Sửa độc giả");
             suadg.ma = txtMaDocGia.getText();
-            suadg.hienThi();
+            suadg.loadInfo();
             suadg.showWindow();
             dtmDocGia.setRowCount(0);
             fillTable();
@@ -148,7 +148,7 @@ public class ReaderManager extends CustomFrame implements ITable {
             ma = (String) dtmPhieuMuon.getValueAt(row, 0);
             ReaderDetail a = new ReaderDetail("Chi tiết phiếu mượn");
             a.ma = ma;
-            a.hienThi();
+            a.fillTable();
             a.showWindow();
         });
 

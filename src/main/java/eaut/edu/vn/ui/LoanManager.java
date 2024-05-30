@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
@@ -80,7 +78,7 @@ public class LoanManager extends CustomFrame {
         btnThem.addActionListener(e -> {
             // TODO Auto-generated method stub
             AddLoan tpm = new AddLoan("Thêm phiếu mượn");
-            tpm.fill();
+            tpm.loadInfo();
             tpm.showWindow();
             fillTable();
         });
@@ -88,17 +86,17 @@ public class LoanManager extends CustomFrame {
             // TODO Auto-generated method stub
             EditLoan suapm = new EditLoan("Sửa phiếu mượn");
             suapm.maPM = txtMaPhieu.getText();
-            suapm.hienThi();
+            suapm.fillInfo();
             suapm.showWindow();
             fillTable();
             dtmSachMuon.setRowCount(0);
         });
         btnXoa.addActionListener(e -> {
             // TODO Auto-generated method stub
-            DeleteLoan xoapm = new DeleteLoan("Xóa phiếu mượn");
-            xoapm.machon = txtMaPhieu.getText();
-            xoapm.hienThi();
-            xoapm.showWindow();
+            DeleteLoan deleteLoan = new DeleteLoan("Xóa phiếu mượn");
+            deleteLoan.machon = txtMaPhieu.getText();
+            deleteLoan.fillInfo();
+            deleteLoan.showWindow();
             dtmPhieuMuon.setRowCount(0);
             fillTable();
         });

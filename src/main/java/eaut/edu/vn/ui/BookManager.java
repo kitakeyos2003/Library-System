@@ -169,30 +169,30 @@ public class BookManager extends CustomFrame implements ITable {
             }
         });
         btnThem.addActionListener(e -> {
-            AddBook themsach = new AddBook("Thêm sách");
-            themsach.showWindow();
+            AddBook addBook = new AddBook("Thêm sách");
+            addBook.showWindow();
             dtmSach.setRowCount(0);
             fillTable();
         });
         btnTimKiem.addActionListener(e -> {
-            SearchBook timsach = new SearchBook("Tìm kiếm thông tin sách");
-            timsach.showWindow();
+            SearchBook searchBook = new SearchBook("Tìm kiếm thông tin sách");
+            searchBook.showWindow();
             dtmSach.setRowCount(0);
             fillTable();
         });
         btnSua.addActionListener(e -> {
-            EditBook suasach = new EditBook("Sửa thông tin sách");
-            suasach.ma = txtMaSach.getText();
-            suasach.hienThi();
-            suasach.showWindow();
+            EditBook editBook = new EditBook("Sửa thông tin sách");
+            editBook.ma = txtMaSach.getText();
+            editBook.loadInfo();
+            editBook.showWindow();
             dtmSach.setRowCount(0);
             fillTable();
         });
         btnXoa.addActionListener(e -> {
-            DeleteBook xoasach = new DeleteBook("Xóa thông tin sách");
-            xoasach.ma = txtMaSach.getText();
-            xoasach.hienThi();
-            xoasach.showWindow();
+            DeleteBook deleteBook = new DeleteBook("Xóa thông tin sách");
+            deleteBook.ma = txtMaSach.getText();
+            deleteBook.loadInfo();
+            deleteBook.showWindow();
             dtmSach.setRowCount(0);
             fillTable();
         });

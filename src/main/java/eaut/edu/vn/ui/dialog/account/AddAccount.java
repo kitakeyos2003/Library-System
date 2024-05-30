@@ -2,6 +2,8 @@ package eaut.edu.vn.ui.dialog.account;
 
 
 import eaut.edu.vn.database.DbManager;
+import eaut.edu.vn.model.Account;
+import eaut.edu.vn.service.AccountService;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -36,9 +38,7 @@ public class AddAccount extends Dialog {
     ButtonGroup gr;
 
     public AddAccount(String title) {
-        super(title);
-        setHeader(new Header("QUẢN LÝ NGƯỜI DÙNG"));
-        setFooter(new Footer());
+        super(title,"QUẢN LÝ NGƯỜI DÙNG");
     }
 
     @Override
@@ -56,27 +56,21 @@ public class AddAccount extends Dialog {
                 return;
             }
             try {
-                String sql = "insert into taikhoan values (?,?,?,?,?,?)";
-                Connection connection = DbManager.getInstance().getConnection();
-                PreparedStatement pre = connection.prepareStatement(sql);
-                pre.setString(1, txtTaiKhoan.getText());
-                pre.setString(2, pwdMatKhau.getText());
-                pre.setInt(3, n);
-                pre.setString(4, txtHoTen.getText());
-                pre.setString(5, txtSDT.getText());
-                pre.setString(6, txtCMND.getText());
-                int x = pre.executeUpdate();
-                pre.close();
-                connection.close();
-                if (x > 0) {
-                    JOptionPane.showMessageDialog(null, "Thêm thành công");
-                    txtHoTen.setText(null);
-                    txtCMND.setText(null);
-                    txtSDT.setText(null);
-                    txtTaiKhoan.setText(null);
-                    pwdMatKhau.setText(null);
+                Account account = new Account();
+                account.setUsername(txtTaiKhoan.getText());
+                account.setPassword(pwdMatKhau.getText());
+                account.setRole(n);
+                account.setName(txtHoTen.getText());
+                account.setPhoneNumber(txtSDT.getText());
+                account.setIdentityNumber(txtCMND.getText());
+                AccountService.getInstance().add(account);
 
-                }
+                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                txtHoTen.setText(null);
+                txtCMND.setText(null);
+                txtSDT.setText(null);
+                txtTaiKhoan.setText(null);
+                pwdMatKhau.setText(null);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, ex.getMessage());

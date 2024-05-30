@@ -2,12 +2,9 @@ package eaut.edu.vn.ui.dialog.reader;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,13 +32,10 @@ public class DeleteReader extends Dialog {
     JButton btnXoa;
 
     public DeleteReader(String title) {
-        super(title);
-        setHeader(new Header("QUẢN LÝ ĐỘC GIẢ"));
-        setFooter(new Footer());
-        hienThi();
+        super(title, "QUẢN LÝ ĐỘC GIẢ");
     }
 
-    public void hienThi() {
+    public void loadInfo() {
         try {
             String sql = "select * from docgia where madg=?";
             Connection connection = DbManager.getInstance().getConnection();

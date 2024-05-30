@@ -2,12 +2,9 @@ package eaut.edu.vn.ui.dialog.returnreceipt;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,14 +39,10 @@ public class ReturnReceipt extends Dialog {
     JDateChooser choosedate;
 
     public ReturnReceipt(String title) {
-        super(title);
-        setHeader(new Header("QUẢN LÝ PHIẾU TRẢ"));
-        setFooter(new Footer());
-        hienThi();
-
+        super(title, "QUẢN LÝ PHIẾU TRẢ");
     }
 
-    public void hienThi() {
+    public void loadInfo() {
         txtMaPhieu.setText(MaPM);
         txtMaSach.setText(MaSach);
         txtMaDG.setText(MaDG);

@@ -115,7 +115,7 @@ public class AdminManager extends CustomFrame {
 //        btnQLDG.setBackground(new Color(204, 142, 53));
 //        btnThongKe.setBackground(new Color(162, 155, 254));
 
-                btnQLS.setBackground(Color.WHITE);
+        btnQLS.setBackground(Color.WHITE);
         btnQLND.setBackground(Color.WHITE);
         btnQLPM.setBackground(Color.WHITE);
         btnQLPT.setBackground(Color.WHITE);

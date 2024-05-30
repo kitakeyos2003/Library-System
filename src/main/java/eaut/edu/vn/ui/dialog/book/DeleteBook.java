@@ -9,12 +9,9 @@ import eaut.edu.vn.util.Util;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,20 +32,17 @@ public class DeleteBook extends Dialog {
     JButton btnXoa;
 
     public DeleteBook(String title) {
-        super(title);
-        setHeader(new Header("QUẢN LÝ SÁCH"));
-        setFooter(new Footer());
-        hienThi();
+        super(title, "QUẢN LÝ SÁCH");
     }
 
-    public void hienThi() {
+    public void loadInfo() {
         try {
-            String sql = "select * from sach where masach=?";
+            String sql = "select * from sach where masach=? LIMIT 1";
             Connection connection = DbManager.getInstance().getConnection();
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, ma);
             ResultSet rs = pre.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 String ma = rs.getString(1);
                 String ten = rs.getString(2);
                 String tg = rs.getString(3);

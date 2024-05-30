@@ -41,9 +41,7 @@ public class SearchBook extends Dialog {
     JTable tblSach;
 
     public SearchBook(String title) {
-        super(title);
-        setHeader(new Header("QUẢN LÝ SÁCH"));
-        setFooter(new Footer());
+        super(title, "QUẢN LÝ SÁCH");
     }
 
     @Override

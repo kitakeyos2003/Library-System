@@ -9,7 +9,6 @@ import eaut.edu.vn.util.Util;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -35,10 +34,7 @@ public class EditReader extends Dialog {
     JComboBox cb;
 
     public EditReader(String title) {
-        super(title);
-        setHeader(new Header("QUẢN LÝ ĐỘC GIẢ"));
-        setFooter(new Footer());
-        hienThi();
+        super(title, "QUẢN LÝ ĐỘC GIẢ");
     }
 
     @Override
@@ -204,14 +200,14 @@ public class EditReader extends Dialog {
 
     }
 
-    public void hienThi() {
+    public void loadInfo() {
         try {
-            String sql = "select * from docgia where madg=?";
+            String sql = "select * from docgia where madg=? LIMIT 1";
             Connection connection = DbManager.getInstance().getConnection();
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, ma);
             ResultSet rs = pre.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 txtMaDocGia.setText(rs.getString(1));
                 txtHoTen.setText(rs.getString(2));
                 txtSDT.setText(rs.getString(3));

@@ -2,12 +2,9 @@ package eaut.edu.vn.ui.dialog.loan;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -37,16 +34,10 @@ public class UpdateBorrowedBookStatus extends Dialog {
     JButton btnXoa;
 
     public UpdateBorrowedBookStatus(String title) {
-        super(title);
-        setHeader(new Header("QUẢN LÝ PHIẾU MƯỢN"));
-        setFooter(new Footer());
-        if (MaPM.length() != 0) {
-            hienThi();
-
-        }
+        super(title, "QUẢN LÝ PHIẾU MƯỢN");
     }
 
-    public void hienThi() {
+    public void loadInfo() {
         try {
             String sql0 = "Select MaSach from ctpm where MaPM=?";
             Connection connection = DbManager.getInstance().getConnection();
@@ -54,8 +45,6 @@ public class UpdateBorrowedBookStatus extends Dialog {
             pre0.setString(1, MaPM);
             ResultSet rs0 = pre0.executeQuery();
             while (rs0.next()) {
-
-                //String ms=rs0.getString(1)
                 cbMaSach.addItem(rs0.getObject(1));
 
             }
@@ -78,15 +67,15 @@ public class UpdateBorrowedBookStatus extends Dialog {
         pnMaPM.setLayout(new FlowLayout());
         JLabel lblMaPM = new JLabel("Mã phiếu: ");
         txtMaPM = new JTextField();
+        txtMaPM.setEnabled(false);
         txtMaPM.setPreferredSize(new Dimension(340, 30));
         pnMaPM.add(lblMaPM);
         pnMaPM.add(txtMaPM);
 
         JPanel pnMaSach = new JPanel();
         pnMaSach.setLayout(new FlowLayout());
-        JLabel lblMaSach = new JLabel("Mã sách: ");
+        JLabel lblMaSach = new JLabel("Sách: ");
         cbMaSach = new JComboBox();
-        //txtMaSach= new JTextField();
         cbMaSach.setPreferredSize(new Dimension(340, 30));
         pnMaSach.add(lblMaSach);
         pnMaSach.add(cbMaSach);

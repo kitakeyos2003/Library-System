@@ -42,9 +42,7 @@ public class AddReader extends Dialog {
     JComboBox cb;
 
     public AddReader(String title) {
-        super(title);
-        setHeader(new Header("QUẢN LÝ ĐỘC GIẢ"));
-        setFooter(new Footer());
+        super(title, "QUẢN LÝ ĐỘC GIẢ");
     }
 
     @Override

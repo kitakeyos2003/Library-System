@@ -22,8 +22,6 @@ import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.main.Application;
 import eaut.edu.vn.model.Reader;
 import eaut.edu.vn.service.ReaderService;
-import eaut.edu.vn.ui.controls.Footer;
-import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
@@ -36,13 +34,10 @@ public class AddLoan extends Dialog {
     JDateChooser choosedate, choosedate1;
 
     public AddLoan(String title) {
-        super(title);
-        setHeader(new Header("QUẢN LÝ PHIẾU MƯỢN"));
-        setFooter(new Footer());
-        fill();
+        super(title, "QUẢN LÝ PHIẾU MƯỢN");
     }
 
-    public void fill() {
+    public void loadInfo() {
         List<Reader> readers = ReaderService.getInstance().getAll();
         for (Reader reader : readers) {
             cbDocGia.addItem(reader);
@@ -154,7 +149,7 @@ public class AddLoan extends Dialog {
 
         JPanel pnMaDG = new JPanel();
         pnMaDG.setLayout(new FlowLayout());
-        JLabel lblMaDG = new JLabel("Mã độc giả: ");
+        JLabel lblMaDG = new JLabel("Độc giả: ");
         cbDocGia = new JComboBox<>();
         cbDocGia.setPreferredSize(new Dimension(340, 30));
         pnMaDG.add(lblMaDG);

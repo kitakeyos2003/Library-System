@@ -27,10 +27,7 @@ public class BookBorrowStatus extends Dialog {
     JButton btnThem;
 
     public BookBorrowStatus(String title) {
-        super(title);
-        setHeader(new Header("THÊM THÔNG TIN SÁCH"));
-        setFooter(new Footer());
-        fill();
+        super(title, "THÊM THÔNG TIN SÁCH");
     }
 
     public void fill() {
@@ -50,13 +47,14 @@ public class BookBorrowStatus extends Dialog {
         pnMaPM.setLayout(new FlowLayout());
         JLabel lblMaPM = new JLabel("Mã phiếu: ");
         txtMaPM = new JTextField();
+        txtMaPM.setEnabled(false);
         txtMaPM.setPreferredSize(new Dimension(340, 30));
         pnMaPM.add(lblMaPM);
         pnMaPM.add(txtMaPM);
 
         JPanel pnMaSach = new JPanel();
         pnMaSach.setLayout(new FlowLayout());
-        JLabel lblMaSach = new JLabel("Mã sách: ");
+        JLabel lblMaSach = new JLabel("Sách: ");
         cbBook = new JComboBox<>();
         cbBook.setPreferredSize(new Dimension(340, 30));
         pnMaSach.add(lblMaSach);

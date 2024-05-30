@@ -234,7 +234,7 @@ public class ReturnManager extends CustomFrame implements ITable {
             ts.MaSach = txtMaSach.getText();
             ts.NgayHenTra = txtNgayHenTra.getText();
             ts.TinhTrangSach = txtTTSachMuon.getText();
-            ts.hienThi();
+            ts.loadInfo();
             ts.showWindow();
             fillTable();
         });

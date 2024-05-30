@@ -16,22 +16,21 @@ public class LoanDetailService implements IService<LoanDetail> {
 
     @Override
     public List<LoanDetail> getAll() {
-        List<LoanDetail> dspm = new ArrayList<LoanDetail>();
+        List<LoanDetail> list = new ArrayList<LoanDetail>();
         try {
-            String sql = "Select * from ctpm";
             Connection connection = DbManager.getInstance().getConnection();
-            PreparedStatement loanDetail = connection.prepareStatement(sql);
+            PreparedStatement loanDetail = connection.prepareStatement("Select * from ctpm");
             ResultSet result = loanDetail.executeQuery();
             while (result.next()) {
-                LoanDetail ctpm = new LoanDetail();
-                ctpm.setLoanId(result.getInt(1));
-                ctpm.setBookId(result.getInt(2));
-                ctpm.setReturnDate(result.getDate(3));
-                ctpm.setBorrowedStatus(result.getInt(4));
-                ctpm.setReturnStatus(result.getInt(5));
-                ctpm.setUserName(result.getString(6));
-                ctpm.setNote(result.getString(7));
-                dspm.add(ctpm);
+                LoanDetail detail = new LoanDetail();
+                detail.setLoanId(result.getInt(1));
+                detail.setBookId(result.getInt(2));
+                detail.setReturnDate(result.getDate(3));
+                detail.setBorrowedStatus(result.getInt(4));
+                detail.setReturnStatus(result.getInt(5));
+                detail.setUserName(result.getString(6));
+                detail.setNote(result.getString(7));
+                list.add(detail);
             }
             result.close();
             loanDetail.close();
@@ -39,7 +38,7 @@ public class LoanDetailService implements IService<LoanDetail> {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return dspm;
+        return list;
     }
 
     @Override

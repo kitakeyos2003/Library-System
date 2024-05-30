@@ -5,18 +5,12 @@ import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
-import eaut.edu.vn.util.Util;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Font;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Vector;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -27,15 +21,10 @@ public class ReaderDetail extends Dialog {
     JTable tblCTPM;
 
     public ReaderDetail(String title) {
-        super(title);
-        setHeader(new Header("BẢN THỐNG KÊ CHI TIẾT PHIẾU MƯỢN"));
-        setFooter(new Footer());
-        if (ma.length() != 0) {
-            hienThi();
-        }
+        super(title,"BẢN THỐNG KÊ CHI TIẾT PHIẾU MƯỢN");
     }
 
-    public void hienThi() {
+    public void fillTable() {
         try {
             String sql = "select * from ctpm where mapm=?";
             Connection connection = DbManager.getInstance().getConnection();

@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,15 +40,10 @@ public class EditLoan extends Dialog {
     JDateChooser choosedate, choosedate1;
 
     public EditLoan(String title) {
-        super(title);
-        setHeader(new Header("QUẢN LÝ PHIẾU MƯỢN"));
-        setFooter(new Footer());
-        if (maPM.length() != 0) {
-            hienThi();
-        }
+        super(title, "QUẢN LÝ PHIẾU MƯỢN");
     }
 
-    public void hienThi() {
+    public void fillInfo() {
         try {
             String sql = "select * from phieumuon where MaPM=?";
             Connection connection = DbManager.getInstance().getConnection();
@@ -118,7 +111,7 @@ public class EditLoan extends Dialog {
                     for (int i = 0; i < (soluongtruoc - soluongsau); i++) {
                         UpdateBorrowedBookStatus xoa = new UpdateBorrowedBookStatus("Xóa bớt sách");
                         xoa.MaPM = maPM;
-                        xoa.hienThi();
+                        xoa.loadInfo();
                         xoa.showWindow();
                     }
 

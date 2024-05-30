@@ -5,9 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -22,7 +19,6 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 
-import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.model.Account;
 import eaut.edu.vn.model.Loan;
 import eaut.edu.vn.service.LoanService;
@@ -39,28 +35,22 @@ public class DeleteAccount extends Dialog {
     JButton btnXoa;
 
     public DeleteAccount(String title) {
-        super(title);
-        setHeader(new Header("QUẢN LÝ NGƯỜI DÙNG"));
-        setFooter(new Footer());
-        if (machon.length() != 0) {
-            hienThi();
-        }
+        super(title, "QUẢN LÝ NGƯỜI DÙNG");
     }
 
-    public void hienThi() {
-        List<Account> dstk = AccountService.getInstance().search(machon);
-        for (Account tk : dstk) {
-            txtTaiKhoan.setText(tk.getUsername());
-            txtCMND.setText(tk.getIdentityNumber());
-            txtHoTen.setText(tk.getName());
-            int phanquyen = tk.getRole();
-            if (phanquyen == 1) {
-                txtPhanQuyen.setText("Admin");
-            } else
-                txtPhanQuyen.setText("Thủ thư");
-            txtSDT.setText(tk.getPhoneNumber());
-            pwdMatKhau.setText(tk.getPassword());
+    public void loadInfo() {
+        Account account = AccountService.getInstance().find(machon);
+        txtTaiKhoan.setText(account.getUsername());
+        txtCMND.setText(account.getIdentityNumber());
+        txtHoTen.setText(account.getName());
+        int phanquyen = account.getRole();
+        if (phanquyen == 1) {
+            txtPhanQuyen.setText("Admin");
+        } else {
+            txtPhanQuyen.setText("Thủ thư");
         }
+        txtSDT.setText(account.getPhoneNumber());
+        pwdMatKhau.setText(account.getPassword());
 
     }
 
@@ -72,23 +62,11 @@ public class DeleteAccount extends Dialog {
                 JOptionPane.showMessageDialog(null, "Người này chưa thu hồi hết sách đã cho mượn.");
                 return;
             }
-            try {
-                String sql = "Delete from taikhoan where user=?";
-                Connection connection = DbManager.getInstance().getConnection();
-                PreparedStatement pre = connection.prepareStatement(sql);
-                pre.setString(1, txtTaiKhoan.getText());
-                int x = pre.executeUpdate();
-                pre.close();
-                connection.close();
-                if (x > 0) {
-                    JOptionPane.showMessageDialog(null, "Xóa thành công");
-                    dispose();
-                }
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(null, ex.getMessage());
-            }
+            Account account = new Account();
+            account.setUsername(txtTaiKhoan.getText());
+            AccountService.getInstance().remove(account);
+            JOptionPane.showMessageDialog(null, "Xóa thành công");
+            dispose();
         });
 
     }
@@ -121,6 +99,7 @@ public class DeleteAccount extends Dialog {
         pnTaiKhoan.setLayout(new FlowLayout());
         JLabel lblTaiKhoan = new JLabel("Tài khoản: ");
         txtTaiKhoan = new JTextField();
+        txtTaiKhoan.setEnabled(false);
         txtTaiKhoan.setPreferredSize(new Dimension(340, 30));
         pnTaiKhoan.add(lblTaiKhoan);
         pnTaiKhoan.add(txtTaiKhoan);
@@ -129,6 +108,7 @@ public class DeleteAccount extends Dialog {
         pnMatKhau.setLayout(new FlowLayout());
         JLabel lblMatKhau = new JLabel("Mật khẩu: ");
         pwdMatKhau = new JPasswordField();
+        pwdMatKhau.setEnabled(false);
         pwdMatKhau.setEchoChar((char) 0);
         pwdMatKhau.setPreferredSize(new Dimension(340, 30));
         pnMatKhau.add(lblMatKhau);
@@ -138,6 +118,7 @@ public class DeleteAccount extends Dialog {
         pnHoTen.setLayout(new FlowLayout());
         JLabel lblHoTen = new JLabel("Họ và tên: ");
         txtHoTen = new JTextField();
+        txtHoTen.setEnabled(false);
         txtHoTen.setPreferredSize(new Dimension(340, 30));
         pnHoTen.add(lblHoTen);
         pnHoTen.add(txtHoTen);
@@ -146,6 +127,7 @@ public class DeleteAccount extends Dialog {
         pnSoDienThoai.setLayout(new FlowLayout());
         JLabel lblSoDienThoai = new JLabel("Số điện thoại: ");
         txtSDT = new JTextField();
+        txtSDT.setEnabled(false);
         txtSDT.setPreferredSize(new Dimension(340, 30));
         pnSoDienThoai.add(lblSoDienThoai);
         pnSoDienThoai.add(txtSDT);
@@ -154,6 +136,7 @@ public class DeleteAccount extends Dialog {
         pnCMND.setLayout(new FlowLayout());
         JLabel lblCMND = new JLabel("Số CMND: ");
         txtCMND = new JTextField();
+        txtCMND.setEnabled(false);
         txtCMND.setPreferredSize(new Dimension(340, 30));
         pnCMND.add(lblCMND);
         pnCMND.add(txtCMND);
@@ -162,6 +145,7 @@ public class DeleteAccount extends Dialog {
         pnPhanQuyen.setLayout(new FlowLayout());
         JLabel lblPhanQuyen = new JLabel("Phân quyền: ");
         txtPhanQuyen = new JTextField();
+        txtPhanQuyen.setEnabled(false);
         txtPhanQuyen.setPreferredSize(new Dimension(340, 30));
         pnPhanQuyen.add(lblPhanQuyen);
         pnPhanQuyen.add(txtPhanQuyen);

@@ -11,12 +11,14 @@ public abstract class Dialog extends JDialog implements UIComposer {
     protected JPanel mainPanel;
     private Header header;
     private Footer footer;
-    public Dialog(String title) {
+    public Dialog(String title, String header) {
         setTitle(title);
         Container container = getContentPane();
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         container.add(mainPanel);
+        setHeader(new Header(header));
+        setFooter(new Footer());
         initComponents();
         addEvents();
     }
