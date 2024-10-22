@@ -51,10 +51,12 @@ public class SearchBook extends Dialog {
             dtmSach.setRowCount(0);
             String tensach = txtTimKiem.getText();
             try {
-                String sql = "select * from sach where tensach like ?";
+                String sql = "select * from sach where tensach like ? or nhaxb like ? or theloai like ?";
                 Connection connection = DbManager.getInstance().getConnection();
                 PreparedStatement pre = connection.prepareStatement(sql);
                 pre.setString(1, '%' + tensach + '%');
+                pre.setString(2, '%' + tensach + '%');
+                pre.setString(3, '%' + tensach + '%');
                 ResultSet rs = pre.executeQuery();
                 while (rs.next()) {
                     String ma = rs.getString(1);
@@ -240,7 +242,7 @@ public class SearchBook extends Dialog {
         JPanel pnTextTimKiem = new JPanel();
         pnTextTimKiem.setLayout(new BorderLayout());
         txtTimKiem = new PlaceholderTextField();
-        txtTimKiem.setPlaceholder("Nhập tên sách...");
+        txtTimKiem.setPlaceholder("Nhập tên sách, thể loại, nhà xuất bản...");
         pnTextTimKiem.add(txtTimKiem);
         pnThanhTimKiem.add(pnTextTimKiem, BorderLayout.CENTER);
         txtTimKiem.setPreferredSize(new Dimension(100, 20));
