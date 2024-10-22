@@ -61,7 +61,7 @@ public class AddLoan extends Dialog {
                 JOptionPane.showMessageDialog(null, "Vui lòng chọn độc giả");
                 return;
             }
-            if (txtSachMuon.getText().length() == 0) {
+            if (txtSachMuon.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Không được để trống");
                 return;
             }
