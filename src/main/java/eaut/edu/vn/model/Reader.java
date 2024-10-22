@@ -12,6 +12,7 @@ public class Reader {
     private String address;
     private String sex;
     private int lostBooks;
+    private String IDCard;
 
     @Override
     public String toString() {

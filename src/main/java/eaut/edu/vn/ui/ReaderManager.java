@@ -1,46 +1,34 @@
 package eaut.edu.vn.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-
 import eaut.edu.vn.interfaces.ITable;
 import eaut.edu.vn.main.Application;
 import eaut.edu.vn.model.Loan;
 import eaut.edu.vn.model.Reader;
 import eaut.edu.vn.service.LoanService;
 import eaut.edu.vn.service.ReaderService;
-import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.CustomFrame;
+import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
-import eaut.edu.vn.ui.dialog.reader.ReaderDetail;
-import eaut.edu.vn.ui.dialog.reader.EditReader;
 import eaut.edu.vn.ui.dialog.reader.AddReader;
 import eaut.edu.vn.ui.dialog.reader.DeleteReader;
+import eaut.edu.vn.ui.dialog.reader.EditReader;
+import eaut.edu.vn.ui.dialog.reader.ReaderDetail;
 import eaut.edu.vn.util.Util;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.List;
+import java.util.Optional;
+import java.util.Vector;
 
 
 public class ReaderManager extends CustomFrame implements ITable {
-    
+
     public int thongke = 0;
-    JTextField txtMaDocGia, txtTenDocGia, txtSDT, txtDiaChi, txtGioiTinh, txtLanMatSach;
+    JTextField txtMaDocGia, txtTenDocGia, txtSDT, txtDiaChi, txtGioiTinh, txtLanMatSach, txtCCCD;
     JButton btnThem, btnXoa, btnSua, btnQuayLai, btnThongTin;
     DefaultTableModel dtmPhieuMuon, dtmDocGia;
     JTable tblDocGia, tblPhieuMuon;
@@ -102,19 +90,34 @@ public class ReaderManager extends CustomFrame implements ITable {
                 int numcols = dtmDocGia.getColumnCount();
 
                 for (int i = 0; i < numcols; i++) {
-                    String str =  dtmDocGia.getValueAt(row, i).toString();
-                    if (i == 0)
+                    Object obj = dtmDocGia.getValueAt(row, i);
+                    String str;
+                    if (obj != null) {
+                        str = obj.toString();
+                    } else {
+                        str = "";
+                    }
+                    if (i == 0) {
                         txtMaDocGia.setText(str);
-                    if (i == 1)
+                    }
+                    if (i == 1) {
                         txtTenDocGia.setText(str);
-                    if (i == 2)
+                    }
+                    if (i == 2) {
                         txtSDT.setText(str);
-                    if (i == 3)
+                    }
+                    if (i == 3) {
                         txtDiaChi.setText(str);
-                    if (i == 4)
+                    }
+                    if (i == 4) {
                         txtGioiTinh.setText(str);
-                    if (i == 5)
+                    }
+                    if (i == 5) {
                         txtLanMatSach.setText(str);
+                    }
+                    if (i == 6) {
+                        txtCCCD.setText(str);
+                    }
                 }
                 String ma = txtMaDocGia.getText();
                 dtmPhieuMuon.setRowCount(0);
@@ -139,17 +142,19 @@ public class ReaderManager extends CustomFrame implements ITable {
 
         });
         btnThongTin.addActionListener(e -> {
-            String ma = "";
             int row = tblPhieuMuon.getSelectedRow();
             if (row == -1) {
                 JOptionPane.showMessageDialog(null, "Mời bạn chọn phiếu mượn");
                 return;
             }
-            ma = (String) dtmPhieuMuon.getValueAt(row, 0);
-            ReaderDetail a = new ReaderDetail("Chi tiết phiếu mượn");
-            a.ma = ma;
-            a.fillTable();
-            a.showWindow();
+            Object idObj = dtmPhieuMuon.getValueAt(row, 0);
+            Optional.ofNullable(idObj).ifPresent(o -> {
+                String ma = idObj.toString();
+                ReaderDetail a = new ReaderDetail("Chi tiết phiếu mượn");
+                a.ma = ma;
+                a.fillTable();
+                a.showWindow();
+            });
         });
 
     }
@@ -165,6 +170,7 @@ public class ReaderManager extends CustomFrame implements ITable {
             vec.add(reader.getAddress());
             vec.add(reader.getSex());
             vec.add(reader.getLostBooks());
+            vec.add(reader.getIDCard());
             dtmDocGia.addRow(vec);
         }
     }
@@ -258,6 +264,15 @@ public class ReaderManager extends CustomFrame implements ITable {
         txtLanMatSach.setPreferredSize(new Dimension(240, 22));
         pnMatSach.add(lblMatSach);
         pnMatSach.add(txtLanMatSach);
+
+        JPanel pnCCCD = new JPanel();
+        pnCCCD.setLayout(new FlowLayout());
+        pnThongTinChiTiet.add(pnCCCD);
+        JLabel lblCCCD = new JLabel("CCCD: ");
+        txtCCCD = new JTextField();
+        txtCCCD.setPreferredSize(new Dimension(240, 22));
+        pnCCCD.add(lblCCCD);
+        pnCCCD.add(txtCCCD);
 
         JPanel pnThaoTac = new JPanel();
         pnThaoTac.setLayout(new BorderLayout());
@@ -353,6 +368,7 @@ public class ReaderManager extends CustomFrame implements ITable {
         dtmDocGia.addColumn("Địa chỉ");
         dtmDocGia.addColumn("Giới tính");
         dtmDocGia.addColumn("Số lần mất sách");
+        dtmDocGia.addColumn("CCCD");
 
         tblDocGia = new JTable(dtmDocGia);
         JScrollPane scDocGia = new JScrollPane(tblDocGia, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -399,6 +415,7 @@ public class ReaderManager extends CustomFrame implements ITable {
         lblDiaChi.setPreferredSize(lblMatSach.getPreferredSize());
         lblGioiTinh.setPreferredSize(lblMatSach.getPreferredSize());
         lblSoDienThoai.setPreferredSize(lblMatSach.getPreferredSize());
+        lblCCCD.setPreferredSize(lblMatSach.getPreferredSize());
 
         pnMaDocGia.setBackground(new Color(255, 255, 255));
         pnTenDG.setBackground(new Color(255, 255, 255));
@@ -406,6 +423,7 @@ public class ReaderManager extends CustomFrame implements ITable {
         pnSoDienThoai.setBackground(new Color(255, 255, 255));
         pnDiaChi.setBackground(new Color(255, 255, 255));
         pnGioiTinh.setBackground(new Color(255, 255, 255));
+        pnCCCD.setBackground(new Color(255, 255, 255));
 
 
         txtMaDocGia.setEditable(false);
@@ -414,6 +432,7 @@ public class ReaderManager extends CustomFrame implements ITable {
         txtSDT.setEditable(false);
         txtGioiTinh.setEditable(false);
         txtDiaChi.setEditable(false);
+        txtCCCD.setEditable(false);
 
     }
 }

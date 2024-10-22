@@ -21,12 +21,13 @@ public class ReaderService implements IService<Reader> {
             ResultSet result = pre.executeQuery();
             while (result.next()) {
                 Reader reader = new Reader();
-                reader.setId(result.getInt(1));
-                reader.setName(result.getString(2));
-                reader.setPhoneNumber(result.getString(3));
-                reader.setAddress(result.getString(4));
-                reader.setSex(result.getString(5));
-                reader.setLostBooks(result.getInt(6));
+                reader.setId(result.getInt("MaDG"));
+                reader.setName(result.getString("TenDG"));
+                reader.setPhoneNumber(result.getString("SDT"));
+                reader.setAddress(result.getString("DiaChi"));
+                reader.setSex(result.getString("GioiTinh"));
+                reader.setLostBooks(result.getInt("MatSach"));
+                reader.setIDCard(result.getString("CCCD"));
                 dsdg.add(reader);
             }
             result.close();

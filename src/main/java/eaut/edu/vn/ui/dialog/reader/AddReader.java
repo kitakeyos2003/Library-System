@@ -36,7 +36,7 @@ import eaut.edu.vn.util.Util;
 
 public class AddReader extends Dialog {
     
-    JTextField txtHoTen, txtSDT, txtDiaChi, txtGioiTinh;
+    JTextField txtHoTen, txtSDT, txtDiaChi, txtGioiTinh, txtCCCD;
     JRadioButton radNam, radNu;
     JButton btnThem;
     JComboBox cb;
@@ -50,13 +50,14 @@ public class AddReader extends Dialog {
         btnThem.addActionListener(e -> {
             try {
 
-                String sql = "INSERT INTO `docgia`(`TenDG`, `SDT`, `DiaChi`, `GioiTinh`, `MatSach`) VALUES (?,?,?,?,0)";
+                String sql = "INSERT INTO `docgia`(`TenDG`, `SDT`, `DiaChi`, `GioiTinh`, `MatSach`, `CCCD`) VALUES (?,?,?,?,0,?)";
                 Connection connection = DbManager.getInstance().getConnection();
                 PreparedStatement pre = connection.prepareStatement(sql);
                 pre.setString(1, txtHoTen.getText());
                 pre.setString(2, txtSDT.getText());
                 pre.setString(3, txtDiaChi.getText());
                 pre.setString(4, (String) cb.getSelectedItem());
+                pre.setString(5, txtCCCD.getText());
                 int x = pre.executeUpdate();
                 pre.close();
                 connection.close();
@@ -132,29 +133,39 @@ public class AddReader extends Dialog {
         pnGioiTinh.add(lblGioiTinh);
         pnGioiTinh.add(cb);
 
+        JPanel pnCCCD = new JPanel();
+        pnDiaChi.setLayout(new FlowLayout());
+        JLabel lblCCCD = new JLabel("CCCD: ");
+        txtCCCD = new JTextField();
+        txtCCCD.setPreferredSize(new Dimension(340, 30));
+        pnCCCD.add(lblCCCD);
+        pnCCCD.add(txtCCCD);
+
 
         pnHienThiChiTiet.add(pnTitle);
         pnHienThiChiTiet.add(pnHoTen);
         pnHienThiChiTiet.add(pnSoDienThoai);
         pnHienThiChiTiet.add(pnDiaChi);
         pnHienThiChiTiet.add(pnGioiTinh);
+        pnHienThiChiTiet.add(pnCCCD);
 
 
-        Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
         Font font2 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 30);
-        Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.TRUETYPE_FONT, 15);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
+
         lblThemDocGia.setFont(font2);
         lblSoDienThoai.setFont(font4);
         lblDiaChi.setFont(font4);
         lblHoTen.setFont(font4);
         lblGioiTinh.setFont(font4);
+        lblCCCD.setFont(font4);
         txtDiaChi.setFont(font4);
         txtHoTen.setFont(font4);
         txtSDT.setFont(font4);
         txtGioiTinh.setFont(font4);
         cb.setFont(font4);
+        txtCCCD.setFont(font4);
 
         pnTitle.setBackground(new Color(241, 242, 246));
         lblThemDocGia.setForeground(new Color(48, 51, 107));
@@ -163,6 +174,7 @@ public class AddReader extends Dialog {
         pnSoDienThoai.setBackground(new Color(241, 242, 246));
         pnHoTen.setBackground(new Color(241, 242, 246));
         pnHinhAnh.setBackground(new Color(241, 242, 246));
+        pnCCCD.setBackground(new Color(241, 242, 246));
         cb.setBackground(new Color(241, 242, 246));
         cb.setForeground(Color.BLACK);
 
@@ -193,6 +205,7 @@ public class AddReader extends Dialog {
         lblHoTen.setPreferredSize(lblSoDienThoai.getPreferredSize());
         lblDiaChi.setPreferredSize(lblSoDienThoai.getPreferredSize());
         cb.setPreferredSize(txtDiaChi.getPreferredSize());
+        lblCCCD.setPreferredSize(lblSoDienThoai.getPreferredSize());
 
 
     }

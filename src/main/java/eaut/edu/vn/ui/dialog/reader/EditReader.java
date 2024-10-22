@@ -29,7 +29,7 @@ import javax.swing.border.TitledBorder;
 
 public class EditReader extends Dialog {
     public String ma = "";
-    JTextField txtMaDocGia, txtHoTen, txtSDT, txtDiaChi, txtGioiTinh;
+    JTextField txtMaDocGia, txtHoTen, txtSDT, txtDiaChi, txtGioiTinh, txtCCCD;
     JButton btnSua;
     JComboBox cb;
 
@@ -102,16 +102,23 @@ public class EditReader extends Dialog {
         pnGioiTinh.add(lblGioiTinh);
         pnGioiTinh.add(cb);
 
+        JPanel pnCCCD = new JPanel();
+        pnCCCD.setLayout(new FlowLayout());
+        JLabel lblCCCD = new JLabel("CCCD: ");
+        txtCCCD = new JTextField();
+        txtCCCD.setPreferredSize(new Dimension(340, 30));
+        pnCCCD.add(lblCCCD);
+        pnCCCD.add(txtCCCD);
+
         pnHienThiChiTiet.add(pnTitle);
         pnHienThiChiTiet.add(pnMaDG);
         pnHienThiChiTiet.add(pnHoTen);
         pnHienThiChiTiet.add(pnSoDienThoai);
         pnHienThiChiTiet.add(pnDiaChi);
         pnHienThiChiTiet.add(pnGioiTinh);
+        pnHienThiChiTiet.add(pnCCCD);
 
-        Font font1 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 24);
         Font font2 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 30);
-        Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.TRUETYPE_FONT, 15);
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 13);
         lblSuaDocGia.setFont(font2);
@@ -126,6 +133,8 @@ public class EditReader extends Dialog {
         txtSDT.setFont(font4);
         txtGioiTinh.setFont(font4);
         cb.setFont(font4);
+        txtCCCD.setFont(font4);
+
         txtMaDocGia.setEditable(false);
 
         pnTitle.setBackground(new Color(241, 242, 246));
@@ -137,6 +146,7 @@ public class EditReader extends Dialog {
         pnHoTen.setBackground(new Color(241, 242, 246));
         pnHinhAnh.setBackground(new Color(241, 242, 246));
         cb.setBackground(new Color(241, 242, 246));
+        pnCCCD.setBackground(new Color(241, 242, 246));
         cb.setForeground(Color.BLACK);
 
 
@@ -166,6 +176,7 @@ public class EditReader extends Dialog {
         lblGioiTinh.setPreferredSize(lblSoDienThoai.getPreferredSize());
         lblHoTen.setPreferredSize(lblSoDienThoai.getPreferredSize());
         lblDiaChi.setPreferredSize(lblSoDienThoai.getPreferredSize());
+        lblCCCD.setPreferredSize(lblSoDienThoai.getPreferredSize());
         cb.setPreferredSize(txtDiaChi.getPreferredSize());
 
     }
@@ -176,14 +187,15 @@ public class EditReader extends Dialog {
             String ma = txtMaDocGia.getText();
             try {
 
-                String sql = "update docgia set  tendg=?, sdt=?, diachi=?, gioitinh=? where madg=?";
+                String sql = "update docgia set  tendg=?, sdt=?, diachi=?, gioitinh=?, cccd=? where madg=?";
                 Connection connection = DbManager.getInstance().getConnection();
                 PreparedStatement pre = connection.prepareStatement(sql);
                 pre.setString(1, txtHoTen.getText());
                 pre.setString(2, txtSDT.getText());
                 pre.setString(3, txtDiaChi.getText());
                 pre.setString(4, (String) cb.getSelectedItem());
-                pre.setString(5, txtMaDocGia.getText());
+                pre.setString(5, txtCCCD.getText());
+                pre.setString(6, txtMaDocGia.getText());
 
                 int x = pre.executeUpdate();
                 pre.close();
@@ -208,13 +220,14 @@ public class EditReader extends Dialog {
             pre.setString(1, ma);
             ResultSet rs = pre.executeQuery();
             if (rs.next()) {
-                txtMaDocGia.setText(rs.getString(1));
-                txtHoTen.setText(rs.getString(2));
-                txtSDT.setText(rs.getString(3));
-                txtDiaChi.setText(rs.getString(4));
-                if (rs.getString(5).length() == 2) {
+                txtMaDocGia.setText(rs.getString("MaDG"));
+                txtHoTen.setText(rs.getString("TenDG"));
+                txtSDT.setText(rs.getString("SDT"));
+                txtDiaChi.setText(rs.getString("DiaChi"));
+                if (rs.getString("GioiTinh").length() == 2) {
                     cb.setSelectedIndex(1);
                 }
+                txtCCCD.setText(rs.getString("CCCD"));
             }
             rs.close();
             pre.close();
