@@ -14,29 +14,35 @@ import eaut.edu.vn.ui.controls.CustomFrame;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.util.Util;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.view.JasperViewer;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
 public class StatisticAnalyzer extends CustomFrame {
 
-    public int thongke = 1;
-    JButton btnChiTietSach, btnChiTietDG, btnChiTietPM, btnChiTietPT, btnQuayLai;
-    DefaultTableModel dtmPM;
-    JTable tbPM;
+    JButton btnBookDetail, btnReaderDetail, btnLoanDetail, btnReturnDetail, btnReturn;
+    JasperReport bookReport, readerReport, loanReport, returnReport;
 
     public StatisticAnalyzer(String title) {
         super(title);
         this.setSize(1025, 580);
         setHeader(new Header("THỐNG KÊ"));
         setFooter(new Footer());
+        compileReport();
+    }
+
+    private void compileReport() {
+        try {
+            bookReport = JasperCompileManager.compileReport("report/SachReport.jrxml");
+            readerReport = JasperCompileManager.compileReport("report/DocGiaReport.jrxml");
+            loanReport = JasperCompileManager.compileReport("report/DocGiaReport.jrxml");
+            returnReport = JasperCompileManager.compileReport("report/PhieuMuonReport.jrxml");
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
     }
 
     public int countBook() {
@@ -74,29 +80,29 @@ public class StatisticAnalyzer extends CustomFrame {
 
         JPanel pnChiTietSach = new JPanel();
         pnChiTietSach.setLayout(new BorderLayout());
-        btnChiTietSach = new JButton("Chi tiết");
-        pnChiTietSach.add(btnChiTietSach, BorderLayout.EAST);
+        btnBookDetail = new JButton("Chi tiết");
+        pnChiTietSach.add(btnBookDetail, BorderLayout.EAST);
         pnChiTietSach.setBackground(new Color(99, 211, 165));
 
         JPanel pnThongKeSach = new JPanel();
         pnThongKeSach.setLayout(new BoxLayout(pnThongKeSach, BoxLayout.Y_AXIS));
-        JLabel btnQLS = new JLabel();
+        JLabel lbBookManager = new JLabel();
         JLabel lblTKSach = new JLabel("Có " + kqs + " đầu sách");
-        pnThongKeSach.add(btnQLS);
+        pnThongKeSach.add(lbBookManager);
         pnThongKeSach.add(lblTKSach);
         pnThongKeSach.add(pnChiTietSach);
 
         JPanel pnChiTietDocGia = new JPanel();
         pnChiTietDocGia.setLayout(new BorderLayout());
-        btnChiTietDG = new JButton("Chi tiết");
-        pnChiTietDocGia.add(btnChiTietDG, BorderLayout.EAST);
+        btnReaderDetail = new JButton("Chi tiết");
+        pnChiTietDocGia.add(btnReaderDetail, BorderLayout.EAST);
         pnChiTietDocGia.setBackground(new Color(82, 78, 79));
 
         JPanel pnThongKeDocGia = new JPanel();
         pnThongKeDocGia.setLayout(new BoxLayout(pnThongKeDocGia, BoxLayout.Y_AXIS));
-        JLabel btnQLDG = new JLabel();
+        JLabel lbReaderManager = new JLabel();
         JLabel lblTKDocGia = new JLabel("Có " + kqdg + " độc giả");
-        pnThongKeDocGia.add(btnQLDG);
+        pnThongKeDocGia.add(lbReaderManager);
         pnThongKeDocGia.add(lblTKDocGia);
         pnThongKeDocGia.add(pnChiTietDocGia);
 
@@ -107,52 +113,52 @@ public class StatisticAnalyzer extends CustomFrame {
 
         JPanel pnChiTietPhieuMuon = new JPanel();
         pnChiTietPhieuMuon.setLayout(new BorderLayout());
-        btnChiTietPM = new JButton("Chi tiết");
-        pnChiTietPhieuMuon.add(btnChiTietPM, BorderLayout.EAST);
+        btnLoanDetail = new JButton("Chi tiết");
+        pnChiTietPhieuMuon.add(btnLoanDetail, BorderLayout.EAST);
         pnChiTietPhieuMuon.setBackground(new Color(122, 161, 94));
 
         JPanel pnThongKePhieuMuon = new JPanel();
         pnThongKePhieuMuon.setLayout(new BoxLayout(pnThongKePhieuMuon, BoxLayout.Y_AXIS));
-        JLabel btnQLPM = new JLabel();
+        JLabel lbLoanManager = new JLabel();
         JLabel lblTKPM = new JLabel("Có " + kqpm + " phiếu mượn");
-        pnThongKePhieuMuon.add(btnQLPM);
+        pnThongKePhieuMuon.add(lbLoanManager);
         pnThongKePhieuMuon.add(lblTKPM);
         pnThongKePhieuMuon.add(pnChiTietPhieuMuon);
 
         JPanel pnChiTietPhieuTra = new JPanel();
         pnChiTietPhieuTra.setLayout(new BorderLayout());
-        btnChiTietPT = new JButton("Chi tiết");
-        pnChiTietPhieuTra.add(btnChiTietPT, BorderLayout.EAST);
+        btnReturnDetail = new JButton("Chi tiết");
+        pnChiTietPhieuTra.add(btnReturnDetail, BorderLayout.EAST);
         pnChiTietPhieuTra.setBackground(new Color(120, 191, 51));
 
         JPanel pnThongKePhieuTra = new JPanel();
         pnThongKePhieuTra.setLayout(new BoxLayout(pnThongKePhieuTra, BoxLayout.Y_AXIS));
-        JLabel btnQLPT = new JLabel();
+        JLabel lbReturnManager = new JLabel();
         JLabel lblTKPT = new JLabel("Có " + kqpt + " phiếu trả");
-        pnThongKePhieuTra.add(btnQLPT);
+        pnThongKePhieuTra.add(lbReturnManager);
         pnThongKePhieuTra.add(lblTKPT);
         pnThongKePhieuTra.add(pnChiTietPhieuTra);
 
 
-        btnQLS.setPreferredSize(new Dimension(270, 150));
-        btnQLPM.setPreferredSize(btnQLS.getPreferredSize());
-        btnQLDG.setPreferredSize(btnQLS.getPreferredSize());
-        btnQLPT.setPreferredSize(btnQLS.getPreferredSize());
+        lbBookManager.setPreferredSize(new Dimension(270, 150));
+        lbLoanManager.setPreferredSize(lbBookManager.getPreferredSize());
+        lbReaderManager.setPreferredSize(lbBookManager.getPreferredSize());
+        lbReturnManager.setPreferredSize(lbBookManager.getPreferredSize());
 
         pnThongKeSach.setBackground(new Color(99, 211, 165));
         pnThongKePhieuMuon.setBackground(new Color(122, 161, 94));
         pnThongKePhieuTra.setBackground(new Color(120, 191, 51));
         pnThongKeDocGia.setBackground(new Color(82, 78, 79));
 
-        btnQLS.setIcon(Util.loadImage("tksach.png"));
-        btnQLPM.setIcon(Util.loadImage("tkphieumuon.png"));
-        btnQLDG.setIcon(Util.loadImage("tkdocgia.png"));
-        btnQLPT.setIcon(Util.loadImage("tkphieutra.png"));
+        lbBookManager.setIcon(Util.loadImage("tksach.png"));
+        lbLoanManager.setIcon(Util.loadImage("tkphieumuon.png"));
+        lbReaderManager.setIcon(Util.loadImage("tkdocgia.png"));
+        lbReturnManager.setIcon(Util.loadImage("tkphieutra.png"));
 
-        btnQLS.setBackground(new Color(99, 211, 165));
-        btnQLPM.setBackground(new Color(122, 161, 94));
-        btnQLPT.setBackground(new Color(120, 191, 51));
-        btnQLDG.setBackground(new Color(82, 78, 79));
+        lbBookManager.setBackground(new Color(99, 211, 165));
+        lbLoanManager.setBackground(new Color(122, 161, 94));
+        lbReturnManager.setBackground(new Color(120, 191, 51));
+        lbReaderManager.setBackground(new Color(82, 78, 79));
 
         pnHang1.add(pnThongKeSach);
         pnHang1.add(pnThongKeDocGia);
@@ -177,24 +183,24 @@ public class StatisticAnalyzer extends CustomFrame {
 
         JPanel pnQuayLai = new JPanel();
         pnQuayLai.setLayout(new FlowLayout());
-        btnQuayLai = new JButton("QUAY LẠI TRANG CHỦ");
-        btnQuayLai.setFocusPainted(false);
-        pnQuayLai.add(btnQuayLai);
-        btnQuayLai.setPreferredSize(new Dimension(300, 40));
+        btnReturn = new JButton("QUAY LẠI TRANG CHỦ");
+        btnReturn.setFocusPainted(false);
+        pnQuayLai.add(btnReturn);
+        btnReturn.setPreferredSize(new Dimension(300, 40));
         pnQuayLai.setBackground(Color.WHITE);
-        btnQuayLai.setBackground(new Color(4, 191, 138));
-        btnQuayLai.setForeground(Color.WHITE);
-        btnQuayLai.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        btnReturn.setBackground(new Color(4, 191, 138));
+        btnReturn.setForeground(Color.WHITE);
+        btnReturn.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
-        btnChiTietSach.setBackground(new Color(99, 211, 165));
-        btnChiTietPM.setBackground(new Color(122, 161, 94));
-        btnChiTietPT.setBackground(new Color(120, 191, 51));
-        btnChiTietDG.setBackground(new Color(82, 78, 79));
+        btnBookDetail.setBackground(new Color(99, 211, 165));
+        btnLoanDetail.setBackground(new Color(122, 161, 94));
+        btnReturnDetail.setBackground(new Color(120, 191, 51));
+        btnReaderDetail.setBackground(new Color(82, 78, 79));
 
-        btnChiTietSach.setForeground(Color.WHITE);
-        btnChiTietPM.setForeground(Color.WHITE);
-        btnChiTietPT.setForeground(Color.WHITE);
-        btnChiTietDG.setForeground(Color.WHITE);
+        btnBookDetail.setForeground(Color.WHITE);
+        btnLoanDetail.setForeground(Color.WHITE);
+        btnReturnDetail.setForeground(Color.WHITE);
+        btnReaderDetail.setForeground(Color.WHITE);
 
         Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 19);
         lblTKSach.setFont(font3);
@@ -207,50 +213,46 @@ public class StatisticAnalyzer extends CustomFrame {
         lblTKPT.setForeground(Color.WHITE);
 
         Font font2 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 18);
-        btnQuayLai.setFont(font2);
+        btnReturn.setFont(font2);
 
         Font font4 = Util.loadFontFromResource("SVN-Avo.ttf", Font.CENTER_BASELINE, 18);
-        btnChiTietDG.setFont(font4);
-        btnChiTietSach.setFont(font4);
-        btnChiTietPM.setFont(font4);
-        btnChiTietPT.setFont(font4);
+        btnReaderDetail.setFont(font4);
+        btnBookDetail.setFont(font4);
+        btnLoanDetail.setFont(font4);
+        btnReturnDetail.setFont(font4);
 
         pnChucNang.add(pnHinhAnh);
         pnChucNang.add(pnQuayLai);
 
         mainPanel.add(pnChucNang, BorderLayout.WEST);
 
-        btnQLDG.setBorder(BorderFactory.createEmptyBorder());
-        btnQLPM.setBorder(BorderFactory.createEmptyBorder());
-        btnQLPT.setBorder(BorderFactory.createEmptyBorder());
-        btnQLS.setBorder(BorderFactory.createEmptyBorder());
+        lbReaderManager.setBorder(BorderFactory.createEmptyBorder());
+        lbLoanManager.setBorder(BorderFactory.createEmptyBorder());
+        lbReturnManager.setBorder(BorderFactory.createEmptyBorder());
+        lbBookManager.setBorder(BorderFactory.createEmptyBorder());
 
-        btnChiTietDG.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        btnChiTietPM.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        btnChiTietPT.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        btnChiTietSach.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        btnReaderDetail.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        btnLoanDetail.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        btnReturnDetail.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+        btnBookDetail.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 
-        btnChiTietSach.setPreferredSize(new Dimension(120, 38));
-        btnChiTietDG.setPreferredSize(new Dimension(120, 38));
-        btnChiTietPT.setPreferredSize(new Dimension(120, 38));
-        btnChiTietPM.setPreferredSize(new Dimension(120, 38));
+        btnBookDetail.setPreferredSize(new Dimension(120, 38));
+        btnReaderDetail.setPreferredSize(new Dimension(120, 38));
+        btnReturnDetail.setPreferredSize(new Dimension(120, 38));
+        btnLoanDetail.setPreferredSize(new Dimension(120, 38));
 
     }
 
     public void addEvents() {
-        btnQuayLai.addActionListener(e -> {
+        btnReturn.addActionListener(e -> {
             // TODO Auto-generated method stub
             AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
             ql.showWindow();
             dispose();
         });
-        btnChiTietDG.addActionListener(e -> {
-            // TODO Auto-generated method stub
+        btnReaderDetail.addActionListener(e -> {
             try {
-                String report = "jasper/DocGiaReport.jrxml";
-                JasperReport jr = JasperCompileManager.compileReport(report);
-                JasperPrint jp = JasperFillManager.fillReport(jr, null, DbManager.getInstance().getConnection());
-                JasperViewer jv = new JasperViewer(jp, false);
+                JasperPrint jp = JasperFillManager.fillReport(readerReport, null, DbManager.getInstance().getConnection());
                 JasperViewer.viewReport(jp, false);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, ex);
@@ -258,37 +260,25 @@ public class StatisticAnalyzer extends CustomFrame {
             }
         });
 
-        btnChiTietPT.addActionListener(e -> {
-            // TODO Auto-generated method stub
+        btnReturnDetail.addActionListener(e -> {
             try {
-                String report = "jasper/PhieuTraReport.jrxml";
-                JasperReport jr = JasperCompileManager.compileReport(report);
-                JasperPrint jp = JasperFillManager.fillReport(jr, null, DbManager.getInstance().getConnection());
-                JasperViewer jv = new JasperViewer(jp, false);
+                JasperPrint jp = JasperFillManager.fillReport(returnReport, null, DbManager.getInstance().getConnection());
                 JasperViewer.viewReport(jp, false);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, ex);
             }
         });
-        btnChiTietSach.addActionListener(e -> {
-            // TODO Auto-generated method stub
+        btnBookDetail.addActionListener(e -> {
             try {
-                String report = "jasper/SachReport.jrxml";
-                JasperReport jr = JasperCompileManager.compileReport(report);
-                JasperPrint jp = JasperFillManager.fillReport(jr, null, DbManager.getInstance().getConnection());
-                JasperViewer jv = new JasperViewer(jp, false);
+                JasperPrint jp = JasperFillManager.fillReport(bookReport, null, DbManager.getInstance().getConnection());
                 JasperViewer.viewReport(jp, false);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, ex);
             }
         });
-        btnChiTietPM.addActionListener(e -> {
-            // TODO Auto-generated method stub
+        btnLoanDetail.addActionListener(e -> {
             try {
-                String report = "jasper/PhieuMuonReport.jrxml";
-                JasperReport jr = JasperCompileManager.compileReport(report);
-                JasperPrint jp = JasperFillManager.fillReport(jr, null, DbManager.getInstance().getConnection());
-                JasperViewer jv = new JasperViewer(jp, false);
+                JasperPrint jp = JasperFillManager.fillReport(loanReport, null, DbManager.getInstance().getConnection());
                 JasperViewer.viewReport(jp, false);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, ex);
