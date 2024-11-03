@@ -1,35 +1,17 @@
 package eaut.edu.vn.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
 import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.main.Application;
-import eaut.edu.vn.service.LoanDetailService;
-
-import eaut.edu.vn.service.ReaderService;
-import eaut.edu.vn.service.LoanService;
-import eaut.edu.vn.service.BookService;
+import eaut.edu.vn.model.Book;
+import eaut.edu.vn.model.Loan;
 import eaut.edu.vn.model.LoanDetail;
 import eaut.edu.vn.model.Reader;
-import eaut.edu.vn.model.Loan;
-import eaut.edu.vn.model.Book;
-
-import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.service.BookService;
+import eaut.edu.vn.service.LoanDetailService;
+import eaut.edu.vn.service.LoanService;
+import eaut.edu.vn.service.ReaderService;
 import eaut.edu.vn.ui.controls.CustomFrame;
+import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.util.Util;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -38,10 +20,15 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.List;
+
 public class StatisticAnalyzer extends CustomFrame {
-    
+
     public int thongke = 1;
-    JButton btnQLDG, btnQLPM, btnQLPT, btnQLS, btnQuayLai, btnChiTietSach, btnChiTietDG, btnChiTietPM, btnChiTietPT;
+    JButton btnChiTietSach, btnChiTietDG, btnChiTietPM, btnChiTietPT, btnQuayLai;
     DefaultTableModel dtmPM;
     JTable tbPM;
 
@@ -93,9 +80,7 @@ public class StatisticAnalyzer extends CustomFrame {
 
         JPanel pnThongKeSach = new JPanel();
         pnThongKeSach.setLayout(new BoxLayout(pnThongKeSach, BoxLayout.Y_AXIS));
-        btnQLS = new JButton();
-        btnQLS.setBorderPainted(false);
-        btnQLS.setFocusPainted(false);
+        JLabel btnQLS = new JLabel();
         JLabel lblTKSach = new JLabel("Có " + kqs + " đầu sách");
         pnThongKeSach.add(btnQLS);
         pnThongKeSach.add(lblTKSach);
@@ -109,9 +94,7 @@ public class StatisticAnalyzer extends CustomFrame {
 
         JPanel pnThongKeDocGia = new JPanel();
         pnThongKeDocGia.setLayout(new BoxLayout(pnThongKeDocGia, BoxLayout.Y_AXIS));
-        btnQLDG = new JButton();
-        btnQLDG.setBorderPainted(false);
-        btnQLDG.setFocusPainted(false);
+        JLabel btnQLDG = new JLabel();
         JLabel lblTKDocGia = new JLabel("Có " + kqdg + " độc giả");
         pnThongKeDocGia.add(btnQLDG);
         pnThongKeDocGia.add(lblTKDocGia);
@@ -130,9 +113,7 @@ public class StatisticAnalyzer extends CustomFrame {
 
         JPanel pnThongKePhieuMuon = new JPanel();
         pnThongKePhieuMuon.setLayout(new BoxLayout(pnThongKePhieuMuon, BoxLayout.Y_AXIS));
-        btnQLPM = new JButton();
-        btnQLPM.setBorderPainted(false);
-        btnQLPM.setFocusPainted(false);
+        JLabel btnQLPM = new JLabel();
         JLabel lblTKPM = new JLabel("Có " + kqpm + " phiếu mượn");
         pnThongKePhieuMuon.add(btnQLPM);
         pnThongKePhieuMuon.add(lblTKPM);
@@ -146,9 +127,7 @@ public class StatisticAnalyzer extends CustomFrame {
 
         JPanel pnThongKePhieuTra = new JPanel();
         pnThongKePhieuTra.setLayout(new BoxLayout(pnThongKePhieuTra, BoxLayout.Y_AXIS));
-        btnQLPT = new JButton();
-        btnQLPT.setBorderPainted(false);
-        btnQLPT.setFocusPainted(false);
+        JLabel btnQLPT = new JLabel();
         JLabel lblTKPT = new JLabel("Có " + kqpt + " phiếu trả");
         pnThongKePhieuTra.add(btnQLPT);
         pnThongKePhieuTra.add(lblTKPT);
@@ -267,34 +246,6 @@ public class StatisticAnalyzer extends CustomFrame {
         });
         btnChiTietDG.addActionListener(e -> {
             // TODO Auto-generated method stub
-            ReaderManager ql = Application.SINGLETON.READER_MANAGER;
-            ql.thongke = thongke;
-            ql.showWindow();
-            dispose();
-        });
-        btnChiTietSach.addActionListener(e -> {
-            // TODO Auto-generated method stub
-            BookManager ql = Application.SINGLETON.BOOK_MANAGER;
-            ql.thongke = thongke;
-            ql.showWindow();
-            dispose();
-        });
-        btnChiTietPM.addActionListener(e -> {
-            // TODO Auto-generated method stub
-            LoanManager ql = Application.SINGLETON.LOAN_MANAGER;
-            ql.thongke = thongke;
-            ql.showWindow();
-            dispose();
-        });
-        btnChiTietPT.addActionListener(e -> {
-            // TODO Auto-generated method stub
-            ReturnManager ql = Application.SINGLETON.RETURN_MANAGER;
-            ql.thongke = thongke;
-            ql.showWindow();
-            dispose();
-        });
-        btnQLDG.addActionListener(e -> {
-            // TODO Auto-generated method stub
             try {
                 String report = "jasper/DocGiaReport.jrxml";
                 JasperReport jr = JasperCompileManager.compileReport(report);
@@ -307,7 +258,7 @@ public class StatisticAnalyzer extends CustomFrame {
             }
         });
 
-        btnQLPT.addActionListener(e -> {
+        btnChiTietPT.addActionListener(e -> {
             // TODO Auto-generated method stub
             try {
                 String report = "jasper/PhieuTraReport.jrxml";
@@ -319,7 +270,7 @@ public class StatisticAnalyzer extends CustomFrame {
                 JOptionPane.showMessageDialog(null, ex);
             }
         });
-        btnQLS.addActionListener(e -> {
+        btnChiTietSach.addActionListener(e -> {
             // TODO Auto-generated method stub
             try {
                 String report = "jasper/SachReport.jrxml";
@@ -331,7 +282,7 @@ public class StatisticAnalyzer extends CustomFrame {
                 JOptionPane.showMessageDialog(null, ex);
             }
         });
-        btnQLPM.addActionListener(e -> {
+        btnChiTietPM.addActionListener(e -> {
             // TODO Auto-generated method stub
             try {
                 String report = "jasper/PhieuMuonReport.jrxml";
