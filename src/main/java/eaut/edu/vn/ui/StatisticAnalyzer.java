@@ -31,7 +31,7 @@ public class StatisticAnalyzer extends CustomFrame {
         this.setSize(1025, 580);
         setHeader(new Header("THỐNG KÊ"));
         setFooter(new Footer());
-        compileReport();
+        new Thread(this::compileReport).start();
     }
 
     private void compileReport() {
