@@ -1,22 +1,5 @@
 package eaut.edu.vn.ui.dialog.loan;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.List;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
-
 import com.toedter.calendar.JDateChooser;
 import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.main.Application;
@@ -25,13 +8,27 @@ import eaut.edu.vn.service.ReaderService;
 import eaut.edu.vn.ui.dialog.Dialog;
 import eaut.edu.vn.util.Util;
 
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 
 public class AddLoan extends Dialog {
 
     JTextField txtTenDG, txtSachMuon, txtThuThu;
     JComboBox<Reader> cbDocGia;
     JButton btnThem;
-    JDateChooser choosedate, choosedate1;
+    JDateChooser chooseBorrowingDate, chooseReturnDate;
 
     public AddLoan(String title) {
         super(title, "QUẢN LÝ PHIẾU MƯỢN");
@@ -50,12 +47,24 @@ public class AddLoan extends Dialog {
         btnThem.addActionListener(e -> {
 
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            if (choosedate.getDate() == null || choosedate1.getDate() == null) {
+            Date borrowingDate = chooseBorrowingDate.getDate();
+            Date returnDate = chooseReturnDate.getDate();
+            if (borrowingDate == null || returnDate == null) {
                 JOptionPane.showMessageDialog(null, "Không được để trống");
                 return;
             }
-            String datemuon = df.format(choosedate.getDate());
-            String datehentra = df.format(choosedate1.getDate());
+            if (returnDate.before(borrowingDate)) {
+                JOptionPane.showMessageDialog(null, "Ngày hẹn trả phải sau ngày mươn");
+                return;
+            }
+            long elapsedTime = returnDate.getTime() - borrowingDate.getTime();
+            int elapsedDays = (int) TimeUnit.MILLISECONDS.toDays(elapsedTime);
+            if (elapsedDays > 45) {
+                JOptionPane.showMessageDialog(null, "Chỉ cho phép mượn tối đa 45 ngày");
+                return;
+            }
+            String datemuon = df.format(borrowingDate);
+            String datehentra = df.format(returnDate);
             Reader reader = (Reader) cbDocGia.getSelectedItem();
             if (reader == null) {
                 JOptionPane.showMessageDialog(null, "Vui lòng chọn độc giả");
@@ -166,20 +175,22 @@ public class AddLoan extends Dialog {
         JPanel pnNgayMuon = new JPanel();
         pnNgayMuon.setLayout(new FlowLayout());
         JLabel lblNgayMuon = new JLabel("Ngày mượn: ");
-        choosedate = new JDateChooser();
-        choosedate.setPreferredSize(new Dimension(340, 30));
-        choosedate.setDateFormatString("yyyy-MM-dd");
+        chooseBorrowingDate = new JDateChooser();
+        chooseBorrowingDate.setPreferredSize(new Dimension(340, 30));
+        chooseBorrowingDate.setDateFormatString("yyyy-MM-dd");
+        chooseBorrowingDate.setDate(new Date());
         pnNgayMuon.add(lblNgayMuon);
-        pnNgayMuon.add(choosedate);
+        pnNgayMuon.add(chooseBorrowingDate);
 
         JPanel pnNgayHenTra = new JPanel();
         pnNgayHenTra.setLayout(new FlowLayout());
         JLabel lblNgayHenTra = new JLabel("Ngày hẹn trả: ");
-        choosedate1 = new JDateChooser();
-        choosedate1.setPreferredSize(new Dimension(340, 30));
-        choosedate1.setDateFormatString("yyyy-MM-dd");
+        chooseReturnDate = new JDateChooser();
+        chooseReturnDate.setPreferredSize(new Dimension(340, 30));
+        chooseReturnDate.setDateFormatString("yyyy-MM-dd");
+        chooseReturnDate.setDate(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(45)));
         pnNgayHenTra.add(lblNgayHenTra);
-        pnNgayHenTra.add(choosedate1);
+        pnNgayHenTra.add(chooseReturnDate);
 
         JPanel pnSoSachCM = new JPanel();
         pnSoSachCM.setLayout(new FlowLayout());
@@ -222,8 +233,8 @@ public class AddLoan extends Dialog {
 
         cbDocGia.setFont(font4);
         txtTenDG.setFont(font4);
-        choosedate.setFont(font4);
-        choosedate1.setFont(font4);
+        chooseBorrowingDate.setFont(font4);
+        chooseReturnDate.setFont(font4);
         txtSachMuon.setFont(font4);
         txtThuThu.setFont(font4);
         txtThuThu.setEditable(false);

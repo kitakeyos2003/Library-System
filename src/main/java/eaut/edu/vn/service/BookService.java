@@ -28,7 +28,7 @@ public class BookService implements IService<Book> {
                     sh.setPublishingCompany(result.getString(4));
                     sh.setCategory(result.getString(5));
                     sh.setQuantity(result.getInt(6));
-                    sh.setPrice(result.getDouble(7));
+                    sh.setPrice(result.getInt(7));
                     books.add(sh);
                 }
             } catch (SQLException e) {
@@ -51,7 +51,7 @@ public class BookService implements IService<Book> {
                     sh.setPublishingCompany(result.getString(4));
                     sh.setCategory(result.getString(5));
                     sh.setQuantity(result.getInt(6));
-                    sh.setPrice(result.getDouble(7));
+                    sh.setPrice(result.getInt(7));
                     books.add(sh);
                 }
             } catch (SQLException e) {
@@ -88,7 +88,7 @@ public class BookService implements IService<Book> {
                     sh.setPublishingCompany(result.getString(4));
                     sh.setCategory(result.getString(5));
                     sh.setQuantity(result.getInt(6));
-                    sh.setPrice(result.getDouble(7));
+                    sh.setPrice(result.getInt(7));
                     books.add(sh);
                 }
             } catch (SQLException e) {

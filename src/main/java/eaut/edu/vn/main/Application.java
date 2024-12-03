@@ -6,11 +6,19 @@ import eaut.edu.vn.service.ReaderService;
 import eaut.edu.vn.ui.*;
 import eaut.edu.vn.ui.controls.CustomFrame;
 
+import javax.swing.*;
+
 public class Application {
 
     public static Account account;
     public static void main(String[] args) {
         DbManager.getInstance().start();
+//        try {
+//            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+//            e.printStackTrace();
+//        }
+
         SINGLETON.LOGIN.showWindow();
     }
 

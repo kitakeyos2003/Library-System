@@ -260,7 +260,6 @@ public class StatisticAnalyzer extends CustomFrame {
                 JasperViewer.viewReport(jp, false);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, ex);
-                ex.printStackTrace();
             }
         });
 

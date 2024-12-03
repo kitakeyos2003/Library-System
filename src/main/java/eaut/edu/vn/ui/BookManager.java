@@ -71,7 +71,7 @@ public class BookManager extends CustomFrame implements ITable {
             vec.add(book.getPublishingCompany());
             vec.add(book.getCategory());
             vec.add(book.getQuantity());
-            vec.add(book.getPrice());
+            vec.add(Util.numberFormat(book.getPrice()));
 
             dtmSach.addRow(vec);
         }
@@ -160,7 +160,7 @@ public class BookManager extends CustomFrame implements ITable {
                         vec.add(book.getPublishingCompany());
                         vec.add(book.getCategory());
                         vec.add(book.getQuantity());
-                        vec.add(book.getPrice());
+                        vec.add(Util.numberFormat(book.getPrice()));
                         dtmSach.addRow(vec);
                     });
                 } else if (evt.getClickCount() == 3) {

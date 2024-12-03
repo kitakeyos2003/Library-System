@@ -12,7 +12,7 @@ public class Book {
     private String publishingCompany;
     private String category;
     private int quantity;
-    private double price;
+    private int price;
 
     @Override
     public String toString() {

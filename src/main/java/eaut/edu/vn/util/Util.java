@@ -53,4 +53,29 @@ public class Util {
         }
         return null;
     }
+
+    public static String numberFormat(long m) {
+        StringBuilder text = new StringBuilder();
+        long num = m / 1000L + 1L;
+        int num2 = 0;
+        while ((long) num2 < num) {
+            if (m < 1000L) {
+                text.insert(0, m);
+                break;
+            }
+            long num3 = m % 1000L;
+            if (num3 == 0L) {
+                text.insert(0, ".000");
+            } else if (num3 < 10L) {
+                text.insert(0, ".00" + num3);
+            } else if (num3 < 100L) {
+                text.insert(0, ".0" + num3);
+            } else {
+                text.insert(0, "." + num3);
+            }
+            m /= 1000L;
+            num2++;
+        }
+        return text.toString();
+    }
 }
