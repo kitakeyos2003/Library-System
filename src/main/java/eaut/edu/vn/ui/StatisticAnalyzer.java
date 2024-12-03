@@ -245,7 +245,6 @@ public class StatisticAnalyzer extends CustomFrame {
 
     public void addEvents() {
         btnReturn.addActionListener(e -> {
-            // TODO Auto-generated method stub
             AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
             ql.showWindow();
             dispose();

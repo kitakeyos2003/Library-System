@@ -16,7 +16,7 @@ public class Reader {
 
     @Override
     public String toString() {
-        if (IDCard != null) {
+        if (IDCard != null && !IDCard.isEmpty()) {
             return name + "/" + IDCard;
         }
         return name;
