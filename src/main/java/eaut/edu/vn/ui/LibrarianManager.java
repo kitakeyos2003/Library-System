@@ -19,7 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class LibrarianManager extends CustomFrame {
-    JButton btnQLDG, btnQLPM, btnQLPT, btnQLS, btnDoiMK, btnDangXuat;
+    JButton btnQLDG, btnQLPM, btnQLPT, btnQLS, btnDoiMK, btnDangXuat, btnThongKe;
 
     public LibrarianManager(String title) {
         super(title);
@@ -66,7 +66,12 @@ public class LibrarianManager extends CustomFrame {
             dispose();
 
         });
-
+        btnThongKe.addActionListener(e -> {
+            // TODO Auto-generated method stub
+            StatisticAnalyzer tk = Application.SINGLETON.STATISTIC_ANALYZER;
+            tk.showWindow();
+            dispose();
+        });
     }
 
     @Override
@@ -89,14 +94,13 @@ public class LibrarianManager extends CustomFrame {
         JPanel pnHang3 = new JPanel();
         pnHang3.setLayout(new FlowLayout());
         pnHang3.setBackground(Color.WHITE);
-        JLabel lblHinhAnh1 = new JLabel();
-        lblHinhAnh1.setIcon(Util.loadImage("anhnen.png"));
-        pnHang3.add(lblHinhAnh1);
+        btnThongKe = new JButton();
 
         btnQLS.setPreferredSize(new Dimension(270, 150));
         btnQLPM.setPreferredSize(btnQLS.getPreferredSize());
         btnQLDG.setPreferredSize(btnQLS.getPreferredSize());
         btnQLPT.setPreferredSize(btnQLS.getPreferredSize());
+        btnThongKe.setPreferredSize(btnQLS.getPreferredSize());
 
 //        btnQLS.setBackground(new Color(51, 217, 178));
 //        btnQLPM.setBackground(new Color(37, 204, 247));
@@ -108,11 +112,13 @@ public class LibrarianManager extends CustomFrame {
         btnQLPM.setIcon(Util.loadImage("phieumuon.png"));
         btnQLDG.setIcon(Util.loadImage("docgia.png"));
         btnQLPT.setIcon(Util.loadImage("phieutra.png"));
+        btnThongKe.setIcon(Util.loadImage("thongke.png"));
 
         pnHang1.add(btnQLS);
         pnHang1.add(btnQLDG);
         pnHang2.add(btnQLPM);
         pnHang2.add(btnQLPT);
+        pnHang3.add(btnThongKe);
 
         pnQuanLy.add(pnHang1);
         pnQuanLy.add(pnHang2);
@@ -167,6 +173,7 @@ public class LibrarianManager extends CustomFrame {
         btnQLPM.setBorder(null);
         btnQLPT.setBorder(null);
         btnQLS.setBorder(null);
+        btnThongKe.setBorder(null);
 
     }
 }

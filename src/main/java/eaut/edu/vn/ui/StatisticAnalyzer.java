@@ -55,7 +55,7 @@ public class StatisticAnalyzer extends CustomFrame {
         return ds.size();
     }
 
-    public int countReturnreceipt() {
+    public int countReturnReceipt() {
         List<LoanDetail> ds = LoanDetailService.getInstance().getAll();
         return ds.size();
     }
@@ -75,7 +75,7 @@ public class StatisticAnalyzer extends CustomFrame {
 
         int kqs = countBook();
         int kqpm = countLoan();
-        int kqpt = countReturnreceipt();
+        int kqpt = countReturnReceipt();
         int kqdg = countReader();
 
         JPanel pnChiTietSach = new JPanel();
@@ -245,8 +245,13 @@ public class StatisticAnalyzer extends CustomFrame {
 
     public void addEvents() {
         btnReturn.addActionListener(e -> {
-            AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
-            ql.showWindow();
+            if (Application.account.getRole() == 1) {
+                AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
+                ql.showWindow();
+            } else if (Application.account.getRole() == 2) {
+                LibrarianManager ql = Application.SINGLETON.LIBRARIAN_MANAGER;
+                ql.showWindow();
+            }
             dispose();
         });
         btnReaderDetail.addActionListener(e -> {
