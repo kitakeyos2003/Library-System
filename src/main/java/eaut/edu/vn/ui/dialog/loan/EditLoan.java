@@ -86,8 +86,6 @@ public class EditLoan extends Dialog {
                 pre.setString(5, txtThuThu.getText());
                 pre.setString(6, txtMaPhieu.getText());
                 int x = pre.executeUpdate();
-                pre.close();
-                connection.close();
                 int genId = -1;
                 if (x > 0) {
                     ResultSet generatedKeys = pre.getGeneratedKeys();
@@ -98,6 +96,8 @@ public class EditLoan extends Dialog {
                     JOptionPane.showMessageDialog(null, "Sửa thành công");
                     dispose();
                 }
+                pre.close();
+                connection.close();
                 if (soluongtruoc < soluongsau) {
                     for (int i = 0; i < (soluongsau - soluongtruoc); i++) {
                         BookBorrowStatus themsach = new BookBorrowStatus("Mượn tiếp sách");

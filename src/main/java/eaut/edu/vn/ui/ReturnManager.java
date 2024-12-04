@@ -10,8 +10,10 @@ import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -60,7 +62,7 @@ public class ReturnManager extends CustomFrame implements ITable {
         dtmPhieuTra.setRowCount(0);
         for (LoanDetail ctpm : dsctpm) {
             if (ctpm.getReturnDate() != null) {
-                Vector<Object> vec = new Vector<Object>();
+                Vector<Object> vec = new Vector<>();
                 vec.add(ctpm.getLoanId());
                 vec.add(ctpm.getBookId());
                 vec.add(ctpm.getReturnDate());
@@ -74,10 +76,16 @@ public class ReturnManager extends CustomFrame implements ITable {
         dtmPhieuChuaTra.setRowCount(0);
         for (LoanDetail ctpm : dsctpm) {
             if (ctpm.getReturnDate() == null) {
-                Vector<Object> vec = new Vector<Object>();
+//                Date returnDate = ctpm.getReturnDate();
+//                long elapsedTime = returnDate.getTime() - System.currentTimeMillis();
+//                int elapsedDays = (int) TimeUnit.MILLISECONDS.toDays(elapsedTime);
+
+                Vector<Object> vec = new Vector<>();
                 vec.add(ctpm.getLoanId());
                 vec.add(ctpm.getBookId());
                 vec.add(ctpm.getBorrowedStatus());
+                vec.add(ctpm.getBorrowedStatus());
+//                vec.add(elapsedDays);
                 dtmPhieuChuaTra.addRow(vec);
             }
         }
@@ -414,6 +422,7 @@ public class ReturnManager extends CustomFrame implements ITable {
         dtmPhieuChuaTra.addColumn("Mã phiếu");
         dtmPhieuChuaTra.addColumn("Mã sách");
         dtmPhieuChuaTra.addColumn("TT sách mượn");
+//        dtmPhieuChuaTra.addColumn("Số ngày hẹn còn lại");
         tblPhieuChuaTra = new JTable(dtmPhieuChuaTra);
         JScrollPane scPhieuChuaTra = new JScrollPane(tblPhieuChuaTra, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scPhieuChuaTra.setPreferredSize(new Dimension(450, 300));
