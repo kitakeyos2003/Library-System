@@ -27,6 +27,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import eaut.edu.vn.database.DbManager;
+import eaut.edu.vn.main.Application;
 import eaut.edu.vn.ui.controls.Footer;
 import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.controls.PlaceholderTextField;
@@ -157,11 +158,12 @@ public class Search extends Dialog {
         });
         btnTraSach.addActionListener(e -> {
             // TODO Auto-generated method stub
-            if (txtNgayTra.getText().length() != 0) {
+            if (!txtNgayTra.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Phiếu mượn đã trả sách rồi");
                 return;
             }
             ReturnReceipt ts = new ReturnReceipt("Trả sách");
+            ts.tentk = Application.account.getUsername();
             ts.MaDG = txtMaDG.getText();
             ts.MaPM = txtMaPhieu.getText();
             ts.MaSach = txtMaSach.getText();
@@ -263,15 +265,6 @@ public class Search extends Dialog {
         JPanel pnThongTin = new JPanel();
         pnThongTin.setLayout(new BorderLayout());
         pnHienThiTimKiemPhieu.add(pnThongTin, BorderLayout.CENTER);
-
-        JPanel pnTitle = new JPanel();
-        pnTitle.setLayout(new FlowLayout());
-        JLabel lblTimKiemSach = new JLabel("TÌM KIẾM PHIẾU TRẢ");
-        pnTitle.add(lblTimKiemSach);
-        pnHienThiTimKiemPhieu.add(pnTitle, BorderLayout.NORTH);
-        Font font5 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 25);
-        lblTimKiemSach.setFont(font5);
-        lblTimKiemSach.setForeground(new Color(4, 191, 138));
 
 
         pnThongTin.add(pnThanhTimKiem, BorderLayout.NORTH);
