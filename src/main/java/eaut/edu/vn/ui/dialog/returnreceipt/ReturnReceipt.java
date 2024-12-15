@@ -55,8 +55,17 @@ public class ReturnReceipt extends Dialog {
     public void addEvents() {
         btnTraSach.addActionListener(e -> {
             // TODO Auto-generated method stub
+            Date returnDate = choosedate.getDate();
+            if (returnDate == null) {
+                JOptionPane.showMessageDialog(null, "Hãy chọn ngày trả");
+                return;
+            }
+            if (returnDate.after(new Date())) {
+                JOptionPane.showMessageDialog(null, "Không được chọn ngày trả sau ngày hôm nay");
+                return;
+            }
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            String datetra = df.format(choosedate.getDate());
+            String datetra = df.format(returnDate);
 
             try {
                 String sql = "Update ctpm set NgayTra=?, TinhTrangTra=?, GhiChu=?,User=? where MaPM=? and MaSach=?";
@@ -74,8 +83,6 @@ public class ReturnReceipt extends Dialog {
                 pre.close();
                 connection.close();
                 if (x > 0) {
-
-
                     // tinh phan tram hư sách
                     int muon = Integer.parseInt(txtTTSachMuon.getText());
                     int tra = Integer.parseInt(txtTTSachTra.getText());
@@ -240,6 +247,7 @@ public class ReturnReceipt extends Dialog {
         choosedate = new JDateChooser();
         choosedate.setPreferredSize(new Dimension(340, 30));
         choosedate.setDateFormatString("yyyy-MM-dd");
+        choosedate.setDate(new Date());
         pnNgayTra.add(lblNgayTra);
         pnNgayTra.add(choosedate);
 

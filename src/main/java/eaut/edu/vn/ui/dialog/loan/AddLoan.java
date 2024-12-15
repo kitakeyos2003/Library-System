@@ -53,6 +53,10 @@ public class AddLoan extends Dialog {
                 JOptionPane.showMessageDialog(null, "Không được để trống");
                 return;
             }
+            if (borrowingDate.after(new Date())) {
+                JOptionPane.showMessageDialog(null, "Ngày mượn không được sau ngày hiện tại");
+                return;
+            }
             if (returnDate.before(borrowingDate)) {
                 JOptionPane.showMessageDialog(null, "Ngày hẹn trả phải sau ngày mươn");
                 return;

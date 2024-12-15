@@ -1,6 +1,5 @@
 package eaut.edu.vn.ui;
 
-import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.interfaces.ITable;
 import eaut.edu.vn.main.Application;
 import eaut.edu.vn.model.Book;
@@ -24,9 +23,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -35,25 +32,35 @@ import java.util.concurrent.TimeUnit;
 public class ReturnManager extends CustomFrame implements ITable {
 
     public int thongke = 0;
-    JTextField txtMaPhieu, txtMaDG, txtMaSach, txtNgayHenTra, txtNgayTra, txtTTSachMuon, txtTTSachTra, txtThuThuNhanSach, txtGhiChu;
-    JButton btnTraSach, btnQuayLai, btnTimKiem;
-    DefaultTableModel dtmPhieuTra, dtmPhieuChuaTra;
-    JTable tblPhieuTra, tblPhieuChuaTra;
-    List<LoanDetail> dsctpm;
+    private JTextField txtMaPhieu, txtMaDG, txtMaSach, txtNgayHenTra, txtNgayTra, txtTTSachMuon, txtTTSachTra, txtThuThuNhanSach, txtGhiChu;
+    private JButton btnTraSach, btnQuayLai, btnTimKiem;
+    private DefaultTableModel dtmPhieuTra, dtmPhieuChuaTra;
+    private JTable tblPhieuTra, tblPhieuChuaTra;
+    private List<LoanDetail> dsctpm;
+    private List<LoanDetail> phieuTraList;
+    private List<LoanDetail> phieuChuaTraList;
+    private List<Loan> loans;
+    private List<Reader> readers;
+    private List<Book> books;
 
     public ReturnManager(String tieude) {
         super(tieude);
         this.setSize(1130, 775);
         setHeader(new Header("QUẢN LÝ PHIẾU TRẢ"));
         setFooter(new Footer());
+        this.phieuTraList = new ArrayList<>();
+        this.phieuChuaTraList = new ArrayList<>();
         fillTable();
     }
 
     @Override
     public void fillTable() {
-        List<Loan> loans = LoanService.getInstance().getAll();
-        List<Reader> readers = ReaderService.getInstance().getAll();
-        List<Book> books = BookService.getInstance().getAll();
+        this.loans = LoanService.getInstance().getAll();
+        this.readers = ReaderService.getInstance().getAll();
+        this.books = BookService.getInstance().getAll();
+
+        this.phieuTraList.clear();
+        this.phieuChuaTraList.clear();
         dsctpm = LoanDetailService.getInstance().getAll();
         dtmPhieuTra.setRowCount(0);
         for (LoanDetail ctpm : dsctpm) {
@@ -68,6 +75,7 @@ public class ReturnManager extends CustomFrame implements ITable {
                 vec.add(ctpm.getUserName());
                 vec.add(ctpm.getNote());
                 dtmPhieuTra.addRow(vec);
+                phieuTraList.add(ctpm);
             }
         }
         dtmPhieuChuaTra.setRowCount(0);
@@ -92,6 +100,7 @@ public class ReturnManager extends CustomFrame implements ITable {
                 }
                 vec.add(ctpm.getBorrowedStatus());
                 dtmPhieuChuaTra.addRow(vec);
+                phieuChuaTraList.add(ctpm);
             }
         }
     }
@@ -148,30 +157,13 @@ public class ReturnManager extends CustomFrame implements ITable {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int n = tblPhieuChuaTra.getSelectedRow();
-                try {
-                    String sql = "Select c.MaPM,a.MaDG,c.MaSach,c.NgayTra,a.NgayHenTra,c.TinhTrangSach,c.TinhTrangTra,c.GhiChu,b.TenND FROM ctpm c,phieumuon a,taikhoan b  where a.MaPM=c.MaPM and b.User=a.User HAVING c.MaSach=? and c.MaPM=?";
-                    Connection connection = DbManager.getInstance().getConnection();
-                    PreparedStatement ps = connection.prepareStatement(sql);
-                    ps.setString(1, String.valueOf(dtmPhieuChuaTra.getValueAt(n, 1)));
-                    ps.setString(2, String.valueOf(dtmPhieuChuaTra.getValueAt(n, 0)));
-                    ResultSet rs = ps.executeQuery();
-                    while (rs.next()) {
-                        txtMaPhieu.setText(rs.getString(1));
-                        txtMaDG.setText(rs.getString(2));
-                        txtMaSach.setText(rs.getString(3));
-                        txtNgayTra.setText(rs.getString(4));
-                        txtNgayHenTra.setText(rs.getString(5));
-                        txtTTSachMuon.setText(rs.getString(6));
-                        txtTTSachTra.setText(rs.getString(7));
-                        txtGhiChu.setText(rs.getString(8));
-                        txtThuThuNhanSach.setText(null);
-                    }
-                    rs.close();
-                    ps.close();
-                    connection.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                if (n < 0 || n >= phieuChuaTraList.size()) {
+                    return;
                 }
+                LoanDetail loanDetail = phieuChuaTraList.get(n);
+                setTabInfo(loanDetail);
+
+
                 tblPhieuTra.setSelectionMode(0);
 
             }
@@ -206,37 +198,17 @@ public class ReturnManager extends CustomFrame implements ITable {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int n = tblPhieuTra.getSelectedRow();
-
-                try {
-                    String sql = "Select c.MaPM,a.MaDG,c.MaSach,c.NgayTra,a.NgayHenTra,c.TinhTrangSach,c.TinhTrangTra,c.GhiChu,b.TenND FROM ctpm c,phieumuon a,taikhoan b  where a.MaPM=c.MaPM and b.User=c.User HAVING c.MaSach=? and c.MaPM=?";
-                    Connection connection = DbManager.getInstance().getConnection();
-                    PreparedStatement pre = connection.prepareStatement(sql);
-                    pre.setString(1, String.valueOf(dtmPhieuTra.getValueAt(n, 1)));
-                    pre.setString(2, String.valueOf(dtmPhieuTra.getValueAt(n, 0)));
-                    ResultSet rs = pre.executeQuery();
-                    while (rs.next()) {
-                        txtMaPhieu.setText(rs.getString(1));
-                        txtMaDG.setText(rs.getString(2));
-                        txtMaSach.setText(rs.getString(3));
-                        txtNgayTra.setText(rs.getString(4));
-                        txtNgayHenTra.setText(rs.getString(5));
-                        txtTTSachMuon.setText(rs.getString(6));
-                        txtTTSachTra.setText(rs.getString(7));
-                        txtGhiChu.setText(rs.getString(8));
-                        txtThuThuNhanSach.setText(rs.getString(9));
-                    }
-                    rs.close();
-                    pre.close();
-                    connection.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                if (n < 0 || n >= phieuTraList.size()) {
+                    return;
                 }
+                LoanDetail loanDetail = phieuTraList.get(n);
+                setTabInfo(loanDetail);
                 tblPhieuChuaTra.setSelectionMode(0);
             }
         });
         btnTraSach.addActionListener(e -> {
             // TODO Auto-generated method stub
-            if (txtNgayTra.getText().length() != 0) {
+            if (!txtNgayTra.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Phiếu mượn đã trả sách rồi");
                 return;
             }
@@ -534,6 +506,29 @@ public class ReturnManager extends CustomFrame implements ITable {
         txtTTSachTra.setEditable(false);
         txtThuThuNhanSach.setEditable(false);
         txtGhiChu.setEditable(false);
+    }
+
+    public void setTabInfo(LoanDetail loanDetail) {
+        Loan loan = loans.stream().filter(l -> l.getId() == loanDetail.getLoanId()).findFirst().orElse(null);
+        txtMaPhieu.setText(String.valueOf(loanDetail.getLoanId()));
+        txtMaDG.setText(String.valueOf(loan.getReaderId()));
+        txtMaSach.setText(String.valueOf(loanDetail.getBookId()));
+        boolean daTra = false;
+        if (loanDetail.getReturnDate() != null) {
+            txtNgayTra.setText(String.valueOf(loanDetail.getReturnDate()));
+            daTra = true;
+        } else {
+            txtNgayTra.setText(null);
+        }
+        txtNgayHenTra.setText(String.valueOf(loan.getReturnDate()));
+        txtTTSachMuon.setText(String.valueOf(loanDetail.getBorrowedStatus()));
+        if (daTra) {
+            txtTTSachTra.setText(String.valueOf(loanDetail.getReturnStatus()));
+        } else {
+            txtTTSachTra.setText(null);
+        }
+        txtGhiChu.setText(loanDetail.getNote());
+        txtThuThuNhanSach.setText(loanDetail.getUserName());
     }
 
 }
