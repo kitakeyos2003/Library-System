@@ -1,10 +1,27 @@
 package eaut.edu.vn.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
+import eaut.edu.vn.database.DbManager;
+import eaut.edu.vn.interfaces.ITable;
+import eaut.edu.vn.main.Application;
+import eaut.edu.vn.model.Book;
+import eaut.edu.vn.model.Loan;
+import eaut.edu.vn.model.LoanDetail;
+import eaut.edu.vn.model.Reader;
+import eaut.edu.vn.service.BookService;
+import eaut.edu.vn.service.LoanDetailService;
+import eaut.edu.vn.service.LoanService;
+import eaut.edu.vn.service.ReaderService;
+import eaut.edu.vn.ui.controls.CustomFrame;
+import eaut.edu.vn.ui.controls.Footer;
+import eaut.edu.vn.ui.controls.Header;
+import eaut.edu.vn.ui.dialog.returnreceipt.ReturnReceipt;
+import eaut.edu.vn.ui.dialog.returnreceipt.Search;
+import eaut.edu.vn.util.Util;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.Connection;
@@ -15,32 +32,8 @@ import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-
-import eaut.edu.vn.database.DbManager;
-import eaut.edu.vn.interfaces.ITable;
-import eaut.edu.vn.main.Application;
-import eaut.edu.vn.service.LoanDetailService;
-
-import eaut.edu.vn.ui.controls.Footer;
-import eaut.edu.vn.ui.controls.CustomFrame;
-import eaut.edu.vn.ui.controls.Header;
-import eaut.edu.vn.ui.dialog.returnreceipt.Search;
-import eaut.edu.vn.ui.dialog.returnreceipt.ReturnReceipt;
-import eaut.edu.vn.model.LoanDetail;
-import eaut.edu.vn.util.Util;
-
 public class ReturnManager extends CustomFrame implements ITable {
-    
+
     public int thongke = 0;
     JTextField txtMaPhieu, txtMaDG, txtMaSach, txtNgayHenTra, txtNgayTra, txtTTSachMuon, txtTTSachTra, txtThuThuNhanSach, txtGhiChu;
     JButton btnTraSach, btnQuayLai, btnTimKiem;
@@ -58,13 +51,17 @@ public class ReturnManager extends CustomFrame implements ITable {
 
     @Override
     public void fillTable() {
+        List<Loan> loans = LoanService.getInstance().getAll();
+        List<Reader> readers = ReaderService.getInstance().getAll();
+        List<Book> books = BookService.getInstance().getAll();
         dsctpm = LoanDetailService.getInstance().getAll();
         dtmPhieuTra.setRowCount(0);
         for (LoanDetail ctpm : dsctpm) {
             if (ctpm.getReturnDate() != null) {
+                Book book = books.stream().filter(b -> b.getId() == ctpm.getBookId()).findFirst().orElse(null);
                 Vector<Object> vec = new Vector<>();
                 vec.add(ctpm.getLoanId());
-                vec.add(ctpm.getBookId());
+                vec.add(book.getName());
                 vec.add(ctpm.getReturnDate());
                 vec.add(ctpm.getBorrowedStatus());
                 vec.add(ctpm.getReturnStatus());
@@ -76,16 +73,24 @@ public class ReturnManager extends CustomFrame implements ITable {
         dtmPhieuChuaTra.setRowCount(0);
         for (LoanDetail ctpm : dsctpm) {
             if (ctpm.getReturnDate() == null) {
-//                Date returnDate = ctpm.getReturnDate();
-//                long elapsedTime = returnDate.getTime() - System.currentTimeMillis();
-//                int elapsedDays = (int) TimeUnit.MILLISECONDS.toDays(elapsedTime);
-
+                Loan loan = loans.stream().filter(l -> l.getId() == ctpm.getLoanId()).findFirst().orElse(null);
+                Date returnDate = loan.getReturnDate();
+                long elapsedTime = returnDate.getTime() - System.currentTimeMillis();
+                int elapsedDays = (int) TimeUnit.MILLISECONDS.toDays(elapsedTime);
+                Reader reader = readers.stream().filter(r -> r.getId() == loan.getReaderId()).findFirst().orElse(null);
+                Book book = books.stream().filter(b -> b.getId() == ctpm.getBookId()).findFirst().orElse(null);
                 Vector<Object> vec = new Vector<>();
                 vec.add(ctpm.getLoanId());
-                vec.add(ctpm.getBookId());
+                vec.add(reader.getName());
+                vec.add(book.getName());
+                if (elapsedDays == 0) {
+                    vec.add("Đã tới ngày hẹn trả");
+                } else if (elapsedDays < 0) {
+                    vec.add("Đã muộn " + (-1 * elapsedDays) + " ngày");
+                } else {
+                    vec.add(elapsedDays + " ngày");
+                }
                 vec.add(ctpm.getBorrowedStatus());
-                vec.add(ctpm.getBorrowedStatus());
-//                vec.add(elapsedDays);
                 dtmPhieuChuaTra.addRow(vec);
             }
         }
@@ -420,10 +425,32 @@ public class ReturnManager extends CustomFrame implements ITable {
 
         dtmPhieuChuaTra = new DefaultTableModel();
         dtmPhieuChuaTra.addColumn("Mã phiếu");
-        dtmPhieuChuaTra.addColumn("Mã sách");
+        dtmPhieuChuaTra.addColumn("Độc giả");
+        dtmPhieuChuaTra.addColumn("Sách");
+        dtmPhieuChuaTra.addColumn("Số ngày hẹn còn lại");
         dtmPhieuChuaTra.addColumn("TT sách mượn");
-//        dtmPhieuChuaTra.addColumn("Số ngày hẹn còn lại");
         tblPhieuChuaTra = new JTable(dtmPhieuChuaTra);
+        tblPhieuChuaTra.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (column == 3 && value instanceof String content) {
+                    if (content.startsWith("Đã tới")) {
+                        c.setBackground(Color.GREEN);
+                    } else if (content.startsWith("Đã muộn")) {
+                        c.setBackground(Color.YELLOW);
+                    } else {
+                        c.setBackground(Color.WHITE);
+                    }
+                } else {
+                    c.setBackground(Color.WHITE);
+                }
+                c.setForeground(Color.BLACK);
+                return c;
+            }
+        });
+
+
         JScrollPane scPhieuChuaTra = new JScrollPane(tblPhieuChuaTra, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scPhieuChuaTra.setPreferredSize(new Dimension(450, 300));
         pnThongKePhieuChuaTra.add(scPhieuChuaTra, BorderLayout.CENTER);
@@ -433,7 +460,7 @@ public class ReturnManager extends CustomFrame implements ITable {
 
         dtmPhieuTra = new DefaultTableModel();
         dtmPhieuTra.addColumn("Mã phiếu");
-        dtmPhieuTra.addColumn("Mã sách");
+        dtmPhieuTra.addColumn("Sách");
         dtmPhieuTra.addColumn("Ngày trả");
         dtmPhieuTra.addColumn("Tình trạng sách mượn");
         dtmPhieuTra.addColumn("Tình trạng sách trả");
