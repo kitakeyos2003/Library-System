@@ -44,100 +44,15 @@ public class Search extends Dialog {
     DefaultTableModel dtmPhieuMuon;
     JTable tblPhieuMuon;
     List<LoanDetail> dsctpm;
-    DefaultTableModel dtmPhieuTra, dtmPhieuChuaTra;
-    JTable tblPhieuTra, tblPhieuChuaTra;
+    DefaultTableModel dtmPhieuChuaTra;
 
     public Search(String title) {
         super(title, "QUẢN LÝ PHIẾU TRẢ");
     }
 
-    private void hienThiPhieuMuonDaTra() {
-        dsctpm = LoanDetailService.getInstance().getAll();
-        dtmPhieuTra.setRowCount(0);
-        for (LoanDetail ctpm : dsctpm) {
-            if (ctpm.getReturnDate() != null) {
-                Vector<Object> vec = new Vector<Object>();
-                vec.add(ctpm.getLoanId());
-                vec.add(ctpm.getBookId());
-                vec.add(ctpm.getNote());
-				
-				/*vec.add(ctpm.getNgayTra());
-				vec.add(ctpm.getTinhtrangsach());
-				vec.add(ctpm.getTinhtrangtra());
-				vec.add(ctpm.getUser());
-				*/
-                dtmPhieuTra.addRow(vec);
-            }
-        }
-
-    }
-
-
-    private void hienThiPhieuMuonChuaTra() {
-        LoanDetailService ctpmsv = new LoanDetailService();
-        dsctpm = ctpmsv.getAll();
-        dtmPhieuChuaTra.setRowCount(0);
-        for (LoanDetail ctpm : dsctpm) {
-            if (ctpm.getReturnDate() == null) {
-                Vector<Object> vec = new Vector<Object>();
-                vec.add(ctpm.getLoanId());
-                vec.add(ctpm.getBookId());
-                vec.add(null);
-                vec.add(ctpm.getBorrowedStatus());
-                vec.add(null);
-                vec.add(null);
-                vec.add(ctpm.getNote());
-                dtmPhieuChuaTra.addRow(vec);
-            }
-        }
-
-    }
-
     @Override
     public void addEvents() {
-        btnTimKiem.addActionListener(e -> {
-            // TODO Auto-generated method stub
-            dtmPhieuMuon.setRowCount(0);
-            String phieutra = txtTimKiem.getText();
-            try {
-                String sql = "Select c.MaPM,a.MaDG,c.MaSach,c.NgayTra,a.NgayHenTra,c.TinhTrangSach,c.TinhTrangTra,c.GhiChu,b.TenND FROM ctpm c,phieumuon a,taikhoan b  where a.MaPM=c.MaPM and b.User=c.User HAVING c.MaPM like ?";
-
-                Connection connection = DbManager.getInstance().getConnection();
-                PreparedStatement pre = connection.prepareStatement(sql);
-                pre.setString(1, '%' + txtTimKiem.getText() + '%');
-                ResultSet rs = pre.executeQuery();
-                while (rs.next()) {
-                    String maphieu = rs.getString(1);
-                    String madocgia = rs.getString(2);
-                    String masach = rs.getString(3);
-                    String ngayhentra = rs.getString(4);
-                    String ngaytra = rs.getString(5);
-                    String ttsachmuon = rs.getString(6);
-                    String ttsachtra = rs.getString(7);
-                    String thuthu = rs.getString(9);
-                    String ghichu = rs.getString(8);
-
-                    Vector<String> vec = new Vector<String>();
-                    vec.add(maphieu);
-                    vec.add(madocgia);
-                    vec.add(masach);
-                    vec.add(ngayhentra);
-                    vec.add(ngaytra);
-                    vec.add(ttsachmuon);
-                    vec.add(ttsachtra);
-                    vec.add(thuthu);
-                    vec.add(ghichu);
-                    dtmPhieuMuon.addRow(vec);
-                }
-                rs.close();
-                pre.close();
-                connection.close();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Hi");
-
-                ex.printStackTrace();
-            }
-        });
+        btnTimKiem.addActionListener(e -> search(txtTimKiem.getText()));
 
         tblPhieuMuon.addMouseListener(new MouseListener() {
             @Override
@@ -204,46 +119,7 @@ public class Search extends Dialog {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    dtmPhieuMuon.setRowCount(0);
-                    String tensach = txtTimKiem.getText();
-                    try {
-                        String sql = "Select c.MaPM,a.MaDG,c.MaSach,c.NgayTra,a.NgayHenTra,c.TinhTrangSach,c.TinhTrangTra,c.GhiChu,b.TenND FROM ctpm c,phieumuon a,taikhoan b  where a.MaPM=c.MaPM and b.User=c.User HAVING c.MaPM like ?";
-
-                        Connection connection = DbManager.getInstance().getConnection();
-                        PreparedStatement pre = connection.prepareStatement(sql);
-                        pre.setString(1, '%' + txtTimKiem.getText() + '%');
-                        ResultSet rs = pre.executeQuery();
-                        while (rs.next()) {
-                            String maphieu = rs.getString(1);
-                            String madocgia = rs.getString(2);
-                            String masach = rs.getString(3);
-                            String ngayhentra = rs.getString(4);
-                            String ngaytra = rs.getString(5);
-                            String ttsachmuon = rs.getString(6);
-                            String ttsachtra = rs.getString(7);
-                            String thuthu = rs.getString(9);
-                            String ghichu = rs.getString(8);
-
-                            Vector<String> vec = new Vector<String>();
-                            vec.add(maphieu);
-                            vec.add(madocgia);
-                            vec.add(masach);
-                            vec.add(ngayhentra);
-                            vec.add(ngaytra);
-                            vec.add(ttsachmuon);
-                            vec.add(ttsachtra);
-                            vec.add(thuthu);
-                            vec.add(ghichu);
-
-
-                            dtmPhieuMuon.addRow(vec);
-                        }
-                        rs.close();
-                        pre.close();
-                        connection.close();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
+                    search(txtTimKiem.getText());
                 }
             }
         });
@@ -296,6 +172,50 @@ public class Search extends Dialog {
         });
     }
 
+    private void search(String text) {
+        try {
+            dtmPhieuMuon.setRowCount(0);
+            String sql = "Select c.MaPM,a.MaDG,c.MaSach,c.NgayTra,a.NgayHenTra,c.TinhTrangSach,c.TinhTrangTra,c.GhiChu,b.TenND FROM ctpm c,phieumuon a,taikhoan b, docgia d, sach e  where a.MaPM=c.MaPM and b.User=c.User and a.MaDG=d.MaDG and c.MaSach=e.MaSach and (c.MaPM like ? or d.TenDG like ? or d.CCCD like ? or e.TenSach like ?)";
+
+            Connection connection = DbManager.getInstance().getConnection();
+            PreparedStatement pre = connection.prepareStatement(sql);
+            String like = '%' + text + '%';
+            pre.setString(1, like);
+            pre.setString(2, like);
+            pre.setString(3, like);
+            pre.setString(4, like);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                String maphieu = rs.getString(1);
+                String madocgia = rs.getString(2);
+                String masach = rs.getString(3);
+                String ngaytra = rs.getString(4);
+                String ngayhentra = rs.getString(5);
+                String ttsachmuon = rs.getString(6);
+                String ttsachtra = rs.getString(7);
+                String thuthu = rs.getString(9);
+                String ghichu = rs.getString(8);
+
+                Vector<String> vec = new Vector<String>();
+                vec.add(maphieu);
+                vec.add(madocgia);
+                vec.add(masach);
+                vec.add(ngayhentra);
+                vec.add(ngaytra);
+                vec.add(ttsachmuon);
+                vec.add(ttsachtra);
+                vec.add(thuthu);
+                vec.add(ghichu);
+                dtmPhieuMuon.addRow(vec);
+            }
+            rs.close();
+            pre.close();
+            connection.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     @Override
     public void initComponents() {
         JPanel pnHienThiTimKiemPhieu = new JPanel();
@@ -323,7 +243,7 @@ public class Search extends Dialog {
         JPanel pnTextTimKiem = new JPanel();
         pnTextTimKiem.setLayout(new BorderLayout());
         txtTimKiem = new PlaceholderTextField();
-        txtTimKiem.setPlaceholder("Nhập mã phiếu...");
+        txtTimKiem.setPlaceholder("Nhập mã phiếu, tên sách, tên độc giả, CCCD...");
         pnTextTimKiem.add(txtTimKiem);
         pnThanhTimKiem.add(pnTextTimKiem, BorderLayout.CENTER);
         txtTimKiem.setPreferredSize(new Dimension(100, 20));
