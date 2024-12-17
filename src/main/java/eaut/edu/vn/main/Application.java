@@ -1,5 +1,6 @@
 package eaut.edu.vn.main;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.model.Account;
 import eaut.edu.vn.service.ReaderService;
@@ -13,11 +14,7 @@ public class Application {
     public static Account account;
     public static void main(String[] args) {
         DbManager.getInstance().start();
-//        try {
-//            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-//            e.printStackTrace();
-//        }
+        FlatLightLaf.setup();
 
         SINGLETON.LOGIN.showWindow();
     }

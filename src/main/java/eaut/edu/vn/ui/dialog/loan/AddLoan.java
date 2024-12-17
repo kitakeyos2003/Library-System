@@ -3,6 +3,7 @@ package eaut.edu.vn.ui.dialog.loan;
 import com.toedter.calendar.JDateChooser;
 import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.main.Application;
+import eaut.edu.vn.model.Book;
 import eaut.edu.vn.model.Reader;
 import eaut.edu.vn.service.ReaderService;
 import eaut.edu.vn.ui.dialog.Dialog;
@@ -20,18 +21,23 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
 
 public class AddLoan extends Dialog {
 
-    JTextField txtTenDG, txtSachMuon, txtThuThu;
+    JTextField txtTenDG, txtThuThu;
     JComboBox<Reader> cbDocGia;
     JButton btnThem;
+    JButton chooseBook;
     JDateChooser chooseBorrowingDate, chooseReturnDate;
+    BookSelectionUI bookSelectionUI;
+    List<Book> selectedBooks;
 
     public AddLoan(String title) {
         super(title, "QUẢN LÝ PHIẾU MƯỢN");
+        bookSelectionUI = new BookSelectionUI(this);
     }
 
     public void loadInfo() {
@@ -74,66 +80,75 @@ public class AddLoan extends Dialog {
                 JOptionPane.showMessageDialog(null, "Vui lòng chọn độc giả");
                 return;
             }
-            if (txtSachMuon.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Không được để trống");
+            if (selectedBooks == null || selectedBooks.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn sách muốn mượn!");
                 return;
             }
-            int soluong2 = 0;
-            try {
-
-                Connection connection = DbManager.getInstance().getConnection();
-                String sqldocgia1 = "Select MatSach from docgia where MaDG=?";
-                PreparedStatement prex = connection.prepareStatement(sqldocgia1);
-                prex.setInt(1, reader.getId());
-                ResultSet b = prex.executeQuery();
-                if (b.next()) {
-                    soluong2 = b.getInt(1);
-                }
-                b.close();
-                prex.close();
-                connection.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            if (soluong2 == 3) {
-                JOptionPane.showMessageDialog(null, "Bạn đã làm mất sách 3 lần. Bạn không được mượn sách nữa.Thanks!");
+            int soLuongSach = selectedBooks.size();
+            int matSach = reader.getLostBooks();
+            if (matSach == 3) {
+                JOptionPane.showMessageDialog(null, "Bạn đã làm mất sách 3 lần. Bạn không được mượn sách nữa!");
                 dispose();
                 return;
             }
-            try {
+            try (Connection connection = DbManager.getInstance().getConnection();) {
                 String sql = "INSERT INTO `phieumuon`(`MaDG`, `NgayMuon`, `NgayHenTra`, `SoLuongMuon`, `User`) VALUES (?,?,?,?,?)";
-                Connection connection = DbManager.getInstance().getConnection();
+
                 PreparedStatement pre = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 pre.setInt(1, reader.getId());
                 pre.setString(2, datemuon);
                 pre.setString(3, datehentra);
-                pre.setString(4, txtSachMuon.getText());
+                pre.setInt(4, soLuongSach);
                 pre.setString(5, txtThuThu.getText());
-                int affectedRows = pre.executeUpdate();
-                if (affectedRows > 0) {
-                    ResultSet generatedKeys = pre.getGeneratedKeys();
-                    if (generatedKeys.next()) {
-                        int id = generatedKeys.getInt(1);
-                        JOptionPane.showMessageDialog(null, "Thêm phiếu mượn thành công");
-                        dispose();
-                        int soluong1 = Integer.parseInt(txtSachMuon.getText());
-                        for (int i = 0; i < soluong1; i++) {
-                            BookBorrowStatus qlts = new BookBorrowStatus("Thêm Sách");
-                            qlts.MaPM = id;
-                            qlts.user = Application.account.getUsername();
-                            qlts.fill();
-                            qlts.showWindow();
-                        }
-                    }
-                    generatedKeys.close();
+                pre.executeUpdate();
+                ResultSet rs = pre.getGeneratedKeys();
+                if (!rs.next()) {
+                    JOptionPane.showMessageDialog(null, "Error retrieving loan ID");
+                    return;
                 }
+                int loanId = rs.getInt(1);
+                rs.close();
                 pre.close();
-                connection.close();
+
+                if (selectedBooks.stream().anyMatch(book -> book.getQuantity() <= 0)) {
+                    JOptionPane.showMessageDialog(null, "Sách hết. Xin vui lòng chọn cuốn khác !");
+                    return;
+                }
+
+                for (Book book : selectedBooks) {
+                    int soluongsach = book.getQuantity();
+                    soluongsach--;
+                    book.setQuantity(soluongsach);
+
+                    sql = "update sach set SoLuong=? where MaSach=?";
+                    pre = connection.prepareStatement(sql);
+                    pre.setInt(1, book.getQuantity());
+                    pre.setInt(2, book.getId());
+                    pre.executeUpdate();
+
+                    sql = "insert into ctpm values(?,?,?,?,?,?,?)";
+
+                    pre = connection.prepareStatement(sql);
+                    pre.setInt(1, loanId);
+                    pre.setInt(2, book.getId());
+                    pre.setDate(3, null);
+                    pre.setString(4, "100");
+                    pre.setString(5, null);
+                    pre.setString(6, null);
+                    pre.setString(7, null);
+                    pre.executeUpdate();
+                    pre.close();
+                }
+
+                JOptionPane.showMessageDialog(this, "Mượn thành công!");
+                dispose();
             } catch (Exception ex) {
-                ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, ex.getMessage());
             }
+
+
         });
+        chooseBook.addActionListener(e -> bookSelectionUI.setVisible(true));
     }
 
 
@@ -198,11 +213,12 @@ public class AddLoan extends Dialog {
 
         JPanel pnSoSachCM = new JPanel();
         pnSoSachCM.setLayout(new FlowLayout());
-        JLabel lblSoSachCM = new JLabel("Số sách mượn: ");
-        txtSachMuon = new JTextField();
-        txtSachMuon.setPreferredSize(new Dimension(340, 30));
+        JLabel lblSoSachCM = new JLabel("Chọn sách mượn: ");
+        chooseBook = new JButton();
+        chooseBook.setPreferredSize(new Dimension(340, 30));
         pnSoSachCM.add(lblSoSachCM);
-        pnSoSachCM.add(txtSachMuon);
+        pnSoSachCM.add(chooseBook);
+        createChooseBookTitle();
 
         JPanel pnThuThu = new JPanel();
         pnThuThu.setLayout(new FlowLayout());
@@ -239,7 +255,7 @@ public class AddLoan extends Dialog {
         txtTenDG.setFont(font4);
         chooseBorrowingDate.setFont(font4);
         chooseReturnDate.setFont(font4);
-        txtSachMuon.setFont(font4);
+        chooseBook.setFont(font4);
         txtThuThu.setFont(font4);
         txtThuThu.setEditable(false);
 
@@ -289,4 +305,18 @@ public class AddLoan extends Dialog {
 
     }
 
+    public void setSelectedBooks(List<Book> selectedBooks) {
+        this.selectedBooks = selectedBooks;
+        createChooseBookTitle();
+    }
+
+    public void createChooseBookTitle() {
+        if (selectedBooks == null || selectedBooks.isEmpty()) {
+            chooseBook.setText("Chưa có sách nào được chọn");
+        } else {
+            StringJoiner joiner = new StringJoiner(", ");
+            selectedBooks.forEach(book -> joiner.add(book.getName()));
+            chooseBook.setText(joiner.toString());
+        }
+    }
 }

@@ -59,7 +59,6 @@ public class Search extends Dialog {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int row = tblPhieuMuon.rowAtPoint(e.getPoint());
-                int col = tblPhieuMuon.columnAtPoint(e.getPoint());
                 int numcols = tblPhieuMuon.getColumnCount();
 
                 for (int i = 0; i < numcols; i++) {

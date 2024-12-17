@@ -11,8 +11,6 @@ import javax.swing.*;
 import eaut.edu.vn.database.DbManager;
 import eaut.edu.vn.model.Book;
 import eaut.edu.vn.service.BookService;
-import eaut.edu.vn.ui.controls.Footer;
-import eaut.edu.vn.ui.controls.Header;
 import eaut.edu.vn.ui.dialog.Dialog;
 
 
@@ -116,7 +114,7 @@ public class BookBorrowStatus extends Dialog {
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn sách");
                     return;
                 }
-                if (txtTinhTrangSach.getText().length() == 0) {
+                if (txtTinhTrangSach.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Không được để trống");
                     return;
                 }
