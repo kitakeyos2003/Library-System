@@ -287,11 +287,11 @@ public class Login extends CustomFrame {
         }
         Application.account = account;
         if (account.getRole() == 1) {
-            AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
+            AdminManager ql = new AdminManager("Trang chủ");;
             ql.showWindow();
             dispose();
         } else if (account.getRole() == 2) {
-            LibrarianManager ql = Application.SINGLETON.LIBRARIAN_MANAGER;
+            LibrarianManager ql = new LibrarianManager("Trang chủ");
             ql.showWindow();
             dispose();
         }

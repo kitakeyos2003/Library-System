@@ -110,19 +110,19 @@ public class ReturnManager extends CustomFrame implements ITable {
         btnQuayLai.addActionListener(e -> {
             // TODO Auto-generated method stub
             if (thongke == 1) {
-                StatisticAnalyzer ui = Application.SINGLETON.STATISTIC_ANALYZER;
+                StatisticAnalyzer ui =   new StatisticAnalyzer("Thống kê");
                 dispose();
                 thongke = 0;
                 return;
             }
             int phanquyen = Application.account.getRole();
             if (phanquyen == 1) {
-                AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
+                AdminManager ql = new AdminManager("Trang chủ");;
                 ql.showWindow();
                 dispose();
             }
             if (phanquyen == 2) {
-                LibrarianManager ql = Application.SINGLETON.LIBRARIAN_MANAGER;
+                LibrarianManager ql = new LibrarianManager("Trang chủ");
                 ql.showWindow();
                 dispose();
             }

@@ -1,10 +1,14 @@
 package eaut.edu.vn.ui.dialog.returnreceipt;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
+import eaut.edu.vn.database.DbManager;
+import eaut.edu.vn.main.Application;
+import eaut.edu.vn.ui.controls.PlaceholderTextField;
+import eaut.edu.vn.ui.dialog.Dialog;
+import eaut.edu.vn.util.Util;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -12,40 +16,16 @@ import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.List;
+import java.sql.SQLException;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-
-import eaut.edu.vn.database.DbManager;
-import eaut.edu.vn.main.Application;
-import eaut.edu.vn.ui.controls.Footer;
-import eaut.edu.vn.ui.controls.Header;
-import eaut.edu.vn.ui.controls.PlaceholderTextField;
-import eaut.edu.vn.ui.dialog.Dialog;
-import eaut.edu.vn.service.LoanDetailService;
-
-import eaut.edu.vn.model.LoanDetail;
-import eaut.edu.vn.util.Util;
-
 public class Search extends Dialog {
-    
+
     JButton btnTimKiem, btnTraSach;
     PlaceholderTextField txtTimKiem;
-    JTextField txtMaPhieu, txtMaDG, txtMaSach, txtNgayHenTra, txtNgayTra, txtTTSachMuon, txtTTSachTra, txtThuThu, txtGhiChu;
+    JTextField txtMaPhieu, txtMaDG, txtMaSach, txtNgayHenTra, txtTTSachMuon, txtThuThu;
     DefaultTableModel dtmPhieuMuon;
     JTable tblPhieuMuon;
-    List<LoanDetail> dsctpm;
-    DefaultTableModel dtmPhieuChuaTra;
 
     public Search(String title) {
         super(title, "QUẢN LÝ PHIẾU TRẢ");
@@ -72,15 +52,9 @@ public class Search extends Dialog {
                     if (i == 3)
                         txtNgayHenTra.setText(str);
                     if (i == 4)
-                        txtNgayTra.setText(str);
-                    if (i == 5)
                         txtTTSachMuon.setText(str);
-                    if (i == 6)
-                        txtTTSachTra.setText(str);
-                    if (i == 7)
+                    if (i == 5)
                         txtThuThu.setText(str);
-                    if (i == 8)
-                        txtGhiChu.setText(str);
                 }
             }
 
@@ -156,11 +130,6 @@ public class Search extends Dialog {
             }
         });
         btnTraSach.addActionListener(e -> {
-            // TODO Auto-generated method stub
-            if (!txtNgayTra.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Phiếu mượn đã trả sách rồi");
-                return;
-            }
             ReturnReceipt ts = new ReturnReceipt("Trả sách");
             ts.tentk = Application.account.getUsername();
             ts.MaDG = txtMaDG.getText();
@@ -176,44 +145,66 @@ public class Search extends Dialog {
     private void search(String text) {
         try {
             dtmPhieuMuon.setRowCount(0);
-            String sql = "Select c.MaPM,a.MaDG,c.MaSach,c.NgayTra,a.NgayHenTra,c.TinhTrangSach,c.TinhTrangTra,c.GhiChu,b.TenND FROM ctpm c,phieumuon a,taikhoan b, docgia d, sach e  where a.MaPM=c.MaPM and b.User=c.User and a.MaDG=d.MaDG and c.MaSach=e.MaSach and (c.MaPM like ? or d.TenDG like ? or d.CCCD like ? or e.TenSach like ?)";
+            if (Util.isNumber(text)) {
+                String sql = "SELECT DISTINCT c.MaPM, a.MaDG, c.MaSach,a.NgayHenTra, c.TinhTrangSach, c.GhiChu, b.TenND " +
+                        "FROM ctpm c " +
+                        "JOIN phieumuon a ON a.MaPM = c.MaPM " +
+                        "JOIN docgia d ON a.MaDG = d.MaDG " +
+                        "JOIN sach e ON c.MaSach = e.MaSach " +
+                        "LEFT JOIN taikhoan b ON a.User = b.User " +
+                        "WHERE c.NgayTra IS NULL AND (a.MaPM = ? OR d.CCCD = ?)";
+                int id = Integer.parseInt(text);
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                pre.setInt(1, id);
+                pre.setInt(2, id);
+                ResultSet rs = pre.executeQuery();
+                fillTable(rs);
+                rs.close();
+                pre.close();
+                connection.close();
+            } else {
+                String sql = "SELECT DISTINCT c.MaPM, a.MaDG, c.MaSach, a.NgayHenTra, c.TinhTrangSach, c.GhiChu, b.TenND " +
+                        "FROM ctpm c " +
+                        "JOIN phieumuon a ON a.MaPM = c.MaPM " +
+                        "JOIN docgia d ON a.MaDG = d.MaDG " +
+                        "JOIN sach e ON c.MaSach = e.MaSach " +
+                        "LEFT JOIN taikhoan b ON a.User = b.User " +
+                        "WHERE c.NgayTra IS NULL AND (d.TenDG LIKE ? OR e.TenSach LIKE ?)";
 
-            Connection connection = DbManager.getInstance().getConnection();
-            PreparedStatement pre = connection.prepareStatement(sql);
-            String like = '%' + text + '%';
-            pre.setString(1, like);
-            pre.setString(2, like);
-            pre.setString(3, like);
-            pre.setString(4, like);
-            ResultSet rs = pre.executeQuery();
-            while (rs.next()) {
-                String maphieu = rs.getString(1);
-                String madocgia = rs.getString(2);
-                String masach = rs.getString(3);
-                String ngaytra = rs.getString(4);
-                String ngayhentra = rs.getString(5);
-                String ttsachmuon = rs.getString(6);
-                String ttsachtra = rs.getString(7);
-                String thuthu = rs.getString(9);
-                String ghichu = rs.getString(8);
-
-                Vector<String> vec = new Vector<String>();
-                vec.add(maphieu);
-                vec.add(madocgia);
-                vec.add(masach);
-                vec.add(ngayhentra);
-                vec.add(ngaytra);
-                vec.add(ttsachmuon);
-                vec.add(ttsachtra);
-                vec.add(thuthu);
-                vec.add(ghichu);
-                dtmPhieuMuon.addRow(vec);
+                Connection connection = DbManager.getInstance().getConnection();
+                PreparedStatement pre = connection.prepareStatement(sql);
+                String like = '%' + text + '%';
+                pre.setString(1, like);
+                pre.setString(2, like);
+                ResultSet rs = pre.executeQuery();
+                fillTable(rs);
+                rs.close();
+                pre.close();
+                connection.close();
             }
-            rs.close();
-            pre.close();
-            connection.close();
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private void fillTable(ResultSet rs) throws SQLException {
+        while (rs.next()) {
+            String maphieu = rs.getString("MaPM");
+            String madocgia = rs.getString("MaDG");
+            String masach = rs.getString("MaSach");
+            String ngayhentra = rs.getString("NgayHenTra");
+            String ttsachmuon = rs.getString("TinhTrangSach");
+            String thuthu = rs.getString("TenND");
+
+            Vector<String> vec = new Vector<String>();
+            vec.add(maphieu);
+            vec.add(madocgia);
+            vec.add(masach);
+            vec.add(ngayhentra);
+            vec.add(ttsachmuon);
+            vec.add(thuthu);
+            dtmPhieuMuon.addRow(vec);
         }
     }
 
@@ -319,15 +310,6 @@ public class Search extends Dialog {
         pnNgayHenTra.add(lblNgayHenTra);
         pnNgayHenTra.add(txtNgayHenTra);
 
-        JPanel pnNgayTra = new JPanel();
-        pnNgayTra.setLayout(new FlowLayout());
-        pnHienThiChiTiet.add(pnNgayTra);
-        JLabel lblNgayTra = new JLabel("Ngày trả: ");
-        txtNgayTra = new JTextField();
-        txtNgayTra.setPreferredSize(new Dimension(240, 22));
-        pnNgayTra.add(lblNgayTra);
-        pnNgayTra.add(txtNgayTra);
-
         JPanel pnTTSachMuon = new JPanel();
         pnTTSachMuon.setLayout(new FlowLayout());
         pnHienThiChiTiet.add(pnTTSachMuon);
@@ -337,15 +319,6 @@ public class Search extends Dialog {
         pnTTSachMuon.add(lblTTSachMuon);
         pnTTSachMuon.add(txtTTSachMuon);
 
-        JPanel pnTTSachTra = new JPanel();
-        pnTTSachTra.setLayout(new FlowLayout());
-        pnHienThiChiTiet.add(pnTTSachTra);
-        JLabel lblTTSachTra = new JLabel("TT sách trả: ");
-        txtTTSachTra = new JTextField();
-        txtTTSachTra.setPreferredSize(new Dimension(240, 22));
-        pnTTSachTra.add(lblTTSachTra);
-        pnTTSachTra.add(txtTTSachTra);
-
         JPanel pnThuThu = new JPanel();
         pnThuThu.setLayout(new FlowLayout());
         pnHienThiChiTiet.add(pnThuThu);
@@ -354,15 +327,6 @@ public class Search extends Dialog {
         txtThuThu.setPreferredSize(new Dimension(240, 22));
         pnThuThu.add(lblThuThuNhanSach);
         pnThuThu.add(txtThuThu);
-
-        JPanel pnGhiChu = new JPanel();
-        pnGhiChu.setLayout(new FlowLayout());
-        pnHienThiChiTiet.add(pnGhiChu);
-        JLabel lblGhiChu = new JLabel("Ghi chú: ");
-        txtGhiChu = new JTextField();
-        txtGhiChu.setPreferredSize(new Dimension(240, 22));
-        pnGhiChu.add(lblGhiChu);
-        pnGhiChu.add(txtGhiChu);
 
         JPanel pnAN3 = new JPanel();
         pnAN3.setLayout(new FlowLayout());
@@ -394,11 +358,8 @@ public class Search extends Dialog {
         dtmPhieuMuon.addColumn("Mã độc giả");
         dtmPhieuMuon.addColumn("Mã sách");
         dtmPhieuMuon.addColumn("Ngày hẹn trả");
-        dtmPhieuMuon.addColumn("Ngày trả");
         dtmPhieuMuon.addColumn("TT Sách mượn");
-        dtmPhieuMuon.addColumn("TT Sách trả");
         dtmPhieuMuon.addColumn("Thủ thư nhận sách");
-        dtmPhieuMuon.addColumn("Ghi chú");
         tblPhieuMuon = new JTable(dtmPhieuMuon);
         JScrollPane sc = new JScrollPane(tblPhieuMuon, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         sc.setPreferredSize(new Dimension(400, 320));
@@ -418,41 +379,29 @@ public class Search extends Dialog {
         lblMaDG.setFont(font4);
         lblMaPhieu.setFont(font4);
         lblMaSach.setFont(font4);
-        lblNgayTra.setFont(font4);
         lblNgayHenTra.setFont(font4);
-        lblTTSachTra.setFont(font4);
         lblTTSachMuon.setFont(font4);
         lblThuThuNhanSach.setFont(font4);
-        lblGhiChu.setFont(font4);
 
         lblMaDG.setPreferredSize(lblThuThuNhanSach.getPreferredSize());
         lblMaPhieu.setPreferredSize(lblThuThuNhanSach.getPreferredSize());
         lblMaSach.setPreferredSize(lblThuThuNhanSach.getPreferredSize());
         lblNgayHenTra.setPreferredSize(lblThuThuNhanSach.getPreferredSize());
-        lblNgayTra.setPreferredSize(lblThuThuNhanSach.getPreferredSize());
-        lblGhiChu.setPreferredSize(lblThuThuNhanSach.getPreferredSize());
         lblTTSachMuon.setPreferredSize(lblThuThuNhanSach.getPreferredSize());
-        lblTTSachTra.setPreferredSize(lblThuThuNhanSach.getPreferredSize());
 
         pnMaSach.setBackground(new Color(255, 255, 255));
         pnMaDG.setBackground(new Color(255, 255, 255));
         pnMaPhieu.setBackground(new Color(255, 255, 255));
         pnNgayHenTra.setBackground(new Color(255, 255, 255));
-        pnNgayTra.setBackground(new Color(255, 255, 255));
-        pnGhiChu.setBackground(new Color(255, 255, 255));
         pnTTSachMuon.setBackground(new Color(255, 255, 255));
         pnThuThu.setBackground(new Color(255, 255, 255));
-        pnTTSachTra.setBackground(new Color(255, 255, 255));
 
         txtMaDG.setEditable(false);
         txtMaPhieu.setEditable(false);
         txtMaSach.setEditable(false);
         txtNgayHenTra.setEditable(false);
-        txtNgayTra.setEditable(false);
         txtThuThu.setEditable(false);
         txtTTSachMuon.setEditable(false);
-        txtTTSachTra.setEditable(false);
-        txtGhiChu.setEditable(false);
 
     }
 

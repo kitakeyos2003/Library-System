@@ -273,13 +273,13 @@ public class AccountManager extends CustomFrame implements ITable {
         btnQuayLai.addActionListener(e -> {
             // TODO Auto-generated method stub
             if (ThongKe == 1) {
-                StatisticAnalyzer ui = Application.SINGLETON.STATISTIC_ANALYZER;
+                StatisticAnalyzer ui =   new StatisticAnalyzer("Thống kê");
                 ui.showWindow();
                 dispose();
                 ThongKe = 0;
                 return;
             }
-            AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
+            AdminManager ql = new AdminManager("Trang chủ");;
             ql.showWindow();
             dispose();
         });

@@ -32,30 +32,30 @@ public class LibrarianManager extends CustomFrame {
     public void addEvents() {
         btnDangXuat.addActionListener(e -> {
             Application.account = null;
-            Login login = Application.SINGLETON.LOGIN;
+            Login login = new Login("Đăng nhập hệ thống");
             login.showWindow();
             dispose();
         });
         btnQLPM.addActionListener(e -> {
-            LoanManager qlpm = Application.SINGLETON.LOAN_MANAGER;
+            LoanManager qlpm = new LoanManager("Quản lý phiếu mượn");
             qlpm.showWindow();
             dispose();
         });
         btnQLPT.addActionListener(e -> {
-            ReturnManager qlpt = Application.SINGLETON.RETURN_MANAGER;
+            ReturnManager qlpt = new ReturnManager("Quản lý phiếu trả");
             qlpt.showWindow();
             dispose();
 
         });
         btnQLDG.addActionListener(e -> {
-            ReaderManager qldg = Application.SINGLETON.READER_MANAGER;
+            ReaderManager qldg = new ReaderManager("Quản lý độc giả");
             qldg.showWindow();
             dispose();
 
         });
 
         btnQLS.addActionListener(e -> {
-            BookManager qls = Application.SINGLETON.BOOK_MANAGER;
+            BookManager qls = new BookManager("Quản lý sách");
             qls.showWindow();
             dispose();
 
@@ -68,7 +68,7 @@ public class LibrarianManager extends CustomFrame {
         });
         btnThongKe.addActionListener(e -> {
             // TODO Auto-generated method stub
-            StatisticAnalyzer tk = Application.SINGLETON.STATISTIC_ANALYZER;
+            StatisticAnalyzer tk =   new StatisticAnalyzer("Thống kê");
             tk.showWindow();
             dispose();
         });

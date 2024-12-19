@@ -47,12 +47,12 @@ public class ReaderManager extends CustomFrame implements ITable {
             // TODO Auto-generated method stub
             int phanquyen = Application.account.getRole();
             if (phanquyen == 1) {
-                AdminManager ql = Application.SINGLETON.ADMIN_MANAGER;
+                AdminManager ql = new AdminManager("Trang chủ");;
                 ql.showWindow();
                 dispose();
             }
             if (phanquyen == 2) {
-                LibrarianManager ql = Application.SINGLETON.LIBRARIAN_MANAGER;
+                LibrarianManager ql = new LibrarianManager("Trang chủ");
                 ql.showWindow();
                 dispose();
             }
