@@ -375,7 +375,6 @@ public class Search extends Dialog {
         lblTieuDe2.setForeground(Color.WHITE);
 
 
-        Font font3 = Util.loadFontFromResource("SVN-Avo.ttf", Font.BOLD, 15);
         lblMaDG.setFont(font4);
         lblMaPhieu.setFont(font4);
         lblMaSach.setFont(font4);
